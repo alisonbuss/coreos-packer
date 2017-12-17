@@ -71,6 +71,6 @@ function startBuilding {
     __initialize "$@"; 
 } 
 
-startBuilding "$@" | tee -a "${0##*/}.log";
+startBuilding "$@" #Gerar Logs# | tee -a "./logs/${0##*/}.log";
 
 exit 0;
