@@ -1,7 +1,7 @@
 
-#coreos-packer
+# coreos-packer
 
-###Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
+### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
 
 Inspired by wasbazi [coreos-packer](https://github.com/wasbazi/coreos-packer)
 
