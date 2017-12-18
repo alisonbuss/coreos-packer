@@ -1,0 +1,16 @@
+[{
+    "package": "coreos-security-vagrant",
+    "description": "A simple CoreOS for production.",
+    "variables": [
+        "./packer-templates/modules/variables/coreos.json"
+    ],
+    "builders": [
+        "./packer-templates/modules/builders/vagrant.json"
+    ],
+    "provisioners": [
+        "./packer-templates/modules/provisioners/shell.json"
+    ],
+    "post-processors": [
+        "./packer-templates/modules/post-processors/vagrant.json"
+    ]
+}]
