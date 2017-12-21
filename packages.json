@@ -17,7 +17,7 @@
             "./packer/modules/variables/vagrant.json"
         ],
         "builders": [
-            "./packer/modules/builders/virtualbox-iso.json"
+            "./packer/modules/builders/vagrant.json"
         ],
         "provisioners": [
             "./packer/modules/provisioners/shell.json"
