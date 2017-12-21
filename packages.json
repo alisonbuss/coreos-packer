@@ -42,10 +42,12 @@
     "packer": {
         "variables": [
             "./packer/modules/variables/coreos-beta.json",
-            "./packer/modules/variables/vagrant.json"
+            "./packer/modules/variables/vagrant.json",
+            "./packer/modules/variables/google.json"
         ],
         "builders": [
-            "./packer/modules/builders/virtualbox-iso.json"
+            "./packer/modules/builders/vagrant.json",
+            "./packer/modules/builders/google.json"
         ],
         "provisioners": [
             "./packer/modules/provisioners/shell.json"
