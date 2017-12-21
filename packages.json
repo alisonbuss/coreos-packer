@@ -1,5 +1,5 @@
 [{
-    "package": "coreos-stable-1576.4.0",
+    "package": "coreos-stable",
     "description": "A simple CoreOS stable for production.",
     "active": true,
     "logs_path": "./logs/",
@@ -9,11 +9,11 @@
     ],
     "commands_before_build": [
         "echo 'execute commands before build...'",
-        "bash ./builds/coreos-stable-1576.4.0/build.sh;"
+        "bash ./builds/coreos-stable/build.sh;"
     ],
     "packer": {
         "variables": [
-            "./packer/modules/variables/basic.json",
+            "./packer/modules/variables/coreos-stable.json",
             "./packer/modules/variables/vagrant.json"
         ],
         "builders": [
@@ -27,7 +27,35 @@
         ]
     }
 },{
-    "package": "coreos-alpha-1632.0.0",
+    "package": "coreos-beta",
+    "description": "A simple CoreOS beta for production.",
+    "active": false,
+    "logs_path": "./logs/",
+    "build_path": "./builds/",
+    "commands_after_build": [
+        "echo 'execute commands after build...'"
+    ],
+    "commands_before_build": [
+        "echo 'execute commands before build...'",
+        "bash ./builds/coreos-beta/build.sh;"
+    ],
+    "packer": {
+        "variables": [
+            "./packer/modules/variables/coreos-beta.json",
+            "./packer/modules/variables/vagrant.json"
+        ],
+        "builders": [
+            "./packer/modules/builders/virtualbox-iso.json"
+        ],
+        "provisioners": [
+            "./packer/modules/provisioners/shell.json"
+        ],
+        "post_processors": [
+            "./packer/modules/post-processors/vagrant.json"
+        ]
+    }
+},{
+    "package": "coreos-alpha",
     "description": "A simple CoreOS alpha for production.",
     "active": false,
     "logs_path": "./logs/",
@@ -37,11 +65,11 @@
     ],
     "commands_before_build": [
         "echo 'execute commands before build...'",
-        "bash ./builds/coreos-alpha-1632.0.0/build.sh;"
+        "bash ./builds/coreos-alpha/build.sh;"
     ],
     "packer": {
         "variables": [
-            "./packer/modules/variables/basic.json",
+            "./packer/modules/variables/coreos-alpha.json",
             "./packer/modules/variables/vagrant.json"
         ],
         "builders": [
