@@ -70,16 +70,25 @@
     "packer": {
         "variables": [
             "./packer/modules/variables/coreos-alpha.json",
-            "./packer/modules/variables/vagrant.json"
+            "./packer/modules/variables/vagrant.json",
+            "./packer/modules/variables/aws.json",
+            "./packer/modules/variables/azure.json",
+            "./packer/modules/variables/digitalocean.json",
+            "./packer/modules/variables/google.json"
         ],
         "builders": [
-            "./packer/modules/builders/virtualbox-iso.json"
+            "./packer/modules/builders/vagrant.json",
+            "./packer/modules/builders/aws.json",
+            "./packer/modules/builders/azure.json",
+            "./packer/modules/builders/digitalocean.json",
+            "./packer/modules/builders/google.json"
         ],
         "provisioners": [
             "./packer/modules/provisioners/shell.json"
         ],
         "post_processors": [
-            "./packer/modules/post-processors/vagrant.json"
+            "./packer/modules/post-processors/vagrant.json",
+            "./packer/modules/post-processors/vagrant-cloud.json"
         ]
     }
 }]

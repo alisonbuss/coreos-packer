@@ -1,12 +1,1 @@
-{
-    "type": "shell",
-    "scripts": [
-        "scripts/ubuntu/apt.sh",
-        "scripts/ubuntu/virtualbox.sh",
-        "scripts/ubuntu/vmware.sh",
-        "scripts/common/vagrant.sh",
-        "scripts/common/sshd.sh",
-        "scripts/ubuntu/cleanup.sh",
-        "scripts/common/minimize.sh"
-    ]
-}
+{}
