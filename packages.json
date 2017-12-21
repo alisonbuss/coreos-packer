@@ -1,17 +1,60 @@
-
 [{
-    "package": "coreos-security-vagrant",
+    "package": "coreos-stable-1576.4.0",
     "description": "A simple CoreOS for production.",
-    "variables": [
-        "./packer-templates/modules/variables/coreos.json"
+    "active": true,
+    "certificates": {
+       
+    },
+    "ignition": {
+        "source": "./container-linux-config/ignition-source.yml",
+        "transpiler": "",
+        "platforms": ["vagrant", "ec2", "gce"]
+    },
+    "packer": {
+        "variables": {
+            "aa": "",
+            "bb": ""
+        },
+        "builders": [
+            "./packer-templates/modules/builders/virtualbox-iso.json"
+        ],
+        "provisioners": [
+            "./packer-templates/modules/provisioners/shell.json"
+        ],
+        "postProcessors": [
+            "./packer-templates/modules/post-processors/vagrant.json"
+        ]
+    }
+},
+{
+    "package": "proposta-nova",
+    "description": ".....",
+    "active": true,
+    "logs_path": "./logs/",
+    "build_path": "./builds/",
+    "commands_after_build": [
+        "echo 'execute commands after build...'"
     ],
-    "builders": [
-        "./packer-templates/modules/builders/vagrant.json"
+    "commands_before_build": [
+        "echo 'execute commands before build...'",
+        "packer build \\",
+        "   -var-file='./builds/proposta-nova/packer/variables-basic.json' \\",
+        "   -var-file='./builds/proposta-nova/packer/variables-vagrant.json' \\",
+        "   ./builds/proposta-nova/packer/template-coreos.json; \\"
     ],
-    "provisioners": [
-        "./packer-templates/modules/provisioners/shell.json"
-    ],
-    "post-processors": [
-        "./packer-templates/modules/post-processors/vagrant.json"
-    ]
+    "packer": {
+        "variables": [
+            "./packer/modules/variables/basic.json",
+            "./packer/modules/variables/vagrant.json"
+        ],
+        "builders": [
+            "./packer/modules/builders/virtualbox-iso.json"
+        ],
+        "provisioners": [
+            "./packer/modules/provisioners/shell.json"
+        ],
+        "post_processors": [
+            "./packer/modules/post-processors/vagrant.json"
+        ]
+    }
 }]

@@ -1,0 +1,58 @@
+{
+    "variables": {
+        "name": "packer-coreos",
+        "release": "alpha",
+        "version": "1618.0.0",
+        "ignition": "ignition-packer-min.json",
+        "memory": "2048",
+        "cpus": "1",
+        "disk_size": "33666"
+    },
+
+    "builders": [{
+        "type": "virtualbox-iso",
+
+        "vm_name": "{{user `name`}}-{{user `release`}}-{{user `version`}}",
+        "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
+        "iso_checksum": "",
+        "iso_checksum_type": "none",
+        "guest_os_type": "Linux26_64",
+        "output_directory": "packer-coreos-{{user `release`}}-{{user `version`}}-{{build_type}}", 
+
+        "hard_drive_interface": "sata",
+        "disk_size": "{{user `disk_size`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+        ],
+        "guest_additions_mode": "disable",
+        "headless": "true",
+
+        "http_directory": "files",
+        "ssh_port": 22,
+        "ssh_username": "core",
+        "ssh_private_key_file": "files/insecure_private_key",
+        "ssh_timeout": "10m",
+        
+        "boot_command": [
+            "sudo -i<enter>",
+            "systemctl stop sshd.socket<enter>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/ignition.json<enter>",
+            "coreos-install -d /dev/vda -C {{ user `release` }} -i ignition.json",
+            "reboot<enter>"
+        ],
+        "boot_wait": "33s",
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }],
+
+    "provisioners": [{
+        "type": "shell",
+        "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"]
+    }],
+
+    "post-processors": [{
+        "type": "vagrant",
+        "compression_level": "6",
+        "output": "./builds/{{user `name`}}/{{.Provider}}/coreos-{{user `release`}}-{{ user `version`}}.box"
+    }]
+}

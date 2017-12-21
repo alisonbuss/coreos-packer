@@ -1,0 +1,11 @@
+{
+    "compression_level": "6",
+    "cpus": "1",
+    "disk_size": "40000",
+    "headless": "false",
+    "iso_checksum": "ca5d9a8438e2434b9a3ac2be67b5c5fa2c1f8e3e40b954519462935195464034",
+    "iso_checksum_type": "sha256",
+    "memory": "512",
+    "mirror": "http://releases.ubuntu.com",
+    "ssh_timeout": "60m"
+}

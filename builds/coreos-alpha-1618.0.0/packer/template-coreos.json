@@ -1,0 +1,49 @@
+{
+    "builders": [{
+        "type": "virtualbox-iso",
+        
+        "vm_name": "{{user `name`}}-{{user `release`}}-{{user `version`}}",
+        "iso_url": "{{user `files_directory`}}/coreos-alpha-1618.0.0.iso",
+        "iso_checksum": "",
+        "iso_checksum_type": "none",
+        "guest_os_type": "Linux26_64",
+        "output_directory": "packer-coreos-{{user `release`}}-{{user `version`}}-{{build_type}}", 
+
+        "hard_drive_interface": "sata",
+        "disk_size": "{{user `disk_size`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+        ],
+        "guest_additions_mode": "disable",
+        "headless": "true",
+        "http_directory": "{{user `files_directory`}}",
+
+        "boot_command": [
+            "sudo -i<enter>",
+            "systemctl stop sshd.socket<enter>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/ignition.json<enter>",
+            "coreos-install -d /dev/vda -C {{ user `release` }} -i ignition.json",
+            "reboot<enter>"
+        ],
+        "boot_wait": "33s",
+
+        "ssh_port": 22,
+        "ssh_username": "core",
+        "ssh_private_key_file": "{{user `files_directory`}}/{{user `vagrant_insecure_private_key`}}",
+        "ssh_timeout": "33m",
+        
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }],
+
+    "provisioners": [{
+        "type": "shell",
+        "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"]
+    }],
+
+    "post-processors": [{
+        "type": "vagrant",
+        "compression_level": "6",
+        "output": "./builds/{{.Provider}}/{{user `vagrant_box_name`}}.box"
+    }]
+}
