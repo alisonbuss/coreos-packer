@@ -37,10 +37,7 @@
     ],
     "commands_before_build": [
         "echo 'execute commands before build...'",
-        "packer build \\",
-        "   -var-file='./builds/proposta-nova/packer/variables-basic.json' \\",
-        "   -var-file='./builds/proposta-nova/packer/variables-vagrant.json' \\",
-        "   ./builds/proposta-nova/packer/template-coreos.json; \\"
+        "bash ./builds/proposta-nova/build.sh;"
     ],
     "packer": {
         "variables": [

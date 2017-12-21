@@ -3,6 +3,8 @@
 
 ### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
 
+Inspired by Satoshi Matsumoto [packer-templates](https://github.com/kaorimatz/packer-templates/)
+
 Inspired by wasbazi [coreos-packer](https://github.com/wasbazi/coreos-packer)
 
 Inspired by YungSang [coreos-packer](https://github.com/YungSang/coreos-packer)

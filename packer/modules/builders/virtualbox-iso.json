@@ -1,33 +1,36 @@
 {
     "type": "virtualbox-iso",
-    "guest_os_type": "Ubuntu_64",
-    "iso_url": "{{user `mirror`}}/17.04/ubuntu-17.04-server-amd64.iso",
-    "iso_checksum": "{{user `iso_checksum`}}",
-    "iso_checksum_type": "{{user `iso_checksum_type`}}",
-    "output_directory": "output-ubuntu-17.04-amd64-{{build_type}}",
-    "vm_name": "packer-ubuntu-17.04-amd64",
+        
+    "vm_name": "{{user `name`}}-{{user `release`}}-{{user `version`}}",
+    "iso_url": "{{user `files_directory`}}/coreos-alpha-1618.0.0.iso",
+    "iso_checksum": "",
+    "iso_checksum_type": "none",
+    "guest_os_type": "Linux26_64",
+    "output_directory": "packer-coreos-{{user `release`}}-{{user `version`}}-{{build_type}}", 
+
+    "hard_drive_interface": "sata",
     "disk_size": "{{user `disk_size`}}",
-    "headless": "{{user `headless`}}",
-    "http_directory": "http",
-    "boot_wait": "5s",
-    "boot_command": [
-        "<esc><wait>",
-        "<esc><wait>",
-        "<enter><wait>",
-        "/install/vmlinuz ",
-        "initrd=/install/initrd.gz ",
-        "net.ifnames=0 ",
-        "auto-install/enable=true ",
-        "debconf/priority=critical ",
-        "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu-17.04/preseed.cfg ",
-        "<enter>"
-    ],
-    "ssh_timeout": "{{user `ssh_timeout`}}",
-    "ssh_username": "vagrant",
-    "ssh_password": "vagrant",
-    "shutdown_command": "sudo systemctl poweroff",
     "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
         ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
-    ]
+    ],
+    "guest_additions_mode": "disable",
+    "headless": "true",
+    "http_directory": "{{user `files_directory`}}",
+
+    "boot_command": [
+        "sudo -i<enter>",
+        "systemctl stop sshd.socket<enter>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/ignition.json<enter>",
+        "coreos-install -d /dev/vda -C {{ user `release` }} -i ignition.json",
+        "reboot<enter>"
+    ],
+    "boot_wait": "33s",
+
+    "ssh_port": 22,
+    "ssh_username": "core",
+    "ssh_private_key_file": "{{user `files_directory`}}/{{user `vagrant_insecure_private_key`}}",
+    "ssh_timeout": "33m",
+    
+    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
 }
