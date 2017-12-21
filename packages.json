@@ -1,34 +1,6 @@
 [{
     "package": "coreos-stable-1576.4.0",
-    "description": "A simple CoreOS for production.",
-    "active": true,
-    "certificates": {
-       
-    },
-    "ignition": {
-        "source": "./container-linux-config/ignition-source.yml",
-        "transpiler": "",
-        "platforms": ["vagrant", "ec2", "gce"]
-    },
-    "packer": {
-        "variables": {
-            "aa": "",
-            "bb": ""
-        },
-        "builders": [
-            "./packer-templates/modules/builders/virtualbox-iso.json"
-        ],
-        "provisioners": [
-            "./packer-templates/modules/provisioners/shell.json"
-        ],
-        "postProcessors": [
-            "./packer-templates/modules/post-processors/vagrant.json"
-        ]
-    }
-},
-{
-    "package": "proposta-nova",
-    "description": ".....",
+    "description": "A simple CoreOS stable for production.",
     "active": true,
     "logs_path": "./logs/",
     "build_path": "./builds/",
@@ -37,7 +9,35 @@
     ],
     "commands_before_build": [
         "echo 'execute commands before build...'",
-        "bash ./builds/proposta-nova/build.sh;"
+        "bash ./builds/coreos-stable-1576.4.0/build.sh;"
+    ],
+    "packer": {
+        "variables": [
+            "./packer/modules/variables/basic.json",
+            "./packer/modules/variables/vagrant.json"
+        ],
+        "builders": [
+            "./packer/modules/builders/virtualbox-iso.json"
+        ],
+        "provisioners": [
+            "./packer/modules/provisioners/shell.json"
+        ],
+        "post_processors": [
+            "./packer/modules/post-processors/vagrant.json"
+        ]
+    }
+},{
+    "package": "coreos-alpha-1632.0.0",
+    "description": "A simple CoreOS alpha for production.",
+    "active": false,
+    "logs_path": "./logs/",
+    "build_path": "./builds/",
+    "commands_after_build": [
+        "echo 'execute commands after build...'"
+    ],
+    "commands_before_build": [
+        "echo 'execute commands before build...'",
+        "bash ./builds/coreos-alpha-1632.0.0/build.sh;"
     ],
     "packer": {
         "variables": [
