@@ -1,9 +1,15 @@
 # Created by https://www.gitignore.io/api/java
 
+# ISO file
+*.iso
+
 # Log file
 *.log
 
 # Log Folder
 [Ll]ogs/
+
+# All Packer Cache Folder
+builds/*/packer_cache/
 
 # End of https://www.gitignore.io/api/java

@@ -16,7 +16,7 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
         ],
         "guest_additions_mode": "disable",
-        "headless": "true",
+        "headless": "false",
         "http_directory": "{{user `files_directory`}}",
 
         "boot_command": [
