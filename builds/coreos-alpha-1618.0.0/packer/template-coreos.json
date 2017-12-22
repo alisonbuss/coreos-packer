@@ -1,11 +1,14 @@
 {
+    "min_packer_version": "1.1.3",
+
     "builders": [{
         "type": "virtualbox-iso",
         
         "vm_name": "packer-{{user `name`}}-{{user `release`}}-{{user `version`}}",
-        "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
         "iso_checksum": "",
         "iso_checksum_type": "none",
+        "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
+        "iso_target_path": "{{user `files_directory`}}{{user `name`}}-{{user `release`}}-{{user `version`}}-image.iso",
         "guest_os_type": "Linux26_64",
         
         "hard_drive_interface": "sata",
@@ -29,6 +32,7 @@
             "reboot<enter>"
         ],  
         
+        "communicator": "ssh",
         "ssh_port": 22,
         "ssh_username": "core",
         "ssh_private_key_file": "{{user `vagrant_insecure_private_key`}}",
@@ -47,6 +51,7 @@
     "post-processors": [{
         "type": "vagrant",
         "compression_level": "6",
-        "output": "{{user `output_path`}}{{user `name`}}-{{user `release`}}-vagrant.box"
+        "output": "{{user `output_path`}}{{user `name`}}-{{user `release`}}-vagrant.box",
+        "vagrantfile_template": "./files/Vagrantfile"
     }]
 }

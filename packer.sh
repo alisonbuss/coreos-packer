@@ -76,7 +76,7 @@ function startBuilding {
 
             touch "./packer-templates/source-temp/${package}-min.json"
             {
-                echo '{"variables":'$variables',"builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$postProcessors']}';
+                echo '{"description":"'$description'","variables":'$variables',"builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$postProcessors'],"min_packer_version": "1.1.3"}';
             } > "./packer-templates/source-temp/${package}-min.json"; 
 
             jq . "./packer-templates/source-temp/${package}-min.json" > "./packer-templates/source-temp/${package}.json"

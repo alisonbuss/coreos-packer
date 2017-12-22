@@ -1,0 +1,45 @@
+$ bash build.sh
+virtualbox-iso output will be in this color.
+
+Warnings for build 'virtualbox-iso':
+
+* A checksum type of 'none' was specified. Since ISO files are so big,
+a checksum is highly recommended.
+
+==> virtualbox-iso: Downloading or copying ISO
+    virtualbox-iso: Downloading or copying: file:///mnt/sda2/git-repositories/public/coreos-packer/builds/coreos-alpha-1618.0.0/files/coreos-alpha-1618.0.0.iso
+==> virtualbox-iso: Starting HTTP server on port 8346
+==> virtualbox-iso: Creating virtual machine...
+==> virtualbox-iso: Creating hard drive...
+==> virtualbox-iso: Creating forwarded port mapping for communicator (SSH, WinRM, etc) (host port 3408)
+==> virtualbox-iso: Executing custom VBoxManage commands...
+    virtualbox-iso: Executing: modifyvm packer-coreos-alpha-1618.0.0 --memory 2048
+    virtualbox-iso: Executing: modifyvm packer-coreos-alpha-1618.0.0 --cpus 1
+==> virtualbox-iso: Starting the virtual machine...
+==> virtualbox-iso: Waiting 33s for boot...
+==> virtualbox-iso: Typing the boot command...
+==> virtualbox-iso: Waiting for SSH to become available...
+==> virtualbox-iso: Connected to SSH!
+==> virtualbox-iso: Uploading VirtualBox version info (5.2.2)
+==> virtualbox-iso: Provisioning with shell script: /tmp/packer-shell314331364
+    virtualbox-iso: Hello World!!!
+    virtualbox-iso: Hello CoreOS!!!
+==> virtualbox-iso: Gracefully halting virtual machine...
+==> virtualbox-iso: Preparing to export machine...
+    virtualbox-iso: Deleting forwarded port mapping for the communicator (SSH, WinRM, etc) (host port 3408)
+==> virtualbox-iso: Exporting virtual machine...
+    virtualbox-iso: Executing: export packer-coreos-alpha-1618.0.0 --output packer-coreos-alpha-1618.0.0-virtualbox-iso/packer-coreos-alpha-1618.0.0.ovf
+==> virtualbox-iso: Deregistering and deleting VM...
+==> virtualbox-iso: Running post-processor: vagrant
+==> virtualbox-iso (vagrant): Creating Vagrant box for 'virtualbox' provider
+    virtualbox-iso (vagrant): Copying from artifact: packer-coreos-alpha-1618.0.0-virtualbox-iso/packer-coreos-alpha-1618.0.0-disk001.vmdk
+    virtualbox-iso (vagrant): Copying from artifact: packer-coreos-alpha-1618.0.0-virtualbox-iso/packer-coreos-alpha-1618.0.0.ovf
+    virtualbox-iso (vagrant): Renaming the OVF to box.ovf...
+    virtualbox-iso (vagrant): Compressing: Vagrantfile
+    virtualbox-iso (vagrant): Compressing: box.ovf
+    virtualbox-iso (vagrant): Compressing: metadata.json
+    virtualbox-iso (vagrant): Compressing: packer-coreos-alpha-1618.0.0-disk001.vmdk
+Build 'virtualbox-iso' finished.
+
+==> Builds finished. The artifacts of successful builds are:
+--> virtualbox-iso: 'virtualbox' provider box: ./builds/virtualbox/coreos-muito-louco.box.box

@@ -1,14 +1,7 @@
-
-
-
-
-
-https://github.com/flomotlik/packer-example
-
-
-
 # -*- mode: ruby -*-
 # # vi: set ft=ruby :
+
+#https://github.com/flomotlik/packer-example
 
 require 'fileutils'
 
