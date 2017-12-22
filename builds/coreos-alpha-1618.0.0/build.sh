@@ -7,9 +7,9 @@ function startBuilding {
         -var-file="./packer/variables-vagrant.json" \
         ./packer/template-coreos.json;
     
-
+    vagrant box add a./box/coreos-alpha-vagrant.box;
 } 
 
-startBuilding "$@" #Gerar Logs# | tee -a "./logs/${0##*/}.log";
+startBuilding "$@" | tee -a "./logs/${0##*/}.log";
 
 exit 0;

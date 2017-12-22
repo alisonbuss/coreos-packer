@@ -3,6 +3,9 @@
 # ISO file
 *.iso
 
+# BOX file
+*.box
+
 # Log file
 *.log
 

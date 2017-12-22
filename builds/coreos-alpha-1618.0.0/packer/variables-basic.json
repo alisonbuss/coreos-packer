@@ -1,10 +1,12 @@
 {
-    "name": "packer-coreos",
+    "name": "coreos",
     "release": "alpha",
     "version": "1618.0.0",
-    "files_directory": "files",
-    "ignition": "ignition.json",
+    
     "memory": "2048",
     "cpus": "1",
-    "disk_size": "33666"
+    "disk_size": "33666",
+
+    "files_directory": "./files/",
+    "ignition_name": "ignition.json"
 }
