@@ -7,7 +7,7 @@ function startBuilding {
         -var-file="./packer/variables-vagrant.json" \
         ./packer/template-coreos.json;
     
-    vagrant box add ./box/coreos-alpha-vagrant.box --name "coreos" --box-version "0.0.1";
+    #vagrant box add ./box/coreos-alpha-vagrant.box --name "coreos" --box-version "0.0.1";
 
     #vagrant init coreos;
 
