@@ -1,9 +1,18 @@
 { 
+    "package": "coreos-alpha-template",
+    "build_path": "./builds/packer-coreos-alpha", 
     "packer": {
         "description": "A simple CoreOS alpha for production.",
-        "variables": [
+        "variables": {
+            "name": "coreos",
+            "release": "alpha",
+            "version": "current",
+            "build_path": "./builds/packer-coreos-alpha"
+        },
+        "list_variables": [
+            "./packer/modules/variables/global.json",
+            "./packer/modules/variables/coreos.json",
             "./packer/modules/variables/machine-large.json",
-            "./packer/modules/variables/coreos-alpha.json",
             "./packer/modules/variables/vagrant.json"
         ],
         "builders": [

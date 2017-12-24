@@ -24,9 +24,13 @@ function BuildImages {
     local ACTION=$(util.getParameterValue "(--action=)" "$@");
 
     # @descr: Descrição da Variavel.
+    local PACKAGE_FILE=$(util.getParameterValue "(--package-file=)" "$@");
+
+    # @descr: Descrição da Variavel.
     local WORKING_DIRECTORY=$(util.getParameterValue "(--working-directory=)" "$@");
 
     echo "${ACTION}";
+    echo "${PACKAGE_FILE}";
     echo "${WORKING_DIRECTORY}";
     echo "";
 
@@ -76,7 +80,7 @@ function BuildImages {
     # @fonts: Fontes de referências
     # @param: Parametros (--aa='aaa', --bb='bbb')
     __initialize() {
-        case ${ACTION} in
+        case ${ACTION} in 
             compile) { 
                 __compile; 
             };;
