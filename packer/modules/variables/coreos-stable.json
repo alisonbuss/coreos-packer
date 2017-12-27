@@ -1,9 +1,0 @@
-{
-    "name": "coreos",
-    "release": "stable",
-    "version": "current",
-    "iso_checksum": "",
-    "iso_checksum_type": "none",
-    "files_directory": "./files/",
-    "ignition_name": "ignition.json"
-}
