@@ -1,6 +1,6 @@
 #!/bin/bash
 function StartBuilding {
-    local path="./packages/coreos-alpha-packer/packer";
+    local path="/mnt/sda2/git-repositories/public/coreos-packer/packages/coreos-alpha-packer/packer-template";
     packer build \
 		-var-file="${path}/vars-global.json" \
 		-var-file="${path}/vars-coreos.json" \

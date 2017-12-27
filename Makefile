@@ -23,7 +23,7 @@ PACKAGE_SOURCE_FILE  ?= $(WORKING_DIRECTORY)/coreos-alpha-package.json
 
 PACKAGE_WORKING_DIRECTORY ?= $(BUILD_DIRECTORY)/$(PACKAGE_NAME)
 PACKAGE_COMPILED_DEFAULT_NAME ?= coreos-template
-PACKAGE_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/packer
+PACKAGE_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/packer-template
 
 # DEFAULT VARIABLES - Ignition For CoreOS
 IGNITION_SOURCE_FILE ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
@@ -145,12 +145,12 @@ install:
 # Doc:
 # ......
 clean: 
-	@echo "Iniciando a exclusão dos arquivos do projeto packer $(PACKAGE_NAME)..."; 
-	@echo "--diretorio: $(PACKAGE_WORKING_DIRECTORY)/*"; 
-
-    #@rm -r $(PACKAGE_WORKING_DIRECTORY);
+	@echo "Iniciando a exclusão dos arquivos do projeto packer $(PACKAGE_NAME)...";
+	@echo "--diretorio: $(PACKAGE_WORKING_DIRECTORY)";
 	
-	@echo "Exclusão concluída!!!...";  
+	@rm -rf $(PACKAGE_WORKING_DIRECTORY);
+	
+	@echo "Exclusão concluída!!!..."; 
 
 
 # Doc:
@@ -163,3 +163,5 @@ test-vagrant:
 
 	@echo "Teste executado!!!...";  
 
+
+#.PHONY: clean
