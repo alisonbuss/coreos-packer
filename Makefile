@@ -42,17 +42,12 @@
 WORKING_DIRECTORY  ?= `pwd`
 BUILD_DIRECTORY ?= $(WORKING_DIRECTORY)/packages
 
-# DEFAULT VARIABLES - CoreOS
-COREOS_RELEASE ?= alpha
-COREOS_VERSION ?= current
-
 # VARIABLE MAN!!!!!
 # DEFAULT VARIABLE - PACKAGE!!!
-PACKAGE_NAME ?= coreos-$(COREOS_RELEASE)-packer
-PACKAGE_SOURCE_FILE ?= $(WORKING_DIRECTORY)/coreos-$(COREOS_RELEASE)-package.json
-
-PACKAGE_WORKING_DIRECTORY ?= $(BUILD_DIRECTORY)/$(PACKAGE_NAME)
-PACKAGE_COMPILED_DEFAULT_NAME ?= coreos-template
+PACKAGE_NAME ?= coreos-vagrant
+PACKAGE_SOURCE_FILE ?= $(WORKING_DIRECTORY)/$(PACKAGE_NAME)-package.json
+PACKAGE_WORKING_DIRECTORY ?= $(BUILD_DIRECTORY)/$(PACKAGE_NAME)-packer
+PACKAGE_COMPILED_DEFAULT_NAME ?= $(PACKAGE_NAME)-template
 PACKAGE_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/packer-template
 
 # DEFAULT VARIABLES - Ignition For CoreOS
@@ -73,7 +68,7 @@ COMPILE_PACKAGE_CMD                ?= $(WORKING_DIRECTORY)/support-files/shell-s
 COMPILE_CERTIFICATE_CMD            ?= $(WORKING_DIRECTORY)/support-files/shell-script/cfssl-for-certificates.sh
 COMPILE_COREOS_IGNITION_CMD        ?= $(WORKING_DIRECTORY)/support-files/shell-script/container-linux-config-for-ignition.sh
 CREATE_SHELL_SCRIPT_RUN_PACKER_CMD ?= $(WORKING_DIRECTORY)/support-files/shell-script/create-shell-script-run-packer.sh
-START_BUILDING_PACKER_CMD          ?= $(PACKAGE_WORKING_DIRECTORY)/build.sh
+START_PACKER_CMD                   ?= $(PACKAGE_WORKING_DIRECTORY)/start-packer.sh
 
 # DEFAULT VARIABLES - Vagrant Command-Line Interface (CLI) 
 VAGRANT_CLI ?= up
@@ -112,12 +107,13 @@ plan:
 	@echo "    --> BUILD_PACKAGE_CMD: $(BUILD_PACKAGE_CMD)";
 	@echo "    --> BUILD_CERTIFICATE_CMD: $(BUILD_CERTIFICATE_CMD)";
 	@echo "    --> BUILD_COREOS_IGNITION_CMD: $(BUILD_COREOS_IGNITION_CMD)";
-	@echo "    --> START_BUILDING_PACKER_CMD: $(START_BUILDING_PACKER_CMD)";
+	@echo "    --> START_PACKER_CMD: $(START_PACKER_CMD)";
 	@echo "";
 
 
 compile: 
 	@bash $(COMPILE_PACKAGE_CMD) \
+		--package-name="$(PACKAGE_NAME)" \
 		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
 		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
 		--package-compiled-default-name="$(PACKAGE_COMPILED_DEFAULT_NAME)" \
@@ -125,8 +121,7 @@ compile:
 		--working-directory="$(WORKING_DIRECTORY)";
 
 	@bash $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD) \
-		--coreos-release="$(COREOS_RELEASE)" \
-		--coreos-version="$(COREOS_VERSION)" \
+		--package-name="$(PACKAGE_NAME)" \
 		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
 		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
 		--package-compiled-default-name="$(PACKAGE_COMPILED_DEFAULT_NAME)" \
@@ -162,9 +157,13 @@ compile:
 
 build:
 	@echo "Iniciando o BUILD do projeto packer $(PACKAGE_NAME)..."; 
-	@echo "--script: $(PACKAGE_WORKING_DIRECTORY)/build.sh"; 
+	@echo "--script: $(START_PACKER_CMD)"; 
 
-	@bash $(START_BUILDING_PACKER_CMD);
+	@bash $(START_PACKER_CMD) validate;
+
+	@bash $(START_PACKER_CMD) inspect;
+
+	@bash $(START_PACKER_CMD) build;
 
 	@echo "Construção concluída!!!...";  
 
@@ -176,8 +175,9 @@ install:
 	@echo "Iniciando a instalação do Vagrant Box do projeto packer $(PACKAGE_NAME)..."; 
 	@echo "--box: $(PACKAGE_WORKING_DIRECTORY)/$(PACKAGE_NAME).box"; 
 
-	@vagrant box add --force --provider=virtualbox \
-		--name lucifer/$(PACKAGE_NAME) \
+	@vagrant box list;
+
+	@vagrant box add --force --provider="virtualbox" --name="lucifer/$(PACKAGE_NAME)" \
 		$(PACKAGE_WORKING_DIRECTORY)/$(PACKAGE_NAME).box;
 
 	@echo "Instalação do box vagrant concluída!!!...";  
@@ -187,6 +187,8 @@ clean:
 	@echo "Iniciando a exclusão dos arquivos do projeto packer $(PACKAGE_NAME)...";
 	@echo "--diretorio: $(PACKAGE_WORKING_DIRECTORY)";
 	
+	@vagrant box remove lucifer/$(PACKAGE_NAME);
+
 	@rm -rf $(PACKAGE_WORKING_DIRECTORY);
 	
 	@echo "Exclusão concluída!!!..."; 

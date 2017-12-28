@@ -1,5 +1,0 @@
-{
-    "output_path": "./box/",
-    "vagrant_insecure_private_key": "./files/vagrant_insecure_private_key",
-    "vagrant_insecure_public_key": "./files/vagrant_insecure_public_key.pub"
-}

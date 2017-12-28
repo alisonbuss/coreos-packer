@@ -1,11 +1,11 @@
 {
     "type": "virtualbox-iso",
         
-    "vm_name": "{{user `name`}}-{{user `release`}}-{{user `version`}}-packer",
+    "vm_name": "vm-{{user `name`}}-packer",
     "iso_checksum": "{{user `iso_checksum`}}",
     "iso_checksum_type": "{{user `iso_checksum_type`}}",
     "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
-    "iso_target_path": "{{user `build_path`}}/{{user `name`}}-{{user `release`}}-{{user `version`}}.iso", 
+    "iso_target_path": "{{user `build_path`}}/coreos-{{user `release`}}-{{user `version`}}.iso", 
     "guest_os_type": "Linux26_64",
     
     "hard_drive_interface": "sata",

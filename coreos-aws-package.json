@@ -1,0 +1,23 @@
+{
+    "packer": {
+        "description": "A simple CoreOS on AWS for production.",
+        "override_variables": {
+            "name": "coreos-aws"
+        },
+        "list_variables": [
+            "/packer-modules/variables/vars-global.json",
+            "/packer-modules/variables/vars-coreos.json",
+            "/packer-modules/variables/vars-aws.json"
+        ],
+        "builders": [
+            "/packer-modules/builders/aws.json"
+        ],
+        "provisioners": [
+            "/packer-modules/provisioners/shell-hello-world.json"
+        ],
+        "post_processors": [
+
+        ],
+        "min_packer_version": "1.1.3"
+    }
+}

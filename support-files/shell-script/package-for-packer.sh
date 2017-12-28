@@ -33,6 +33,8 @@ function util.getParameterValue(){
 #    param | json: '{"version":"..."}'
 function StartCompilation {
     # @descr: Descrição da Variavel.
+    local package_name=$(util.getParameterValue "(--package-name=)" "$@"); 
+    # @descr: Descrição da Variavel.
     local package_source_file=$(util.getParameterValue "(--package-source-file=)" "$@");  
     # @descr: Descrição da Variavel.
     local package_working_directory=$(util.getParameterValue "(--package-working-directory=)" "$@");  
