@@ -1,5 +1,5 @@
 {
     "type": "vagrant",
     "compression_level": "6",
-    "output": "{{user `output_path`}}{{user `name`}}-{{user `release`}}-vagrant.box"
+    "output": "{{user `build_path`}}/{{user `vagrant_box_name`}}"
 }

@@ -12,10 +12,10 @@
 # Log Folder
 [Ll]ogs/
 
-# All Packer Cache Folder
-packages/*/packer_cache/
+# All Packer Folder
+packages/*/packer-vm-cache/
 
-# All vagrant Folder
+# All Vagrant Folder
 packages/*/.vagrant/
 
 # End of https://www.gitignore.io/api/java

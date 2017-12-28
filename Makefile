@@ -6,9 +6,35 @@
 #		  http://mindbending.org/pt/makefile-para-java
 #		  https://www.embarcados.com.br/introducao-ao-makefile/		
 # @example:
-#       bash script-example.sh --action='install' --param='{"version":"3.6.66"}'
+#       $ make plan compile build install vagrant
 #   OR
-#       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
+#       $ make plan
+#   OR
+#       $ make compile  
+#   OR
+#       $ make build  
+#   OR
+#       $ make build-force  
+#   OR
+#       $ make install  
+#   OR
+#       $ make clean  
+#   OR
+#       $ make vagrant  
+#   OR
+#       $ make vagrant VAGRANT_CLI="status"  
+#   OR
+#       $ make vagrant VAGRANT_CLI="ssh coreos01.example.com"   
+#   OR
+#       $ make vagrant VAGRANT_CLI="box list"   
+#   OR
+#       $ make vagrant VAGRANT_CLI="global-status"   
+#   OR
+#       $ make vagrant VAGRANT_CLI="destroy"   
+#	OR
+#		$ make plan compile build install vagrant \
+#			  PACKAGE_NAME="coreos-stable-packer" \
+#			  PACKAGE_SOURCE_FILE="./coreos-stable-package.json"
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
@@ -16,10 +42,14 @@
 WORKING_DIRECTORY  ?= `pwd`
 BUILD_DIRECTORY ?= $(WORKING_DIRECTORY)/packages
 
+# DEFAULT VARIABLES - CoreOS
+COREOS_RELEASE ?= alpha
+COREOS_VERSION ?= current
+
 # VARIABLE MAN!!!!!
 # DEFAULT VARIABLE - PACKAGE!!!
-PACKAGE_NAME ?= coreos-alpha-packer
-PACKAGE_SOURCE_FILE  ?= $(WORKING_DIRECTORY)/coreos-alpha-package.json
+PACKAGE_NAME ?= coreos-$(COREOS_RELEASE)-packer
+PACKAGE_SOURCE_FILE ?= $(WORKING_DIRECTORY)/coreos-$(COREOS_RELEASE)-package.json
 
 PACKAGE_WORKING_DIRECTORY ?= $(BUILD_DIRECTORY)/$(PACKAGE_NAME)
 PACKAGE_COMPILED_DEFAULT_NAME ?= coreos-template
@@ -39,14 +69,24 @@ CFSSL_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/files/certificates
 
 # DEFAULT VARIABLES - Building and compiling files for Packer 
 #					 (Construção e compilação de arquivos para o Packer) 
-BUILD_PACKAGE_CMD         ?= $(WORKING_DIRECTORY)/support-files/shell-script/package-for-packer.sh
-BUILD_CERTIFICATE_CMD     ?= $(WORKING_DIRECTORY)/support-files/shell-script/cfssl-for-certificates.sh
-BUILD_COREOS_IGNITION_CMD ?= $(WORKING_DIRECTORY)/support-files/shell-script/container-linux-config-for-ignition.sh
-START_BUILDING_PACKER_CMD ?= $(PACKAGE_WORKING_DIRECTORY)/build.sh
+COMPILE_PACKAGE_CMD                ?= $(WORKING_DIRECTORY)/support-files/shell-script/package-for-packer.sh
+COMPILE_CERTIFICATE_CMD            ?= $(WORKING_DIRECTORY)/support-files/shell-script/cfssl-for-certificates.sh
+COMPILE_COREOS_IGNITION_CMD        ?= $(WORKING_DIRECTORY)/support-files/shell-script/container-linux-config-for-ignition.sh
+CREATE_SHELL_SCRIPT_RUN_PACKER_CMD ?= $(WORKING_DIRECTORY)/support-files/shell-script/create-shell-script-run-packer.sh
+START_BUILDING_PACKER_CMD          ?= $(PACKAGE_WORKING_DIRECTORY)/build.sh
+
+# DEFAULT VARIABLES - Vagrant Command-Line Interface (CLI) 
+VAGRANT_CLI ?= up
+#VAGRANT_CLI ?= status
+#VAGRANT_CLI ?= ssh coreos01.example.com
+#VAGRANT_CLI ?= halt
+#VAGRANT_CLI ?= reload
+#VAGRANT_CLI ?= destroy
+#VAGRANT_CLI ?= validate
+#VAGRANT_CLI ?= box list
+#VAGRANT_CLI ?= global-status
 
 
-# Doc:
-# ......
 plan: 
 	@echo "Exibir plano de execução e seus valores:";
 	@echo "";
@@ -75,24 +115,32 @@ plan:
 	@echo "    --> START_BUILDING_PACKER_CMD: $(START_BUILDING_PACKER_CMD)";
 	@echo "";
 
-# Doc:
-# ......
+
 compile: 
-	@bash $(BUILD_PACKAGE_CMD) \
+	@bash $(COMPILE_PACKAGE_CMD) \
 		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
 		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
 		--package-compiled-default-name="$(PACKAGE_COMPILED_DEFAULT_NAME)" \
 		--package-compiled-directory="$(PACKAGE_COMPILED_DIRECTORY)" \
 		--working-directory="$(WORKING_DIRECTORY)";
 
-	@bash $(BUILD_CERTIFICATE_CMD) \
+	@bash $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD) \
+		--coreos-release="$(COREOS_RELEASE)" \
+		--coreos-version="$(COREOS_VERSION)" \
+		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
+		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
+		--package-compiled-default-name="$(PACKAGE_COMPILED_DEFAULT_NAME)" \
+		--package-compiled-directory="$(PACKAGE_COMPILED_DIRECTORY)" \
+		--working-directory="$(WORKING_DIRECTORY)";
+
+	@bash $(COMPILE_CERTIFICATE_CMD) \
 		--cert-source-file="$(CFSSL_SOURCE_FILE)" \
 		--cert-working-directory="$(CFSSL_WORKING_DIRECTORY)" \
 		--cert-compiled-default-name="$(CFSSL_COMPILED_DEFAULT_NAME)" \
 		--cert-compiled-directory="$(CFSSL_COMPILED_DIRECTORY)" \
 		--working-directory="$(WORKING_DIRECTORY)";
 
-	@bash $(BUILD_COREOS_IGNITION_CMD) \
+	@bash $(COMPILE_COREOS_IGNITION_CMD) \
 		--ignition-source-file="$(IGNITION_SOURCE_FILE)" \
 		--ignition-working-directory="$(IGNITION_WORKING_DIRECTORY)" \
 		--ignition-compiled-default-name="$(IGNITION_COMPILED_DEFAULT_NAME)" \
@@ -112,25 +160,18 @@ compile:
 	@echo "Compilação concluída!!!...";  
 
 
-# Doc:
-# ......
 build:
 	@echo "Iniciando o BUILD do projeto packer $(PACKAGE_NAME)..."; 
 	@echo "--script: $(PACKAGE_WORKING_DIRECTORY)/build.sh"; 
-	@cat "$(PACKAGE_WORKING_DIRECTORY)/build.sh"; 
 
 	@bash $(START_BUILDING_PACKER_CMD);
 
 	@echo "Construção concluída!!!...";  
 
 
-# Doc:
-# ......
 build-force: clean compile build
 	
-
-# Doc:
-# ......		
+		
 install: 
 	@echo "Iniciando a instalação do Vagrant Box do projeto packer $(PACKAGE_NAME)..."; 
 	@echo "--box: $(PACKAGE_WORKING_DIRECTORY)/$(PACKAGE_NAME).box"; 
@@ -142,8 +183,6 @@ install:
 	@echo "Instalação do box vagrant concluída!!!...";  
 
 
-# Doc:
-# ......
 clean: 
 	@echo "Iniciando a exclusão dos arquivos do projeto packer $(PACKAGE_NAME)...";
 	@echo "--diretorio: $(PACKAGE_WORKING_DIRECTORY)";
@@ -153,15 +192,11 @@ clean:
 	@echo "Exclusão concluída!!!..."; 
 
 
-# Doc:
-# ......
-test-vagrant: 
+vagrant: 
 	@echo "Iniciando teste da VM do projeto packer $(PACKAGE_NAME)..."; 
 	@echo "--Vagrantfile: $(PACKAGE_WORKING_DIRECTORY)/Vagrantfile"; 
 
-	VAGRANT_CWD=$(PACKAGE_WORKING_DIRECTORY)/ vagrant up;
+	VAGRANT_CWD=$(PACKAGE_WORKING_DIRECTORY)/ vagrant $(VAGRANT_CLI);
 
 	@echo "Teste executado!!!...";  
 
-
-#.PHONY: clean

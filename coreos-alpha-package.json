@@ -3,10 +3,7 @@
         "description": "A simple CoreOS alpha for production.",
         "override_variables": {
             "name": "coreos",
-            "release": "alpha",
-            "version": "current",
-            "build_path": "/packages/coreos-alpha-packer",
-            "vagrant_box": "coreos-alpha-packer.box"
+            "vagrant_box_name": "coreos-alpha-packer.box"
         },
         "list_variables": [
             "/packer-modules/variables/vars-global.json",

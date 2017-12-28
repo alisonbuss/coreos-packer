@@ -4,6 +4,6 @@
     "version": "current",
     "iso_checksum": "",
     "iso_checksum_type": "none",
-    "ignition_name": "ignition.json",
-    "ignition_directory": "/files/ignitions"
+    "ignition_path": "/files/ignitions/",
+    "ignition_name": "coreos-ignition-for-virtualbox.json"
 }

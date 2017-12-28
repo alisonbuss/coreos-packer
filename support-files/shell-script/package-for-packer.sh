@@ -42,15 +42,13 @@ function StartCompilation {
     local package_compiled_directory=$(util.getParameterValue "(--package-compiled-directory=)" "$@");  
     # @descr: Descrição da Variavel.
     local WORKING_DIRECTORY=$(util.getParameterValue "(--working-directory=)" "$@");
-    
     # @descr: Descrição da Variavel.
     local package_compiled_file="${package_compiled_directory}/${package_compiled_default_name}";  
 
     local packerTemplate=$(cat "${package_source_file}" | jq -c ".packer"); 
+
     local description=$(echo "${packerTemplate}" | jq -r ".description");
     local minPackerVersion=$(echo "${packerTemplate}" | jq -r ".min_packer_version");
-    local overrideVariables="";
-    local listVariables="";
     local builders="";
     local provisioners="";
     local postProcessors="";            
@@ -60,13 +58,11 @@ function StartCompilation {
     mkdir -p "${package_compiled_directory}";
 
     echo "Processando módulo [override_variables]...";
-    echo "${packerTemplate}" | jq -c '.override_variables' > "${package_compiled_directory}/OVERRIDE_VARIABLES.json"
+    echo "${packerTemplate}" | jq -c '.override_variables' > "${package_compiled_directory}/vars-override-variables.json";
 
     echo "Processando módulo [list_variables]..."; 
     for item in $(echo "${packerTemplate}" | jq -r '.list_variables[]'); do
         cp "${WORKING_DIRECTORY}${item}" "${package_compiled_directory}/";
-        local nameVariable=$(basename ${WORKING_DIRECTORY}${item});
-        listVariables+='\\n\t\t-var-file="${path}/'${nameVariable}'" \'; 
     done 
 
     echo "Processando módulo [builders]...";
@@ -108,51 +104,6 @@ function StartCompilation {
 
     echo "Convertendo o template packer em modo [source]";  
     jq . "${package_compiled_file}-min.json" > "${package_compiled_file}.json";
-
-    echo "Validando template packer [minified]";  
-    packer validate "${package_compiled_file}-min.json";
-
-    echo "Validando template packer [source]";  
-    packer validate "${package_compiled_file}.json";
-
-    echo "Iniciando a criação do arquivo build.sh para packer";  
-    echo "--para o diretorio: ${package_working_directory}"; 
-    touch "${package_working_directory}/build.sh"
-    {
-        echo -e '#!/bin/bash';
-        echo -e 'function StartBuilding {';
-        echo -e '    local path="'${package_compiled_directory}'";';
-        echo -e '    packer build \'$listVariables'';
-        echo -e '        -var-file="${path}/OVERRIDE_VARIABLES.json" \';
-        echo -e '        "${path}/'${package_compiled_default_name}'.json";';
-        echo -e '}';
-        echo -e 'StartBuilding "$@";';
-        echo -e 'exit 0;';
-    } > "${package_working_directory}/build.sh";
-
-    echo "Iniciando a criação do arquivo README.md";  
-    echo "--para o diretorio: ${package_working_directory}"; 
-    touch "${package_working_directory}/README.md"
-    {
-        echo '# coreos-packer';
-        echo '## Projero Gerado pelo Package';
-        echo '   ';
-        echo '### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).   ';
-        echo '   ';
-        echo '**Descrição:**';
-        echo '#### '$description' ';
-        echo '   ';
-        echo '**Variaveis sobrescritas:** (OVERRIDE_VARIABLES.json)';
-        echo '```json';
-        cat ${package_compiled_directory}/OVERRIDE_VARIABLES.json
-        echo '```   ';
-        echo '   ';
-        echo '**Script de execução:**';
-        echo '```bash';
-        cat ${package_working_directory}/build.sh
-        echo '```   ';
-        echo '   ';
-    } > "${package_working_directory}/README.md";
 
 } 
 

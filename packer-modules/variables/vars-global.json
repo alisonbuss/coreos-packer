@@ -1,6 +1,3 @@
 {
-    "home": "{{env `HOME`}}",
-    "home_packer_path": "{{env `HOME`}}/.packer",
-    "working_directory": "{{pwd}}",
     "build_path": "./"
 }
