@@ -66,38 +66,14 @@ function StartCompilation {
 
     echo "Iniciando a criação do arquivo build.sh para packer";  
     echo "--para o diretorio: ${package_working_directory}"; 
-    touch "${package_working_directory}/start-packer.sh"
+    touch "${package_working_directory}/README.md"
     {
-        echo -e '#!/bin/bash';
-        echo -e 'function StartPacker {';
-        echo -e '    local params="$@";';
-        echo -e '    local coreos_release="'${coreos_release}'";';
-        echo -e '    local coreos_version="'${coreos_version}'";';
-        echo -e '    local coreos_url_iso="http://${coreos_release}.release.core-os.net/amd64-usr/${coreos_version}/coreos_production_iso_image.iso";';
-        echo -e '    local coreos_url_digests="${coreos_url_iso}.DIGESTS";';
-        echo -e '    local coreos_iso_checksum_type="SHA512";';
-        echo   $'    local coreos_iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk \'{ print length, $1 | "sort -rg"}\' | awk \'NR == 1 { print $2 }\');';   
-        echo -e '    local package_working_directory="'${package_working_directory}'";';
-        echo -e '    local package_template_directory="'${package_compiled_directory}'";';
-        echo -e '    __run_packer() {';
-        echo -e '        packer "$@" \'$list_variables'';
-        echo -e '            -var "release=${coreos_release}" \';
-        echo -e '            -var "version=${coreos_version}" \';
-        echo -e '            -var "iso_checksum_type=${coreos_iso_checksum_type}" \';
-        echo -e '            -var "iso_checksum=${coreos_iso_checksum}" \';
-        echo -e '            -var "build_path=${package_working_directory}" \';
-        echo -e '            -var-file="${package_template_directory}/vars-override-variables.json" \';
-        echo -e '            "${package_template_directory}/'${package_compiled_name}'-min.json";';
-        echo -e '    }';
-        echo -e '    case $params in';
-        echo -e '        validate) { __run_packer validate; };;';
-        echo -e '        build)    { __run_packer build; };;';
-        echo -e '        *)        { packer "$@"; };;';
-        echo -e '    esac';
-        echo -e '}';
-        echo -e 'StartPacker "$@";';
-        echo -e 'exit 0;';
-    } > "${package_working_directory}/start-packer.sh";
+        echo "";
+        echo "";
+        echo "";
+        echo "";
+        echo "";
+    } > "${package_working_directory}/README.md";
 
 } 
 

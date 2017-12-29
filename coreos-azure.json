@@ -1,0 +1,26 @@
+{
+    "packer_modules": "/packer-modules",
+    "packer_template": {
+        "description": "CoreOS stable image for a Azure platform.",
+        "override_variables": {
+            "name": "coreos",
+            "release": "stable",
+            "version": "current"
+        },
+        "list_variables": [
+            "/variables/vars-global.json",
+            "/variables/vars-coreos.json",
+            "/variables/vars-azure.json"
+        ],
+        "builders": [
+            "/builders/azure.json"
+        ],
+        "provisioners": [
+            "/provisioners/shell-hello-world.json"
+        ],
+        "post_processors": [
+
+        ],
+        "min_packer_version": "1.1.3"
+    }
+}

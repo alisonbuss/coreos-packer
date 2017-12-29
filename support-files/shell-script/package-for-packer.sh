@@ -9,7 +9,6 @@
 #       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
 #-------------------------------------------------------------#
 
-# @descr: get parameter value
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
 # @example:
 #    $ util.getParameterValue "(--param3=|-p3=)" "$@"
@@ -33,44 +32,44 @@ function util.getParameterValue(){
 #    param | json: '{"version":"..."}'
 function StartCompilation {
     # @descr: Descrição da Variavel.
-    local package_name=$(util.getParameterValue "(--package-name=)" "$@"); 
+    local source_file=$(util.getParameterValue "(--source-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local package_source_file=$(util.getParameterValue "(--package-source-file=)" "$@");  
+    local compiled_name=$(util.getParameterValue "(--compiled-name=)" "$@");  
+    # @descr: Descrição da Variavel.
+    local compiled_directory=$(util.getParameterValue "(--compiled-directory=)" "$@");  
     # @descr: Descrição da Variavel.
     local package_working_directory=$(util.getParameterValue "(--package-working-directory=)" "$@");  
     # @descr: Descrição da Variavel.
-    local package_compiled_default_name=$(util.getParameterValue "(--package-compiled-default-name=)" "$@");  
+    local main_working_directory=$(util.getParameterValue "(--main-working-directory=)" "$@");  
+    
     # @descr: Descrição da Variavel.
-    local package_compiled_directory=$(util.getParameterValue "(--package-compiled-directory=)" "$@");  
+    local packer_modules=$(cat "${source_file}" | jq -r ".packer_modules"); 
     # @descr: Descrição da Variavel.
-    local WORKING_DIRECTORY=$(util.getParameterValue "(--working-directory=)" "$@");
+    local packer_template=$(cat "${source_file}" | jq -c ".packer_template"); 
     # @descr: Descrição da Variavel.
-    local package_compiled_file="${package_compiled_directory}/${package_compiled_default_name}";  
-
-    local packerTemplate=$(cat "${package_source_file}" | jq -c ".packer"); 
-
-    local description=$(echo "${packerTemplate}" | jq -r ".description");
-    local minPackerVersion=$(echo "${packerTemplate}" | jq -r ".min_packer_version");
-    local builders="";
-    local provisioners="";
-    local postProcessors="";            
+    local description=$(echo "${packer_template}" | jq -r ".description");
+    # @descr: Descrição da Variavel.
+    local min_packer_version=$(echo "${packer_template}" | jq -r ".min_packer_version");
+         
+    packer_modules="${main_working_directory}${packer_modules}";
 
     echo "Criando diretorio de compilação do packer...";  
-    echo "--diretorio: ${package_compiled_directory}";  
-    mkdir -p "${package_compiled_directory}";
+    echo "--diretorio: ${compiled_directory}";  
+    mkdir -p "${compiled_directory}";
 
     echo "Processando módulo [override_variables]...";
-    echo "${packerTemplate}" | jq -c '.override_variables' > "${package_compiled_directory}/vars-override-variables.json";
+    echo "${packer_template}" | jq -c '.override_variables' > "${compiled_directory}/vars-override-variables.json";
 
     echo "Processando módulo [list_variables]..."; 
-    for item in $(echo "${packerTemplate}" | jq -r '.list_variables[]'); do
-        cp "${WORKING_DIRECTORY}${item}" "${package_compiled_directory}/";
+    for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
+        cp "${packer_modules}${variableJSON}" "${compiled_directory}/";
     done 
 
     echo "Processando módulo [builders]...";
-    local size=$(echo "${packerTemplate}" | jq ".builders | length");
-    for item in $(echo "${packerTemplate}" | jq -r '.builders[]'); do
-        builders+=$(cat ${WORKING_DIRECTORY}${item}); 
+    local builders="";
+    local size=$(echo "${packer_template}" | jq ".builders | length");
+    for builderJSON in $(echo "${packer_template}" | jq -r '.builders[]'); do
+        builders+=$(cat ${packer_modules}${builderJSON}); 
         if [ $size -gt 1 ]; then
             builders+=",";
             size=$(($size-1)); 
@@ -78,9 +77,10 @@ function StartCompilation {
     done 
 
     echo "Processando módulo [provisioners]...";
-    local size=$(echo "${packerTemplate}" | jq ".provisioners | length");
-    for item in $(echo "${packerTemplate}" | jq -r '.provisioners[]'); do
-        provisioners+=$(cat ${WORKING_DIRECTORY}${item}); 
+    local provisioners="";
+    local size=$(echo "${packer_template}" | jq ".provisioners | length");
+    for provisionerJSON in $(echo "${packer_template}" | jq -r '.provisioners[]'); do
+        provisioners+=$(cat ${packer_modules}${provisionerJSON}); 
         if [ $size -gt 1 ]; then
             provisioners+=",";
             size=$(($size-1)); 
@@ -88,24 +88,25 @@ function StartCompilation {
     done 
 
     echo "Processando módulo [post_processors]...";
-    local size=$(echo "${packerTemplate}" | jq ".post_processors | length");
-    for item in $(echo "${packerTemplate}" | jq -r '.post_processors[]'); do
-        postProcessors+=$(cat ${WORKING_DIRECTORY}${item}); 
+    local post_processors="";      
+    local size=$(echo "${packer_template}" | jq ".post_processors | length");
+    for post_processorJSON in $(echo "${packer_template}" | jq -r '.post_processors[]'); do
+        post_processors+=$(cat ${packer_modules}${post_processorJSON}); 
         if [ $size -gt 1 ]; then
-            postProcessors+=",";
+            post_processors+=",";
             size=$(($size-1)); 
         fi
     done 
 
     echo "Iniciando a compilação do package para packer...";  
-    echo "--para o diretorio: ${package_compiled_directory}"; 
-    touch "${package_compiled_file}-min.json"
+    echo "--para o diretorio: ${compiled_directory}"; 
+    touch "${compiled_directory}/${compiled_name}-min.json"
     {
-        echo '{"description":"'$description'","builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$postProcessors'],"min_packer_version": "'${minPackerVersion}'"}';
-    } > "${package_compiled_file}-min.json"; 
+        echo '{"description":"'$description'","builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$post_processors'],"min_packer_version": "'${min_packer_version}'"}';
+    } > "${compiled_directory}/${compiled_name}-min.json"; 
 
     echo "Convertendo o template packer em modo [source]";  
-    jq . "${package_compiled_file}-min.json" > "${package_compiled_file}.json";
+    jq . "${compiled_directory}/${compiled_name}-min.json" > "${compiled_directory}/${compiled_name}.json";
 
 } 
 

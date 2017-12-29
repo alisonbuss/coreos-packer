@@ -1,0 +1,36 @@
+{
+    "packer_modules": "/packer-modules",
+    "packer_template": {
+        "description": "CoreOS stable image for all platform.",
+        "override_variables": {
+            "name": "coreos",
+            "release": "stable",
+            "version": "current"
+        },
+        "list_variables": [
+            "/variables/vars-global.json",
+            "/variables/vars-coreos.json",
+            "/variables/vars-machine-medium.json",
+            "/variables/vars-vagrant.json",
+            "/variables/vars-aws.json",
+            "/variables/vars-azure.json",
+            "/variables/vars-digitalocean.json",
+            "/variables/vars-google.json"
+        ],
+        "builders": [
+            "/builders/vagrant.json",
+            "/builders/aws.json",
+            "/builders/azure.json",
+            "/builders/digitalocean.json",
+            "/builders/google.json"
+        ],
+        "provisioners": [
+            "/provisioners/shell-hello-world.json"
+        ],
+        "post_processors": [
+            "/post-processors/vagrant-box.json",
+            "/post-processors/vagrant-box-cloud.json"
+        ],
+        "min_packer_version": "1.1.3"
+    }
+}

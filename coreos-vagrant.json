@@ -1,0 +1,27 @@
+{
+    "packer_modules": "/packer-modules",
+    "packer_template": {
+        "description": "CoreOS alpha image for a Vagrant platform.",
+        "override_variables": {
+            "name": "coreos",
+            "release": "alpha",
+            "version": "1632.0.0"
+        },
+        "list_variables": [
+            "/variables/vars-global.json",
+            "/variables/vars-coreos.json",
+            "/variables/vars-machine-large.json",
+            "/variables/vars-vagrant.json"
+        ],
+        "builders": [
+            "/builders/vagrant.json"
+        ],
+        "provisioners": [
+            "/provisioners/shell-hello-world.json"
+        ],
+        "post_processors": [
+            "/post-processors/vagrant-box.json"
+        ],
+        "min_packer_version": "1.1.3"
+    }
+}

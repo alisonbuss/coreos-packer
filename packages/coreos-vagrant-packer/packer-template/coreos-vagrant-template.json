@@ -1,9 +1,9 @@
 {
-  "description": "A simple CoreOS in VM Vagrant for production.",
+  "description": "CoreOS alpha image for a Vagrant platform.",
   "builders": [
     {
       "type": "virtualbox-iso",
-      "vm_name": "{{user `name`}}-packer",
+      "vm_name": "vm-{{user `name`}}-packer",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
