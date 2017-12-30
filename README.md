@@ -1,4 +1,8 @@
 
+## Unstable design !!!
+
+## Status: in development very crazy... rsrsrs ....
+
 # coreos-packer
 
 ### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
@@ -16,18 +20,6 @@ Inspired by [packer-qemu-coreos-container-linux](https://github.com/dyson/packer
 Inspired by [kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)
 
 Official Documentation: [Packer Documentation](https://www.packer.io/docs/index.html)
-
-
-
-
-
-## Unstable design !!!
-
-## Status: in development very crazy... rsrsrs ....
-
-
-
-
 
 ### Referências:
 
