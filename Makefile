@@ -33,43 +33,46 @@
 #       $ make vagrant VAGRANT_CLI="destroy"   
 #	OR
 #		$ make plan compile build install vagrant \
-#			  PACKAGE_NAME="coreos-stable-packer" \
-#			  PACKAGE_SOURCE_FILE="./coreos-stable-package.json"
+#			  NEW_MODEL_NAME="coreos-vagrant" \
+#			  NEW_MODEL_SOURCE_FILE="./coreos-vagrant.json"
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
-#MAIN_WORKING_DIRECTORY ?= .
-MAIN_WORKING_DIRECTORY ?= `pwd`
-BUILD_DIRECTORY ?= $(MAIN_WORKING_DIRECTORY)/packages
+WORKING_DIRECTORY   ?= .
+#WORKING_DIRECTORY  ?= `pwd`
+PACKER_BUILD_PATH   ?= $(WORKING_DIRECTORY)/packer-builds
+PACKER_MODULES_PATH ?= $(WORKING_DIRECTORY)/packer-modules
 
 # VARIABLE MAN!!!!!
-# DEFAULT VARIABLE - PACKAGE!!!
-PACKAGE_NAME ?= coreos-aws
-PACKAGE_SOURCE_FILE ?= $(MAIN_WORKING_DIRECTORY)/$(PACKAGE_NAME).json
-PACKAGE_WORKING_DIRECTORY ?= $(BUILD_DIRECTORY)/$(PACKAGE_NAME)-packer
-PACKAGE_COMPILED_NAME ?= $(PACKAGE_NAME)-template
-PACKAGE_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/packer-template
+# DEFAULT VARIABLE - NEW NEW_MODEL!!! to be compiled!!!
+NEW_MODEL_NAME ?= coreos-vagrant
+
+NEW_MODEL_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/$(NEW_MODEL_NAME).json
+NEW_MODEL_BUILD_PATH    ?= $(PACKER_BUILD_PATH)/$(NEW_MODEL_NAME)-packer
+NEW_MODEL_COMPILED_NAME ?= $(NEW_MODEL_NAME)-template
+NEW_MODEL_COMPILED_PATH ?= $(NEW_MODEL_BUILD_PATH)/packer-template
+NEW_MODEL_OUTPUT_FILE   ?= $(NEW_MODEL_COMPILED_PATH)/$(NEW_MODEL_COMPILED_NAME).json
+
+# DEFAULT VARIABLE - CoreOS!!!
+COREOS_RELEASE ?= stable
+COREOS_VERSION ?= current
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE ?= $(MAIN_WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
-IGNITION_WORKING_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)
+IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
+IGNITION_BUILD_PATH    ?= $(NEW_MODEL_BUILD_PATH)/files/ignitions
 IGNITION_COMPILED_NAME ?= coreos-ignition
-IGNITION_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/files/ignitions
 
 # DEFAULT VARIABLES - Certificates CFSSL
-CFSSL_SOURCE_FILE ?= $(MAIN_WORKING_DIRECTORY)/support-files/certificates/setting.json
-CFSSL_WORKING_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)
-CFSSL_COMPILED_NAME ?= coreos-cert
-CFSSL_COMPILED_DIRECTORY ?= $(PACKAGE_WORKING_DIRECTORY)/files/certificates
+CFSSL_BUILD_PATH ?= $(NEW_MODEL_BUILD_PATH)/files/certificates
 
 # DEFAULT VARIABLES - Building and compiling files for Packer 
 #					 (Construção e compilação de arquivos para o Packer) 
-COMPILE_PACKAGE_CMD                ?= $(MAIN_WORKING_DIRECTORY)/support-files/shell-script/package-for-packer.sh
-COMPILE_CERTIFICATE_CMD            ?= $(MAIN_WORKING_DIRECTORY)/support-files/shell-script/cfssl-for-certificates.sh
-COMPILE_COREOS_IGNITION_CMD        ?= $(MAIN_WORKING_DIRECTORY)/support-files/shell-script/container-linux-config-for-ignition.sh
-CREATE_SHELL_SCRIPT_RUN_PACKER_CMD ?= $(MAIN_WORKING_DIRECTORY)/support-files/shell-script/create-shell-script-run-packer.sh
-CREATE_DOCUMENTATION_PACKER_CMD	   ?= $(MAIN_WORKING_DIRECTORY)/support-files/shell-script/create-documentation-packer.sh
-START_PACKER_CMD                   ?= $(PACKAGE_WORKING_DIRECTORY)/start-packer.sh
+COMPILE_NEW_MODEL_FOR_PACKER_CMD   ?= $(WORKING_DIRECTORY)/support-files/shell-script/compile-new-model-for-packer.sh
+COMPILE_CONFIG_IGNITION_CMD        ?= $(WORKING_DIRECTORY)/support-files/shell-script/compile-container-linux-config.sh
+COMPILE_CERTIFICATE_CMD            ?= $(WORKING_DIRECTORY)/support-files/shell-script/compile-cfssl-certificates.sh
+CREATE_SHELL_SCRIPT_RUN_PACKER_CMD ?= $(WORKING_DIRECTORY)/support-files/shell-script/create-shell-script-run-packer.sh
+CREATE_DOCUMENTATION_PACKER_CMD	   ?= $(WORKING_DIRECTORY)/support-files/shell-script/create-documentation-packer.sh
+START_PACKER_CMD                   ?= $(NEW_MODEL_BUILD_PATH)/start-packer.sh
 
 # DEFAULT VARIABLES - Vagrant Command-Line Interface (CLI) 
 VAGRANT_CLI ?= up
@@ -82,87 +85,88 @@ VAGRANT_CLI ?= up
 #VAGRANT_CLI ?= box list
 #VAGRANT_CLI ?= global-status
 
-
 plan: 
 	@echo "The default values to be used by this Makefile:";
 	@echo "";
-	@echo "    --> MAIN_WORKING_DIRECTORY: $(MAIN_WORKING_DIRECTORY)";
-	@echo "    --> BUILD_DIRECTORY: $(BUILD_DIRECTORY)";
+	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
+	@echo "    --> PACKER_BUILD_PATH: $(PACKER_BUILD_PATH)";
+	@echo "    --> PACKER_MODULES_PATH: $(PACKER_MODULES_PATH)";
 	@echo "";
-	@echo "    --> PACKAGE_NAME: $(PACKAGE_NAME)";
-	@echo "    --> PACKAGE_SOURCE_FILE: $(PACKAGE_SOURCE_FILE)";
-	@echo "    --> PACKAGE_WORKING_DIRECTORY: $(PACKAGE_WORKING_DIRECTORY)";
-	@echo "    --> PACKAGE_COMPILED_NAME: $(PACKAGE_COMPILED_NAME)";
-	@echo "    --> PACKAGE_COMPILED_DIRECTORY: $(PACKAGE_COMPILED_DIRECTORY)";
+	@echo "    --> NEW_MODEL_NAME: $(NEW_MODEL_NAME)";
+	@echo "    --> NEW_MODEL_BUILD_PATH: $(NEW_MODEL_BUILD_PATH)";
+	@echo "    --> NEW_MODEL_COMPILED_NAME: $(NEW_MODEL_COMPILED_NAME)";
+	@echo "    --> NEW_MODEL_COMPILED_PATH: $(NEW_MODEL_COMPILED_PATH)";
+	@echo "    --> NEW_MODEL_SOURCE_FILE: $(NEW_MODEL_SOURCE_FILE)";
+	@echo "    --> NEW_MODEL_OUTPUT_FILE: $(NEW_MODEL_OUTPUT_FILE)";
+	@echo "";
+	@echo "    --> COREOS_RELEASE: $(COREOS_RELEASE)";
+	@echo "    --> COREOS_VERSION: $(COREOS_VERSION)";
 	@echo "";
 	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
-	@echo "    --> IGNITION_WORKING_DIRECTORY: $(IGNITION_WORKING_DIRECTORY)";
+	@echo "    --> IGNITION_BUILD_PATH: $(IGNITION_BUILD_PATH)";
 	@echo "    --> IGNITION_COMPILED_NAME: $(IGNITION_COMPILED_NAME)";
-	@echo "    --> IGNITION_COMPILED_DIRECTORY: $(IGNITION_COMPILED_DIRECTORY)";
 	@echo "";
-	@echo "    --> CFSSL_SOURCE_FILE: $(CFSSL_SOURCE_FILE)";
-	@echo "    --> CFSSL_WORKING_DIRECTORY: $(CFSSL_WORKING_DIRECTORY)";
-	@echo "    --> CFSSL_COMPILED_NAME: $(CFSSL_COMPILED_NAME)";
-	@echo "    --> CFSSL_COMPILED_DIRECTORY: $(CFSSL_COMPILED_DIRECTORY)";
+	@echo "    --> CFSSL_BUILD_PATH: $(CFSSL_BUILD_PATH)";
 	@echo "";
-	@echo "    --> COMPILE_PACKAGE_CMD: $(COMPILE_PACKAGE_CMD)";
+	@echo "    --> COMPILE_NEW_MODEL_FOR_PACKER_CMD: $(COMPILE_NEW_MODEL_FOR_PACKER_CMD)";
+	@echo "    --> COMPILE_CONFIG_IGNITION_CMD: $(COMPILE_CONFIG_IGNITION_CMD)";
 	@echo "    --> COMPILE_CERTIFICATE_CMD: $(COMPILE_CERTIFICATE_CMD)";
-	@echo "    --> COMPILE_COREOS_IGNITION_CMD: $(COMPILE_COREOS_IGNITION_CMD)";
 	@echo "    --> CREATE_SHELL_SCRIPT_RUN_PACKER_CMD: $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD)";
+	@echo "    --> CREATE_DOCUMENTATION_PACKER_CMD: $(CREATE_DOCUMENTATION_PACKER_CMD)";
 	@echo "    --> START_PACKER_CMD: $(START_PACKER_CMD)";
 	@echo "";
 
 
 compile: 
-	@bash $(COMPILE_PACKAGE_CMD) \
-		--source-file="$(PACKAGE_SOURCE_FILE)" \
-		--compiled-name="$(PACKAGE_COMPILED_NAME)" \
-		--compiled-directory="$(PACKAGE_COMPILED_DIRECTORY)" \
-		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
-		--main-working-directory="$(MAIN_WORKING_DIRECTORY)";
+	@bash $(COMPILE_NEW_MODEL_FOR_PACKER_CMD) \
+		--source-file="$(NEW_MODEL_SOURCE_FILE)" \
+		--output-file="$(NEW_MODEL_OUTPUT_FILE)" \
+		--packer-modules="$(PACKER_MODULES_PATH)";
 
 	@bash $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD) \
-		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
-		--package-compiled-name="$(PACKAGE_COMPILED_NAME)" \
-		--package-compiled-directory="$(PACKAGE_COMPILED_DIRECTORY)" \
-		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
-		--main-working-directory="$(MAIN_WORKING_DIRECTORY)";
+		--new-model-source-file="$(NEW_MODEL_SOURCE_FILE)" \
+		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
+		--new-model-build-path="$(NEW_MODEL_BUILD_PATH)" \
+		--packer-modules="$(PACKER_MODULES_PATH)" \
+		--coreos-release="$(COREOS_RELEASE)" \
+		--coreos-version="$(COREOS_VERSION)";
 
 	@bash $(CREATE_DOCUMENTATION_PACKER_CMD) \
-		--package-source-file="$(PACKAGE_SOURCE_FILE)" \
-		--package-compiled-name="$(PACKAGE_COMPILED_NAME)" \
-		--package-compiled-directory="$(PACKAGE_COMPILED_DIRECTORY)" \
-		--package-working-directory="$(PACKAGE_WORKING_DIRECTORY)" \
-		--main-working-directory="$(MAIN_WORKING_DIRECTORY)";
+		--new-model-source-file="$(NEW_MODEL_SOURCE_FILE)" \
+		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
+		--new-model-build-path="$(NEW_MODEL_BUILD_PATH)" \
+		--packer-modules="$(PACKER_MODULES_PATH)";
 
-	@bash $(COMPILE_COREOS_IGNITION_CMD) \
+	@bash $(COMPILE_CONFIG_IGNITION_CMD) \
 		--source-file="$(IGNITION_SOURCE_FILE)" \
+		--build-path="$(IGNITION_BUILD_PATH)" \
 		--compiled-name="$(IGNITION_COMPILED_NAME)" \
-		--compiled-directory="$(IGNITION_COMPILED_DIRECTORY)" \
-		--platforms="'packet' 'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure'";
+		--platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+
+	@echo "Copiando arquivos dos provisionadores..."; 
+	@echo "--fonte..: $(WORKING_DIRECTORY)/provisioners"; 
+	@echo "--destino: $(NEW_MODEL_BUILD_PATH)"; 
+	@cp -r "$(WORKING_DIRECTORY)/provisioners" "$(NEW_MODEL_BUILD_PATH)/"; 
 
 	@echo "Copiando arquivo do Vagrantfile..."; 
-	@echo "--fonte:   $(MAIN_WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 
-	@echo "--destino: $(PACKAGE_WORKING_DIRECTORY)/Vagrantfile"; 
-	@cp "$(MAIN_WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile" "$(PACKAGE_WORKING_DIRECTORY)/"; 
+	@echo "--fonte..: $(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 
+	@echo "--destino: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
+	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile" "$(NEW_MODEL_BUILD_PATH)/"; 
 
 	@echo "Copiando chave privada SSH do Vagrant..."; 
-	@echo "--fonte:   $(MAIN_WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 
-	@echo "--destino: $(PACKAGE_WORKING_DIRECTORY)/files/vagrant_insecure_private_key"; 
-	@cp "$(MAIN_WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key" "$(PACKAGE_WORKING_DIRECTORY)/files";
+	@echo "--fonte..: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 
+	@echo "--destino: $(NEW_MODEL_BUILD_PATH)/files/vagrant_insecure_private_key"; 
+	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key" "$(NEW_MODEL_BUILD_PATH)/files";
 
 	@echo "Compilação concluída!!!...";  
 
 
 build:
-	@echo "Iniciando o BUILD do projeto packer $(PACKAGE_NAME)..."; 
+	@echo "Iniciando o BUILD do projeto packer [$(NEW_MODEL_NAME)]..."; 
 	@echo "--script: $(START_PACKER_CMD)"; 
 
 	@bash $(START_PACKER_CMD) validate;
-
-	@bash $(START_PACKER_CMD) inspect \
-		$(PACKAGE_COMPILED_DIRECTORY)/$(PACKAGE_COMPILED_NAME).json;
-
+	@bash $(START_PACKER_CMD) inspect $(NEW_MODEL_OUTPUT_FILE).json;
 	@bash $(START_PACKER_CMD) build;
 
 	@echo "Construção concluída!!!...";  
@@ -172,33 +176,44 @@ build-force: clean compile build
 	
 		
 install: 
-	@echo "Iniciando a instalação do Vagrant Box do projeto packer $(PACKAGE_NAME)..."; 
-	@echo "--box: $(PACKAGE_WORKING_DIRECTORY)/$(PACKAGE_NAME).box"; 
+	@echo "Iniciando a instalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
 
 	@vagrant box list;
 
-	@vagrant box add --force --provider="virtualbox" --name="lucifer/$(PACKAGE_NAME)" \
-		$(PACKAGE_WORKING_DIRECTORY)/coreos-vagrant.box;
+	@vagrant box add --force \
+					 --provider="virtualbox" \
+					 --name="lucifer/$(NEW_MODEL_NAME)" \
+					 $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box;
 
-	@echo "Instalação do box vagrant concluída!!!...";  
+	@echo "Instalação do vagrant box concluída!!!...";  
 
 
 clean: 
-	@echo "Iniciando a exclusão dos arquivos do projeto packer $(PACKAGE_NAME)...";
-	@echo "--diretorio: $(PACKAGE_WORKING_DIRECTORY)";
+	@echo "Iniciando a exclusão dos arquivos do projeto packer [$(NEW_MODEL_NAME)]...";
+	@echo "--diretorio: $(NEW_MODEL_BUILD_PATH)";
 	
-	@vagrant box remove lucifer/$(PACKAGE_NAME);
+	@vagrant box remove lucifer/$(NEW_MODEL_NAME);
 
-	@rm -rf $(PACKAGE_WORKING_DIRECTORY);
+	@rm -rf $(NEW_MODEL_BUILD_PATH);
+	
+	@echo "Exclusão concluída!!!..."; 
+
+
+clean-force: 
+	@echo "Iniciando a exclusão dos arquivos de BUILDs";
+	@echo "--diretorio: $(PACKER_BUILD_PATH)";
+
+	@rm -rf $(PACKER_BUILD_PATH);
 	
 	@echo "Exclusão concluída!!!..."; 
 
 
 vagrant: 
-	@echo "Iniciando teste da VM do projeto packer $(PACKAGE_NAME)..."; 
-	@echo "--Vagrantfile: $(PACKAGE_WORKING_DIRECTORY)/Vagrantfile"; 
+	@echo "Iniciando teste vagrant do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 
-	VAGRANT_CWD=$(PACKAGE_WORKING_DIRECTORY)/ vagrant $(VAGRANT_CLI);
+	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant $(VAGRANT_CLI);
 
 	@echo "Teste executado!!!...";  
 

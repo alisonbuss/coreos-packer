@@ -34,20 +34,21 @@ function StartCompilation {
     # @descr: Descrição da Variavel.
     local source_file=$(util.getParameterValue "(--source-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local compiled_name=$(util.getParameterValue "(--compiled-name=)" "$@");  
+    local build_path=$(util.getParameterValue "(--build-path=)" "$@");  
     # @descr: Descrição da Variavel.
-    local compiled_directory=$(util.getParameterValue "(--compiled-directory=)" "$@");  
+    local compiled_name=$(util.getParameterValue "(--compiled-name=)" "$@");  
     # @descr: Descrição da Variavel.
     local platforms=$(util.getParameterValue "(--platforms=)" "$@");  
     # @descr: Descrição da Variavel.
-    local compiled_file="${compiled_directory}/${compiled_name}";  
+    local compiled_file="${build_path}/${compiled_name}";  
 
     echo "Criando diretorio de compilação do ignitions...";  
-    echo "--diretorio: ${compiled_directory}";  
-    mkdir -p "${compiled_directory}";
+    echo "--diretorio: ${build_path}";  
+    mkdir -p "${build_path}";
 
     echo "Compilando o 'Container Linux Config' para 'ignition'...";  
-    echo "--Para as plataformas: [${platforms[@]}]"; 
+    echo "--plataformas: [${platforms[@]}]"; 
+    echo ""; 
 
     echo "Converting to (no-platform)...";
     ct -in-file "${source_file}" -out-file "${compiled_file}.json" --pretty;

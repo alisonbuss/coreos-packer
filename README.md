@@ -17,7 +17,19 @@ Inspired by [kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes
 
 Official Documentation: [Packer Documentation](https://www.packer.io/docs/index.html)
 
-## Referências:
+
+
+
+
+## Unstable design !!!
+
+## Status: in development very crazy... rsrsrs ....
+
+
+
+
+
+### Referências:
 
 * ChurrOps on DevOps, Blog. ***[Packer] Customizando e automatizando suas imagens – Parte 1***
   Acessado: *17 de Dezembro de 2017*.
@@ -79,3 +91,26 @@ Official Documentation: [Packer Documentation](https://www.packer.io/docs/index.
 * BLAZED’S TECH, Blog. ***CoreOS, Iptables and Vulcand***
   Acessado: *17 de Dezembro de 2017*.
   Disponível: *[https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/](https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/)*.
+
+
+https://github.com/ainoya/aws-coreos-clustering-kit/
+
+https://github.com/cloudurable/cassandra-image/wiki/Using-Packer-to-create-an-AMI-for-Amazon---EC2
+https://github.com/cloudurable/cassandra-image
+
+https://github.com/dyson/packer-qemu-coreos-container-linux
+
+https://github.com/stylelab-io/kubernetes-coreos-packer
+
+https://github.com/brikis98/terraform-up-and-running-code
+
+https://github.com/kaorimatz/packer-templates/
+
+https://github.com/wasbazi/coreos-packer
+
+https://github.com/kevit/coreos-packer
+
+https://github.com/flomotlik/packer-example
+
+
+

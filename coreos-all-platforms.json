@@ -1,8 +1,7 @@
 {
-    "packer_modules": "/packer-modules",
     "packer_template": {
         "description": "CoreOS stable image for all platform.",
-        "override_variables": {
+        "variables": {
             "name": "coreos",
             "release": "stable",
             "version": "current"

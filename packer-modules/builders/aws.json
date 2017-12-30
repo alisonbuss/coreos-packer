@@ -1,3 +1,27 @@
 {
-    "type": "amazon-ebs"
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `aws_region`}}",
+    "source_ami": "{{user `aws_ami_image`}}",
+    "instance_type": "{{user `aws_instance_type`}}",
+    "ssh_username": "core",
+    "ami_name": "management_host {{timestamp}}",
+    "tags": {
+        "Name": "management_host {{timestamp}}",
+        "OS_Version": "LinuxCentOs7",
+        "Release": "7",
+        "Description": "CoreOS Stable Current image basic image"
+    },
+    "user_data_file": "config/user-data.sh",
+
+    "subnet_id": "{{user `subnet_id`}}",
+    "ami_virtualization_type": "hvm",
+    "ami_block_device_mappings": [
+        {
+           "device_name": "/dev/xvda",
+           "volume_size": 100,
+           "delete_on_termination": true
+        }
+    ]
 }

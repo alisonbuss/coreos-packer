@@ -1,8 +1,7 @@
 {
-    "packer_modules": "/packer-modules",
     "packer_template": {
         "description": "CoreOS alpha image for a Vagrant platform.",
-        "override_variables": {
+        "variables": {
             "name": "coreos",
             "release": "alpha",
             "version": "1632.0.0"

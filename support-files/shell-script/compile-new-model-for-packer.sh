@@ -34,35 +34,34 @@ function StartCompilation {
     # @descr: Descrição da Variavel.
     local source_file=$(util.getParameterValue "(--source-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local compiled_name=$(util.getParameterValue "(--compiled-name=)" "$@");  
+    local output_file=$(util.getParameterValue "(--output-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local compiled_directory=$(util.getParameterValue "(--compiled-directory=)" "$@");  
-    # @descr: Descrição da Variavel.
-    local package_working_directory=$(util.getParameterValue "(--package-working-directory=)" "$@");  
-    # @descr: Descrição da Variavel.
-    local main_working_directory=$(util.getParameterValue "(--main-working-directory=)" "$@");  
-    
-    # @descr: Descrição da Variavel.
-    local packer_modules=$(cat "${source_file}" | jq -r ".packer_modules"); 
+    local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
+
     # @descr: Descrição da Variavel.
     local packer_template=$(cat "${source_file}" | jq -c ".packer_template"); 
     # @descr: Descrição da Variavel.
     local description=$(echo "${packer_template}" | jq -r ".description");
     # @descr: Descrição da Variavel.
     local min_packer_version=$(echo "${packer_template}" | jq -r ".min_packer_version");
-         
-    packer_modules="${main_working_directory}${packer_modules}";
 
-    echo "Criando diretorio de compilação do packer...";  
-    echo "--diretorio: ${compiled_directory}";  
-    mkdir -p "${compiled_directory}";
+    # @descr: Descrição da Variavel.
+    local compiled_template_name=$(basename "${output_file}");  
+    compiled_template_name="${compiled_template_name%.*}";
 
-    echo "Processando módulo [override_variables]...";
-    echo "${packer_template}" | jq -c '.override_variables' > "${compiled_directory}/vars-override-variables.json";
+    # @descr: Descrição da Variavel.
+    local compiled_template_path=$(dirname "${output_file}");
 
-    echo "Processando módulo [list_variables]..."; 
+    echo "Criando diretorio de construção packer...";  
+    echo "--diretorio: ${compiled_template_path}";  
+    mkdir -p "${compiled_template_path}";
+
+    echo "Processando módulo de [variables]...";
+    echo "${packer_template}" | jq -c '.variables' > "${compiled_template_path}/vars-override-variables.json";
+
+    echo "Processando módulo de [list_variables]..."; 
     for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
-        cp "${packer_modules}${variableJSON}" "${compiled_directory}/";
+        cp "${packer_modules}${variableJSON}" "${compiled_template_path}/";
     done 
 
     echo "Processando módulo [builders]...";
@@ -98,15 +97,15 @@ function StartCompilation {
         fi
     done 
 
-    echo "Iniciando a compilação do package para packer...";  
-    echo "--para o diretorio: ${compiled_directory}"; 
-    touch "${compiled_directory}/${compiled_name}-min.json"
+    echo "Iniciando a compilação e a criação do packer template...";  
+    echo "--diretorio: ${compiled_template_path}"; 
+    touch "${compiled_template_path}/${compiled_template_name}-min.json"
     {
         echo '{"description":"'$description'","builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$post_processors'],"min_packer_version": "'${min_packer_version}'"}';
-    } > "${compiled_directory}/${compiled_name}-min.json"; 
+    } > "${compiled_template_path}/${compiled_template_name}-min.json"; 
 
-    echo "Convertendo o template packer em modo [source]";  
-    jq . "${compiled_directory}/${compiled_name}-min.json" > "${compiled_directory}/${compiled_name}.json";
+    echo "Convertendo o packer template em modo [source]";  
+    jq . "${compiled_template_path}/${compiled_template_name}-min.json" > "${compiled_template_path}/${compiled_template_name}.json";
 
 } 
 

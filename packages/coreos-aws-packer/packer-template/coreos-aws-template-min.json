@@ -1,1 +1,0 @@
-{"description":"CoreOS stable image for a AWS platform.","builders":[{ "type": "amazon-ebs" }],"provisioners":[{ "type": "shell", "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"] }],"post-processors":[],"min_packer_version": "1.1.3"}

@@ -32,48 +32,40 @@ function util.getParameterValue(){
 #    param | json: '{"version":"..."}'
 function StartCompilation {
     # @descr: Descrição da Variavel.
-    local package_source_file=$(util.getParameterValue "(--package-source-file=)" "$@");  
+    local new_mode_source_file=$(util.getParameterValue "(--new-model-source-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local package_compiled_name=$(util.getParameterValue "(--package-compiled-name=)" "$@");  
+    local new_mode_output_file=$(util.getParameterValue "(--new-model-output-file=)" "$@");  
     # @descr: Descrição da Variavel.
-    local package_compiled_directory=$(util.getParameterValue "(--package-compiled-directory=)" "$@");  
+    local new_mode_build_path=$(util.getParameterValue "(--new-model-build-path=)" "$@");  
     # @descr: Descrição da Variavel.
-    local package_working_directory=$(util.getParameterValue "(--package-working-directory=)" "$@");  
+    local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
+    
     # @descr: Descrição da Variavel.
-    local main_working_directory=$(util.getParameterValue "(--main-working-directory=)" "$@"); 
+    local compiled_template_name=$(basename "${new_mode_output_file}");  
+    compiled_template_name="${compiled_template_name%.*}";
 
-     # @descr: Descrição da Variavel.
-    local packer_modules=$(cat "${package_source_file}" | jq -r ".packer_modules"); 
     # @descr: Descrição da Variavel.
-    local packer_template=$(cat "${package_source_file}" | jq -c ".packer_template"); 
+    local compiled_template_path=$(dirname "${new_mode_output_file}");
 
-    echo "Processando módulo [override_variables]...";
-    local coreos_release=$(echo ${packer_template} | jq -r '.override_variables.release');
-    if [ "${coreos_release}" == "null" ]; then 
-        coreos_release="stable";
-    fi
-    local coreos_version=$(echo ${packer_template} | jq -r '.override_variables.version');
-    if [ "${coreos_version}" == "null" ]; then 
-        coreos_version="current";
-    fi
+    # @descr: Descrição da Variavel.
+    local packer_template=$(cat "${new_mode_source_file}" | jq -c ".packer_template"); 
+
+    echo "Processando módulo [variables]...";
+
 
     echo "Processando módulo [list_variables]..."; 
     local list_variables="";   
     for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
-        local nameVariableJSON=$(basename ${main_working_directory}${packer_modules}${variableJSON});
-        list_variables+='\\n\t\t\t-var-file="${package_template_directory}/'${nameVariableJSON}'" \'; 
+        local nameVariableJSON=$(basename ${packer_modules}${variableJSON});
+        list_variables+='\\n\t\t\t-var-file="${module_build_path}/'${nameVariableJSON}'" \'; 
     done 
 
     echo "Iniciando a criação do arquivo build.sh para packer";  
-    echo "--para o diretorio: ${package_working_directory}"; 
-    touch "${package_working_directory}/README.md"
+    echo "--para o diretorio: ${module_build_path}"; 
+    touch "${new_mode_build_path}/README.md"
     {
-        echo "";
-        echo "";
-        echo "";
-        echo "";
-        echo "";
-    } > "${package_working_directory}/README.md";
+        echo -e '...';
+    } > "${new_mode_build_path}/README.md";
 
 } 
 
