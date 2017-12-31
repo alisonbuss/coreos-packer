@@ -57,7 +57,7 @@ function StartCompilation {
     mkdir -p "${compiled_template_path}";
 
     echo "Processando módulo de [variables]...";
-    echo "${packer_template}" | jq -c '.variables' > "${compiled_template_path}/vars-override-variables.json";
+    echo "${packer_template}" | jq -c '.variables' > "${compiled_template_path}/vars-custom-variables.json";
 
     echo "Processando módulo de [list_variables]..."; 
     for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do

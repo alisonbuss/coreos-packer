@@ -1,0 +1,95 @@
+#!/bin/bash
+
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Sua Descrição da Instalação na Maquina.
+# @fonts: 	
+# @example:
+#       bash Makefile.test plan
+#    OR
+#       bash Makefile.test compile
+#    OR
+#       bash Makefile.test compile-all
+#-------------------------------------------------------------#
+
+function MakefileTest {
+    local new_model_name="coreos-vagrant";
+    local coreos_release="alpha";
+    local coreos_version="1632.0.0";
+
+    local ARGUMENTS="NEW_MODEL_NAME=${new_model_name} COREOS_RELEASE=${coreos_release} COREOS_VERSION=${coreos_version}";
+
+    case "$@" in
+        plan) {
+            make plan $ARGUMENTS;
+
+        };;
+        compile) {
+            make plan compile $ARGUMENTS;
+
+        };;
+        build) {
+            make plan compile build $ARGUMENTS;
+
+        };;
+        build-force) {
+            make build-force $ARGUMENTS;
+
+        };;
+        install) {
+            make plan compile build install $ARGUMENTS;
+
+        };;
+        uninstall) {
+            make uninstall $ARGUMENTS;
+
+        };;
+        clean) {
+            make clean;
+
+        };;
+        clean-force) {
+            make clean-force $ARGUMENTS;
+
+        };;
+        vagrant) {
+            make vagrant $ARGUMENTS;
+
+        };;
+        vagrant-up) {
+            make vagrant-up $ARGUMENTS;
+
+        };;
+        compile-all) {
+            make compile NEW_MODEL_NAME=coreos-all-platforms \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+
+            make compile NEW_MODEL_NAME=coreos-aws \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+
+            make compile NEW_MODEL_NAME=coreos-azure \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+
+            make compile NEW_MODEL_NAME=coreos-digitalocean \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+
+            make compile NEW_MODEL_NAME=coreos-google \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+                         
+            make compile NEW_MODEL_NAME=coreos-vagrant \
+                         COREOS_RELEASE=${coreos_release} \
+                         COREOS_VERSION=${coreos_version};
+        };;
+        *) {
+            echo "O tipo do teste não foi passado ou está incorreto.";
+        };;
+    esac
+}
+
+MakefileTest "$@" 2>&1 | tee Makefile.test.log;
+
+exit 0;

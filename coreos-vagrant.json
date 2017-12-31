@@ -2,9 +2,7 @@
     "packer_template": {
         "description": "CoreOS alpha image for a Vagrant platform.",
         "variables": {
-            "name": "coreos",
-            "release": "alpha",
-            "version": "1632.0.0"
+            "custom_variables": "Values.. values..."
         },
         "list_variables": [
             "/variables/vars-global.json",

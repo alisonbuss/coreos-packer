@@ -7,15 +7,16 @@
 *.box
 
 # Log file
-*.log
+#*.log
 
 # Log Folder
 [Ll]ogs/
+[Ll]ogs/*.log
 
 # All Packer Folder
-packages/*/packer-vm-cache/
+packer-builds/*/packer-vm-cache/
 
 # All Vagrant Folder
-packages/*/.vagrant/
+packer-builds/*/.vagrant/
 
 # End of https://www.gitignore.io/api/java

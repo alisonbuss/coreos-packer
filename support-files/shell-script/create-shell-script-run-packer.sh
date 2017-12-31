@@ -55,17 +55,11 @@ function StartCompilation {
     local packer_template=$(cat "${new_mode_source_file}" | jq -c ".packer_template"); 
 
     echo "Processando módulo [variables]...";
-    local variable_coreos_release=$(echo ${packer_template} | jq -r '.variables.coreos_release');
-    if [ "${coreos_release}" == "" ] && [ "${variable_coreos_release}" == "null" ]; then
+    if [ "${coreos_release}" == "" ]; then
         coreos_release="stable";
-    elif [ "${variable_coreos_release}" != "null" ]; then
-        coreos_release="${variable_coreos_release}";
     fi
-    local variable_coreos_version=$(echo ${packer_template} | jq -r '.variables.coreos_version');
-    if [ "${coreos_version}" == "" ] && [ "${variable_coreos_version}" == "null" ]; then
+    if [ "${coreos_version}" == "" ]; then
         coreos_version="current";
-    elif [ "${variable_coreos_version}" != "null" ]; then
-        coreos_version="${variable_coreos_version}";
     fi
 
     echo "Processando módulo [list_variables]..."; 
@@ -89,20 +83,22 @@ function StartCompilation {
         echo   $'    local coreos_iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk \'{ print length, $1 | "sort -rg"}\' | awk \'NR == 1 { print $2 }\');';   
         echo -e '    local build_path="'${new_mode_build_path}'";';
         echo -e '    local template_path="'${compiled_template_path}'";';
+        echo -e '    local template_file="${template_path}/'${compiled_template_name}'-min.json";';
         echo -e '    __run_packer() {';
         echo -e '        packer "$@" \'$list_variables'';
+        echo -e '            -var-file="${template_path}/vars-custom-variables.json" \';
         echo -e '            -var "coreos_release=${coreos_release}" \';
         echo -e '            -var "coreos_version=${coreos_version}" \';
         echo -e '            -var "coreos_iso_checksum_type=${coreos_iso_checksum_type}" \';
         echo -e '            -var "coreos_iso_checksum=${coreos_iso_checksum}" \';
         echo -e '            -var "global_build_path=${build_path}" \';
-        echo -e '            -var-file="${template_path}/vars-override-variables.json" \';
-        echo -e '            "${template_path}/'${compiled_template_name}'-min.json";';
+        echo -e '            "${template_file}";';
         echo -e '    }';
         echo -e '    case $params in';
-        echo -e '        validate) { __run_packer validate; };;';
-        echo -e '        build)    { __run_packer build;    };;';
-        echo -e '        *)        { packer "$@";           };;';
+        echo -e '        validate) { __run_packer "${params}"; };;';
+        echo -e '        inspect)  { packer inspect "${template_file}"; };;';
+        echo -e '        build)    { __run_packer "${params}"; };;';
+        echo -e '        *)        { packer "${params}"; };;';
         echo -e '    esac';
         echo -e '}';
         echo -e 'StartPacker "$@";';

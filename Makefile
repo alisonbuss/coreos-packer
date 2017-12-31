@@ -42,6 +42,7 @@ WORKING_DIRECTORY   ?= .
 #WORKING_DIRECTORY  ?= `pwd`
 PACKER_BUILD_PATH   ?= $(WORKING_DIRECTORY)/packer-builds
 PACKER_MODULES_PATH ?= $(WORKING_DIRECTORY)/packer-modules
+PACKER_ONLY         ?= virtualbox-iso
 
 # VARIABLE MAN!!!!!
 # DEFAULT VARIABLE - NEW NEW_MODEL!!! to be compiled!!!
@@ -75,7 +76,7 @@ CREATE_DOCUMENTATION_PACKER_CMD	   ?= $(WORKING_DIRECTORY)/support-files/shell-s
 START_PACKER_CMD                   ?= $(NEW_MODEL_BUILD_PATH)/start-packer.sh
 
 # DEFAULT VARIABLES - Vagrant Command-Line Interface (CLI) 
-VAGRANT_CLI ?= up
+VAGRANT_CLI ?= version
 #VAGRANT_CLI ?= status
 #VAGRANT_CLI ?= ssh coreos01.example.com
 #VAGRANT_CLI ?= halt
@@ -88,15 +89,18 @@ VAGRANT_CLI ?= up
 plan: 
 	@echo "The default values to be used by this Makefile:";
 	@echo "";
+	@echo "    --> MAKECMDGOALS: 'make $(MAKECMDGOALS)'";
 	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
+	@echo "";
 	@echo "    --> PACKER_BUILD_PATH: $(PACKER_BUILD_PATH)";
 	@echo "    --> PACKER_MODULES_PATH: $(PACKER_MODULES_PATH)";
+	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
 	@echo "";
 	@echo "    --> NEW_MODEL_NAME: $(NEW_MODEL_NAME)";
+	@echo "    --> NEW_MODEL_SOURCE_FILE: $(NEW_MODEL_SOURCE_FILE)";
 	@echo "    --> NEW_MODEL_BUILD_PATH: $(NEW_MODEL_BUILD_PATH)";
 	@echo "    --> NEW_MODEL_COMPILED_NAME: $(NEW_MODEL_COMPILED_NAME)";
 	@echo "    --> NEW_MODEL_COMPILED_PATH: $(NEW_MODEL_COMPILED_PATH)";
-	@echo "    --> NEW_MODEL_SOURCE_FILE: $(NEW_MODEL_SOURCE_FILE)";
 	@echo "    --> NEW_MODEL_OUTPUT_FILE: $(NEW_MODEL_OUTPUT_FILE)";
 	@echo "";
 	@echo "    --> COREOS_RELEASE: $(COREOS_RELEASE)";
@@ -166,8 +170,8 @@ build:
 	@echo "--script: $(START_PACKER_CMD)"; 
 
 	@bash $(START_PACKER_CMD) validate;
-	@bash $(START_PACKER_CMD) inspect $(NEW_MODEL_OUTPUT_FILE).json;
-	@bash $(START_PACKER_CMD) build;
+	@bash $(START_PACKER_CMD) inspect;
+	@bash $(START_PACKER_CMD) build -only="$(PACKER_ONLY)";
 
 	@echo "Construção concluída!!!...";  
 
@@ -180,22 +184,31 @@ install:
 	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
 
 	@vagrant box list;
-
 	@vagrant box add --force \
 					 --provider="virtualbox" \
 					 --name="lucifer/$(NEW_MODEL_NAME)" \
 					 $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box;
+	@vagrant box list;
 
 	@echo "Instalação do vagrant box concluída!!!...";  
+
+
+uninstall: 
+	@echo "Iniciando a desinstalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
+
+	@vagrant box list;
+	@vagrant box remove lucifer/$(NEW_MODEL_NAME);
+	@vagrant box list;
+
+	@echo "Desinstalação do vagrant box concluída!!!...";
 
 
 clean: 
 	@echo "Iniciando a exclusão dos arquivos do projeto packer [$(NEW_MODEL_NAME)]...";
 	@echo "--diretorio: $(NEW_MODEL_BUILD_PATH)";
-	
-	@vagrant box remove lucifer/$(NEW_MODEL_NAME);
 
-	@rm -rf $(NEW_MODEL_BUILD_PATH);
+	@rm -rf $(NEW_MODEL_BUILD_PATH); sleep 2s;
 	
 	@echo "Exclusão concluída!!!..."; 
 
@@ -204,7 +217,7 @@ clean-force:
 	@echo "Iniciando a exclusão dos arquivos de BUILDs";
 	@echo "--diretorio: $(PACKER_BUILD_PATH)";
 
-	@rm -rf $(PACKER_BUILD_PATH);
+	@rm -rf $(PACKER_BUILD_PATH); sleep 2s;
 	
 	@echo "Exclusão concluída!!!..."; 
 
@@ -214,6 +227,15 @@ vagrant:
 	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 
 	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant $(VAGRANT_CLI);
+
+	@echo "Teste executado!!!...";  
+
+
+vagrant-up: 
+	@echo "Iniciando teste vagrant do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
+
+	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant up;
 
 	@echo "Teste executado!!!...";  
 

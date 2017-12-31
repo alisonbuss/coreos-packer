@@ -21,6 +21,8 @@ Inspired by [kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes
 
 Official Documentation: [Packer Documentation](https://www.packer.io/docs/index.html)
 
+Módulos para packer.io, basea-se em um file.json com uma sixtase simples para a moduralização dos "Packer Template". (Modules for packer.io, is based on a file.json with a simple sixtase for the moduralization of "Packer Template".) 
+
 ### Referências:
 
 * ChurrOps on DevOps, Blog. ***[Packer] Customizando e automatizando suas imagens – Parte 1***
