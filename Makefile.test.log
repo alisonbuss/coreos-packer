@@ -5,10 +5,11 @@ The default values to be used by this Makefile:
 
     --> PACKER_BUILD_PATH: ./packer-builds
     --> PACKER_MODULES_PATH: ./packer-modules
+    --> PACKER_NEW_MODEL_PATH: ./packer-new-model
     --> PACKER_ONLY: virtualbox-iso
 
     --> NEW_MODEL_NAME: coreos-vagrant
-    --> NEW_MODEL_SOURCE_FILE: ./coreos-vagrant.json
+    --> NEW_MODEL_SOURCE_FILE: ./packer-new-model/coreos-vagrant.json
     --> NEW_MODEL_BUILD_PATH: ./packer-builds/coreos-vagrant-packer
     --> NEW_MODEL_COMPILED_NAME: coreos-vagrant-template
     --> NEW_MODEL_COMPILED_PATH: ./packer-builds/coreos-vagrant-packer/packer-template
@@ -44,8 +45,6 @@ Processando módulo [variables]...
 Processando módulo [list_variables]...
 Iniciando a criação do arquivo build.sh para packer
 --para o diretorio: 
-Processando módulo [variables]...
-Processando módulo [list_variables]...
 Iniciando a criação do arquivo build.sh para packer
 --para o diretorio: 
 Criando diretorio de compilação do ignitions...

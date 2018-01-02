@@ -34,21 +34,22 @@
 #	OR
 #		$ make plan compile build install vagrant \
 #			  NEW_MODEL_NAME="coreos-vagrant" \
-#			  NEW_MODEL_SOURCE_FILE="./coreos-vagrant.json"
+#			  NEW_MODEL_SOURCE_FILE="./packer-new-model/coreos-vagrant.json"
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
-WORKING_DIRECTORY   ?= .
-#WORKING_DIRECTORY  ?= `pwd`
-PACKER_BUILD_PATH   ?= $(WORKING_DIRECTORY)/packer-builds
-PACKER_MODULES_PATH ?= $(WORKING_DIRECTORY)/packer-modules
-PACKER_ONLY         ?= virtualbox-iso
+WORKING_DIRECTORY     ?= .
+#WORKING_DIRECTORY    ?= `pwd`
+PACKER_BUILD_PATH     ?= $(WORKING_DIRECTORY)/packer-builds
+PACKER_MODULES_PATH   ?= $(WORKING_DIRECTORY)/packer-modules
+PACKER_NEW_MODEL_PATH ?= $(WORKING_DIRECTORY)/packer-new-model
+PACKER_ONLY           ?= virtualbox-iso
 
 # VARIABLE MAN!!!!!
 # DEFAULT VARIABLE - NEW NEW_MODEL!!! to be compiled!!!
 NEW_MODEL_NAME ?= coreos-vagrant
 
-NEW_MODEL_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/$(NEW_MODEL_NAME).json
+NEW_MODEL_SOURCE_FILE   ?= $(PACKER_NEW_MODEL_PATH)/$(NEW_MODEL_NAME).json
 NEW_MODEL_BUILD_PATH    ?= $(PACKER_BUILD_PATH)/$(NEW_MODEL_NAME)-packer
 NEW_MODEL_COMPILED_NAME ?= $(NEW_MODEL_NAME)-template
 NEW_MODEL_COMPILED_PATH ?= $(NEW_MODEL_BUILD_PATH)/packer-template
@@ -94,6 +95,7 @@ plan:
 	@echo "";
 	@echo "    --> PACKER_BUILD_PATH: $(PACKER_BUILD_PATH)";
 	@echo "    --> PACKER_MODULES_PATH: $(PACKER_MODULES_PATH)";
+	@echo "    --> PACKER_NEW_MODEL_PATH: $(PACKER_NEW_MODEL_PATH)";
 	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
 	@echo "";
 	@echo "    --> NEW_MODEL_NAME: $(NEW_MODEL_NAME)";
@@ -179,7 +181,7 @@ build:
 build-force: clean compile build
 	
 		
-install: 
+install-box: 
 	@echo "Iniciando a instalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
 	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
 
@@ -193,7 +195,7 @@ install:
 	@echo "Instalação do vagrant box concluída!!!...";  
 
 
-uninstall: 
+uninstall-box: 
 	@echo "Iniciando a desinstalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
 	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
 

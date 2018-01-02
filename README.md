@@ -106,5 +106,53 @@ https://github.com/kevit/coreos-packer
 
 https://github.com/flomotlik/packer-example
 
+http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
+
+https://www.infoq.com/br/search.action?queryString=API+Gateway&page=1&searchOrder=&sst=KYiYsc1qHfkIyyf8
+
+http://gutocarvalho.net/blog/2016/09/06/por-onde-iniciar-os-estudos-sobre-devops/
+https://www.alura.com.br/carreira-engenheiro-devops
+https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
+https://www.nginx.com/blog/microservices-api-gateways-part-1-why-an-api-gateway/
+https://www.nginx.com/blog/microservices-api-gateways-part-2-how-kong-can-help/
+
+USAR ESSE AKI
+https://konghq.com/kong-community-edition/
+https://pantsel.github.io/konga/
+https://pantsel.github.io/konga/
+https://gravitee.io/
+http://wicked.haufe.io/
+https://www.fusio-project.org/
+http://www.apiman.io/latest/index.html
+
+https://sensedia.com/blog/apis/owasp-2017-top-10-riscos-seguranca-apis/
+
+https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
+
+É AKI AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA........
+https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
+https://konghq.com/blog/protecting-rate-limiting-api-kong/
+
+https://github.com/upmc-enterprises/kubernetes-secret-manager
+https://github.com/coreos/awesome-kubernetes-extensions
+
+https://www.youtube.com/watch?v=h4A8HytL5ts
+
+https://tyk.io/#section-0
+
+https://www.gluu.org/
+
+http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
+
+https://getkong.org/
+https://pantsel.github.io/konga/
+https://ajaysreedhar.github.io/kongdash/
+https://medium.com/@aodjaturongvachirasaksakul/kong-free-api-gateway-28edc64f7b6e
+
+https://github.com/coreos/awesome-kubernetes-extensions
+
+https://apiumbrella.io/
+
+http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
 
 

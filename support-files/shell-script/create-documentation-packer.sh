@@ -50,21 +50,104 @@ function StartCompilation {
     # @descr: Descrição da Variavel.
     local packer_template=$(cat "${new_mode_source_file}" | jq -c ".packer_template"); 
 
-    echo "Processando módulo [variables]...";
-
-
-    echo "Processando módulo [list_variables]..."; 
-    local list_variables="";   
-    for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
-        local nameVariableJSON=$(basename ${packer_modules}${variableJSON});
-        list_variables+='\\n\t\t\t-var-file="${module_build_path}/'${nameVariableJSON}'" \'; 
-    done 
-
     echo "Iniciando a criação do arquivo build.sh para packer";  
     echo "--para o diretorio: ${module_build_path}"; 
     touch "${new_mode_build_path}/README.md"
     {
-        echo -e '...';
+        echo -e '# DOCUMENTATION:';
+
+        echo -e '## [Packer Modules] usados para gerar o "Novo Modelo Packer"';
+        echo -e '```text';
+        tree -d "${packer_modules}"; echo "";
+        echo -e '```';
+        echo -e ' ';
+
+        echo -e '## New Model for Packer';
+        echo -e '##### '${new_mode_source_file}' ';
+        echo -e '```bash';
+        cat "${new_mode_source_file}"; echo "";
+        echo -e '```';
+        echo -e ' ';
+
+        echo -e '## Arquivos Gerados pelo Novo Modelo Packer';
+        echo -e '```text';
+        tree "${new_mode_build_path}"; echo "";
+        echo -e '```';
+        echo -e ' ';
+
+        echo -e '## vars-custom-variables.json';
+        echo -e '##### '${compiled_template_path}'/vars-custom-variables.json';
+        echo -e '```json';
+        jq . "${compiled_template_path}/vars-custom-variables.json";
+        echo -e '```';
+        echo -e ' ';
+
+        echo -e '## list_variables';
+        echo -e '   ';
+        for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
+            local nameJSON=$(basename ${packer_modules}${variableJSON});
+            echo -e '#### --- '${nameJSON}' ';
+            echo -e '##### '${packer_modules}${variableJSON}' ';
+            echo -e '```json';
+            cat "${packer_modules}${variableJSON}"; echo "";
+            echo -e '```';
+            echo -e ' ';
+        done 
+        echo -e ' ';
+       
+        echo -e '## builders';
+        echo -e '   ';
+        for builderJSON in $(echo "${packer_template}" | jq -r '.builders[]'); do
+            local nameJSON=$(basename ${packer_modules}${builderJSON});
+            echo -e '#### --- '${nameJSON}' ';
+            echo -e '##### '${packer_modules}${builderJSON}' ';
+            echo -e '```json';
+            cat "${packer_modules}${builderJSON}"; echo "";
+            echo -e '```';
+            echo -e ' ';
+        done 
+        echo -e ' ';
+
+        echo -e '## provisioners';
+        echo -e '   ';
+        for provisionerJSON in $(echo "${packer_template}" | jq -r '.provisioners[]'); do
+            local nameJSON=$(basename ${packer_modules}${provisionerJSON});
+            echo -e '#### --- '${nameJSON}' ';
+            echo -e '##### '${packer_modules}${provisionerJSON}' ';
+            echo -e '```json';
+            cat "${packer_modules}${provisionerJSON}"; echo "";
+            echo -e '```';
+            echo -e ' ';
+        done 
+        echo -e ' ';
+
+        echo -e '## post_processors';
+        echo -e '   ';
+        for post_processorJSON in $(echo "${packer_template}" | jq -r '.post_processors[]'); do
+            local nameJSON=$(basename ${packer_modules}${post_processorJSON});
+            echo -e '#### --- '${nameJSON}' ';
+            echo -e '##### '${packer_modules}${post_processorJSON}' ';
+            echo -e '```json';
+            cat "${packer_modules}${post_processorJSON}"; echo "";
+            echo -e '```';
+            echo -e ' ';
+        done
+        echo -e ' ';
+
+        echo -e '## '${compiled_template_name}'.json';
+        echo -e '##### '${compiled_template_path}'/'${compiled_template_name}'.json';
+        echo -e '```json';
+        cat "${compiled_template_path}/${compiled_template_name}.json"; echo "";
+        echo -e '```';
+        echo -e ' ';
+
+        echo -e '## start-packer.sh';
+        echo -e '##### '${new_mode_build_path}'/start-packer.sh';
+        echo -e '```bash';
+        cat "${new_mode_build_path}/start-packer.sh"; echo "";
+        echo -e '```';
+        echo -e ' ';
+
     } > "${new_mode_build_path}/README.md";
 
 } 

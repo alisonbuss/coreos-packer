@@ -35,12 +35,12 @@ function MakefileTest {
             make build-force $ARGUMENTS;
 
         };;
-        install) {
-            make plan compile build install $ARGUMENTS;
+        install-box) {
+            make plan compile build install-box $ARGUMENTS;
 
         };;
-        uninstall) {
-            make uninstall $ARGUMENTS;
+        uninstall-box) {
+            make uninstall-box $ARGUMENTS;
 
         };;
         clean) {
@@ -85,7 +85,7 @@ function MakefileTest {
                          COREOS_VERSION=${coreos_version};
         };;
         *) {
-            echo "O tipo do teste não foi passado ou está incorreto.";
+            echo "AVISO: O tipo do teste não foi passado ou está incorreto.";
         };;
     esac
 }
