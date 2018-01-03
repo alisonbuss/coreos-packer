@@ -46,7 +46,7 @@ PACKER_NEW_MODEL_PATH ?= $(WORKING_DIRECTORY)/packer-new-model
 PACKER_ONLY           ?= virtualbox-iso
 
 # VARIABLE MAN!!!!!
-# DEFAULT VARIABLE - NEW NEW_MODEL!!! to be compiled!!!
+# DEFAULT VARIABLE - NEW MODEL!!! to be compiled!!!
 NEW_MODEL_NAME ?= coreos-vagrant
 
 NEW_MODEL_SOURCE_FILE   ?= $(PACKER_NEW_MODEL_PATH)/$(NEW_MODEL_NAME).json

@@ -1,12 +1,14 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
-# @fonts: Fontes de referências
+# @descr: Script for compiling the "Container Linux Config" for CoreOS "Ignition". 
+# @fonts: https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile
 # @example:
-#       bash script-example.sh --action='install' --param='{"version":"3.6.66"}'
-#   OR
-#       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
+#       bash compile-container-linux-config.sh \
+#   		                  --source-file="source-ignition.yml" \
+#                             --build-path="./folderX" \
+#                             --compiled-name="ignitionX" \
+#   		                  --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux

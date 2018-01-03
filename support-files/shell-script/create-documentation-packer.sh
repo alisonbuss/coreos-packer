@@ -85,8 +85,6 @@ function StartCompilation {
         echo -e '## list_variables';
         echo -e '   ';
         for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
-            local nameJSON=$(basename ${packer_modules}${variableJSON});
-            echo -e '#### --- '${nameJSON}' ';
             echo -e '##### '${packer_modules}${variableJSON}' ';
             echo -e '```json';
             cat "${packer_modules}${variableJSON}"; echo "";
@@ -98,8 +96,6 @@ function StartCompilation {
         echo -e '## builders';
         echo -e '   ';
         for builderJSON in $(echo "${packer_template}" | jq -r '.builders[]'); do
-            local nameJSON=$(basename ${packer_modules}${builderJSON});
-            echo -e '#### --- '${nameJSON}' ';
             echo -e '##### '${packer_modules}${builderJSON}' ';
             echo -e '```json';
             cat "${packer_modules}${builderJSON}"; echo "";
@@ -111,8 +107,6 @@ function StartCompilation {
         echo -e '## provisioners';
         echo -e '   ';
         for provisionerJSON in $(echo "${packer_template}" | jq -r '.provisioners[]'); do
-            local nameJSON=$(basename ${packer_modules}${provisionerJSON});
-            echo -e '#### --- '${nameJSON}' ';
             echo -e '##### '${packer_modules}${provisionerJSON}' ';
             echo -e '```json';
             cat "${packer_modules}${provisionerJSON}"; echo "";
@@ -124,8 +118,6 @@ function StartCompilation {
         echo -e '## post_processors';
         echo -e '   ';
         for post_processorJSON in $(echo "${packer_template}" | jq -r '.post_processors[]'); do
-            local nameJSON=$(basename ${packer_modules}${post_processorJSON});
-            echo -e '#### --- '${nameJSON}' ';
             echo -e '##### '${packer_modules}${post_processorJSON}' ';
             echo -e '```json';
             cat "${packer_modules}${post_processorJSON}"; echo "";

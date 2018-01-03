@@ -1,12 +1,16 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
-# @fonts: Fontes de referências
+# @descr: Script for compiling the "Container Linux Config" for CoreOS "Ignition". 
+# @fonts: https://github.com/coreos/container-linux-config-transpiler
+#         https://coreos.com/os/docs/latest/configuration.html
+#         https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile
 # @example:
-#       bash script-example.sh --action='install' --param='{"version":"3.6.66"}'
-#   OR
-#       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
+#       bash compile-container-linux-config.sh \
+#   		                  --source-file="source-ignition.yml" \
+#                             --build-path="./folderX" \
+#                             --compiled-name="ignitionX" \
+#   		                  --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
@@ -25,54 +29,56 @@ function util.getParameterValue(){
     echo $valueEnd;
 }
 
-# @descr: Descrição da Função.
-# @fonts: Fontes de referências
+# @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
-#    action | text: (install, uninstall)
-#    param | json: '{"version":"..."}'
+#    $@ | array: (*)
 function StartCompilation {
-    # @descr: Descrição da Variavel.
     local source_file=$(util.getParameterValue "(--source-file=)" "$@");  
-    # @descr: Descrição da Variavel.
     local build_path=$(util.getParameterValue "(--build-path=)" "$@");  
-    # @descr: Descrição da Variavel.
     local compiled_name=$(util.getParameterValue "(--compiled-name=)" "$@");  
-    # @descr: Descrição da Variavel.
     local platforms=$(util.getParameterValue "(--platforms=)" "$@");  
-    # @descr: Descrição da Variavel.
     local compiled_file="${build_path}/${compiled_name}";  
 
-    echo "Criando diretorio de compilação do ignitions...";  
-    echo "--diretorio: ${build_path}";  
+    echo "Creating directory for the creation of ignitions...";  
+    echo "--affected directory: '${build_path}'";  
     mkdir -p "${build_path}";
 
-    echo "Compilando o 'Container Linux Config' para 'ignition'...";  
-    echo "--plataformas: [${platforms[@]}]"; 
+    echo 'Starting the compilation process from "Container Linux Config" to "ignition"....';  
+    echo "--affected platforms: [${platforms[@]}]"; 
     echo ""; 
 
     echo "Converting to (no-platform)...";
+    echo "--generated file: '${compiled_file}.json'";  
     ct -in-file "${source_file}" -out-file "${compiled_file}.json" --pretty;
 
     echo "Converting to (vagrant-virtualbox)...";
+    echo "--generated file: '${compiled_file}-for-virtualbox.json'";
     ct --platform=vagrant-virtualbox -in-file "${source_file}" -out-file "${compiled_file}-for-virtualbox.json" --pretty;
 
     echo "Converting to (digitalocean)...";
+    echo "--generated file: '${compiled_file}-for-digitalocean.json'";
     ct --platform=digitalocean -in-file "${source_file}" -out-file "${compiled_file}-for-digitalocean.json" --pretty;
 
     echo "Converting to (ec2)...";
+    echo "--generated file: '${compiled_file}-for-ec2.json'";
     ct --platform=ec2 -in-file "${source_file}" -out-file "${compiled_file}-for-ec2.json" --pretty;
 
     echo "Converting to (gce)...";
+    echo "--generated file: '${compiled_file}-for-gce.json'";
     ct --platform=gce -in-file "${source_file}" -out-file "${compiled_file}-for-gce.json" --pretty;
 
     echo "Converting to (azure)...";
+    echo "--generated file: '${compiled_file}-for-azure.json'";
     ct --platform=azure -in-file "${source_file}" -out-file "${compiled_file}-for-azure.json" --pretty;
 
     echo "Converting to (packet)...";
+    echo "--generated file: '${compiled_file}-for-packet.json'";
     ct --platform=packet -in-file "${source_file}" -out-file "${compiled_file}-for-packet.json" --pretty;
 
 } 
 
+# @descr: Call of execution of the script's main function.
 StartCompilation "$@";
 
+# @descr: Finishing the script!!! :P
 exit 0;

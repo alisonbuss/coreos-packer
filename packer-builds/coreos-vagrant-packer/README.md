@@ -84,7 +84,6 @@
  
 ## list_variables
    
-#### --- vars-global.json 
 ##### ./packer-modules/variables/vars-global.json 
 ```json
 {
@@ -92,7 +91,6 @@
 }
 ```
  
-#### --- vars-coreos.json 
 ##### ./packer-modules/variables/vars-coreos.json 
 ```json
 {
@@ -106,7 +104,6 @@
 }
 ```
  
-#### --- vars-machine-large.json 
 ##### ./packer-modules/variables/vars-machine-large.json 
 ```json
 {
@@ -117,7 +114,6 @@
 
 ```
  
-#### --- vars-vagrant.json 
 ##### ./packer-modules/variables/vars-vagrant.json 
 ```json
 {
@@ -130,7 +126,6 @@
  
 ## builders
    
-#### --- vagrant.json 
 ##### ./packer-modules/builders/vagrant.json 
 ```json
 {
@@ -179,7 +174,6 @@
  
 ## provisioners
    
-#### --- shell-hello-world.json 
 ##### ./packer-modules/provisioners/shell-hello-world.json 
 ```json
 {
@@ -191,7 +185,6 @@
  
 ## post_processors
    
-#### --- vagrant-box.json 
 ##### ./packer-modules/post-processors/vagrant-box.json 
 ```json
 {

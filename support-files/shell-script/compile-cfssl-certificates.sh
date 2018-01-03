@@ -1,12 +1,15 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
-# @fonts: Fontes de referências
+# @descr: Script for key generation and TLS/SSL certificates.
+# @fonts: https://github.com/cloudflare/cfssl
+#         https://blog.cloudflare.com/introducing-cfssl/
+#         https://technedigitale.com/archives/639
+#         https://medium.com/@vrmvrm/setup-cloudflare-cfssl-with-ocsp-responder-aba44b4134e6
 # @example:
-#       bash script-example.sh --action='install' --param='{"version":"3.6.66"}'
-#   OR
-#       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
+#       bash compile-cfssl-certificates.sh \
+#   		              --source-file="" \
+#   		              --output-file="";
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
@@ -25,18 +28,19 @@ function util.getParameterValue(){
     echo $valueEnd;
 }
 
-# @descr: Descrição da Função.
-# @fonts: Fontes de referências
+# @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
-#    action | text: (install, uninstall)
-#    param | json: '{"version":"..."}'
+#    $@ | array: (*)
 function StartCompilation {
-   
+    local param1=$(util.getParameterValue "(--param-01=)" "$@"); 
+    local param2=$(util.getParameterValue "(--param-02=)" "$@"); 
     
  
 
 } 
 
+# @descr: Call of execution of the script's main function.
 StartCompilation "$@";
 
+# @descr: Finishing the script!!! :P
 exit 0;
