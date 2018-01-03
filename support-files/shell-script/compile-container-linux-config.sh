@@ -39,13 +39,14 @@ function StartCompilation {
     local platforms=$(util.getParameterValue "(--platforms=)" "$@");  
     local compiled_file="${build_path}/${compiled_name}";  
 
+    echo -e "\nStarting script execution [compile-container-linux-config.sh]";
+
     echo "Creating directory for the creation of ignitions...";  
     echo "--affected directory: '${build_path}'";  
     mkdir -p "${build_path}";
 
-    echo 'Starting the compilation process from "Container Linux Config" to "ignition"....';  
+    echo 'Starting the compilation process from "Container Linux Config" to "ignition"...';  
     echo "--affected platforms: [${platforms[@]}]"; 
-    echo ""; 
 
     echo "Converting to (no-platform)...";
     echo "--generated file: '${compiled_file}.json'";  

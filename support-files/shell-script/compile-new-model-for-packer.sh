@@ -1,14 +1,13 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Script for compiling the "Container Linux Config" for CoreOS "Ignition". 
-# @fonts: https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile
+# @descr: Script for compiling the "New Model Packer" for "Packer". 
+# @fonts: 
 # @example:
-#       bash compile-container-linux-config.sh \
-#   		                  --source-file="source-ignition.yml" \
-#                             --build-path="./folderX" \
-#                             --compiled-name="ignitionX" \
-#   		                  --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+#       bash compile-new-model-for-packer.sh \
+#   		                  --source-file="./packer-new-model/coreos-all-platforms.json" \
+#                             --output-file="./packer-builds/.../coreos-vagrant-template.json" \
+#   		                  --packer-modules="./packer-modules";
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
@@ -27,49 +26,45 @@ function util.getParameterValue(){
     echo $valueEnd;
 }
 
-# @descr: Descrição da Função.
-# @fonts: Fontes de referências
+# @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
-#    action | text: (install, uninstall)
-#    param | json: '{"version":"..."}'
+#    $@ | array: (*)
 function StartCompilation {
-    # @descr: Descrição da Variavel.
     local source_file=$(util.getParameterValue "(--source-file=)" "$@");  
-    # @descr: Descrição da Variavel.
     local output_file=$(util.getParameterValue "(--output-file=)" "$@");  
-    # @descr: Descrição da Variavel.
     local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
 
-    # @descr: Descrição da Variavel.
     local packer_template=$(cat "${source_file}" | jq -c ".packer_template"); 
-    # @descr: Descrição da Variavel.
+
     local description=$(echo "${packer_template}" | jq -r ".description");
-    # @descr: Descrição da Variavel.
     local min_packer_version=$(echo "${packer_template}" | jq -r ".min_packer_version");
 
-    # @descr: Descrição da Variavel.
     local compiled_template_name=$(basename "${output_file}");  
     compiled_template_name="${compiled_template_name%.*}";
 
-    # @descr: Descrição da Variavel.
     local compiled_template_path=$(dirname "${output_file}");
 
-    echo "Criando diretorio de construção packer...";  
-    echo "--diretorio: ${compiled_template_path}";  
+    echo -e "\nStarting script execution [compile-new-model-for-packer.sh]";
+
+    echo "Creating directory for the creation of packer template...";  
+    echo "--affected directory: '${compiled_template_path}'";  
     mkdir -p "${compiled_template_path}";
 
-    echo "Processando módulo de [variables]...";
+    echo "Processing and compiling the [variables] module...";
+    echo "--generated file: '${compiled_template_path}/vars-custom-variables.json'";  
     echo "${packer_template}" | jq -c '.variables' > "${compiled_template_path}/vars-custom-variables.json";
 
-    echo "Processando módulo de [list_variables]..."; 
+    echo "Processing and compiling the [variables list] module...";
     for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
+        echo "--generated file: '${packer_modules}${variableJSON}'";  
         cp "${packer_modules}${variableJSON}" "${compiled_template_path}/";
     done 
 
-    echo "Processando módulo [builders]...";
+    echo "Processing and compiling the [builders] module...";
     local builders="";
     local size=$(echo "${packer_template}" | jq ".builders | length");
     for builderJSON in $(echo "${packer_template}" | jq -r '.builders[]'); do
+        echo "--reading file: '${packer_modules}${builderJSON}'"; 
         builders+=$(cat ${packer_modules}${builderJSON}); 
         if [ $size -gt 1 ]; then
             builders+=",";
@@ -77,10 +72,11 @@ function StartCompilation {
         fi
     done 
 
-    echo "Processando módulo [provisioners]...";
+    echo "Processing and compiling the [provisioners] module...";
     local provisioners="";
     local size=$(echo "${packer_template}" | jq ".provisioners | length");
     for provisionerJSON in $(echo "${packer_template}" | jq -r '.provisioners[]'); do
+        echo "--reading file: '${packer_modules}${provisionerJSON}'"; 
         provisioners+=$(cat ${packer_modules}${provisionerJSON}); 
         if [ $size -gt 1 ]; then
             provisioners+=",";
@@ -88,10 +84,11 @@ function StartCompilation {
         fi
     done 
 
-    echo "Processando módulo [post_processors]...";
+    echo "Processing and compiling the [post processors] module...";
     local post_processors="";      
     local size=$(echo "${packer_template}" | jq ".post_processors | length");
     for post_processorJSON in $(echo "${packer_template}" | jq -r '.post_processors[]'); do
+        echo "--reading file: '${packer_modules}${post_processorJSON}'"; 
         post_processors+=$(cat ${packer_modules}${post_processorJSON}); 
         if [ $size -gt 1 ]; then
             post_processors+=",";
@@ -99,18 +96,21 @@ function StartCompilation {
         fi
     done 
 
-    echo "Iniciando a compilação e a criação do packer template...";  
-    echo "--diretorio: ${compiled_template_path}"; 
+    echo "Starting the compilation of the [new model] for a Packer Template...";  
+    echo "--affected directory: ${compiled_template_path}"; 
+    echo "--generated file: '${compiled_template_name}-min.json'";  
     touch "${compiled_template_path}/${compiled_template_name}-min.json"
     {
         echo '{"description":"'$description'","builders":['$builders'],"provisioners":['$provisioners'],"post-processors":['$post_processors'],"min_packer_version": "'${min_packer_version}'"}';
     } > "${compiled_template_path}/${compiled_template_name}-min.json"; 
 
-    echo "Convertendo o packer template em modo [source]";  
+    echo "--generated file: '${compiled_template_name}.json'";  
     jq . "${compiled_template_path}/${compiled_template_name}-min.json" > "${compiled_template_path}/${compiled_template_name}.json";
 
 } 
 
+# @descr: Call of execution of the script's main function.
 StartCompilation "$@";
 
+# @descr: Finishing the script!!! :P
 exit 0;

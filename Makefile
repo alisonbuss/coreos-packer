@@ -1,10 +1,11 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
+# @descr: Makefile for project construction.
 # @fonts: https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
 # 		  https://blog.pantuza.com/tutoriais/como-funciona-o-makefile
 #		  http://mindbending.org/pt/makefile-para-java
-#		  https://www.embarcados.com.br/introducao-ao-makefile/		
+#		  https://www.embarcados.com.br/introducao-ao-makefile/	
+#		  https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile	
 # @example:
 #       $ make plan compile build install vagrant
 #   OR
@@ -124,6 +125,8 @@ plan:
 
 
 compile: 
+	@echo "Starting the compilation of the [$(NEW_MODEL_NAME)] project..."; 
+
 	@bash $(COMPILE_NEW_MODEL_FOR_PACKER_CMD) \
 		--source-file="$(NEW_MODEL_SOURCE_FILE)" \
 		--output-file="$(NEW_MODEL_OUTPUT_FILE)" \
@@ -149,95 +152,101 @@ compile:
 		--compiled-name="$(IGNITION_COMPILED_NAME)" \
 		--platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
 
-	@echo "Copiando arquivos dos provisionadores..."; 
-	@echo "--fonte..: $(WORKING_DIRECTORY)/provisioners"; 
-	@echo "--destino: $(NEW_MODEL_BUILD_PATH)"; 
+	@echo "Copying files from provisioners..."; 
+	@echo "--source: $(WORKING_DIRECTORY)/provisioners"; 
+	@echo "--output: $(NEW_MODEL_BUILD_PATH)"; 
 	@cp -r "$(WORKING_DIRECTORY)/provisioners" "$(NEW_MODEL_BUILD_PATH)/"; 
 
-	@echo "Copiando arquivo do Vagrantfile..."; 
-	@echo "--fonte..: $(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 
-	@echo "--destino: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
+	@echo "Copying files from Vagrantfile..."; 
+	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 
+	@echo "--output: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile" "$(NEW_MODEL_BUILD_PATH)/"; 
 
-	@echo "Copiando chave privada SSH do Vagrant..."; 
-	@echo "--fonte..: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 
-	@echo "--destino: $(NEW_MODEL_BUILD_PATH)/files/vagrant_insecure_private_key"; 
+	@echo "Copying Vagrant SSH Private Key..."; 
+	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 
+	@echo "--output: $(NEW_MODEL_BUILD_PATH)/files/vagrant_insecure_private_key"; 
 	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key" "$(NEW_MODEL_BUILD_PATH)/files";
 
-	@echo "Compilação concluída!!!...";  
+	@echo "Complete compilation!";  
 
 
 build:
-	@echo "Iniciando o BUILD do projeto packer [$(NEW_MODEL_NAME)]..."; 
-	@echo "--script: $(START_PACKER_CMD)"; 
+	@echo "Starting the BUILD of the [$(NEW_MODEL_NAME)] project..."; 
 
+	@echo "Applying validation in the [Packer Template]:"; 
 	@bash $(START_PACKER_CMD) validate;
+	
+	@echo "Applying inspect in the [Packer Template]:"; 
 	@bash $(START_PACKER_CMD) inspect;
+
+	@echo "Applying build in the [Packer Template]:"; 
 	@bash $(START_PACKER_CMD) build -only="$(PACKER_ONLY)";
 
-	@echo "Construção concluída!!!...";  
+	@echo "Complete build!";  
 
 
 build-force: clean compile build
 	
 		
 install-box: 
-	@echo "Iniciando a instalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
-	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
+	@echo "Starting the Vagrant Box installation of the packer project [$(NEW_MODEL_NAME)]..."; 
+	@echo "--box to be generated: $(NEW_MODEL_BUILD_PATH)/coreos-$(COREOS_RELEASE)-$(COREOS_VERSION).box"; 
 
 	@vagrant box list;
 	@vagrant box add --force \
 					 --provider="virtualbox" \
 					 --name="lucifer/$(NEW_MODEL_NAME)" \
-					 $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box;
+					 $(NEW_MODEL_BUILD_PATH)/coreos-$(COREOS_RELEASE)-$(COREOS_VERSION).box;
 	@vagrant box list;
 
-	@echo "Instalação do vagrant box concluída!!!...";  
+	@echo "Complete Vagrant Box installation!";  
 
 
 uninstall-box: 
-	@echo "Iniciando a desinstalação do Vagrant Box do projeto packer [$(NEW_MODEL_NAME)]..."; 
-	@echo "--box: $(NEW_MODEL_BUILD_PATH)/coreos-vagrant.box"; 
+	@echo "Starting the Vagrant Box uninstallation of the packer project [$(NEW_MODEL_NAME)]..."; 
+	@echo "--box be uninstall: lucifer/$(NEW_MODEL_NAME)"; 
 
 	@vagrant box list;
 	@vagrant box remove lucifer/$(NEW_MODEL_NAME);
 	@vagrant box list;
 
-	@echo "Desinstalação do vagrant box concluída!!!...";
+	@echo "Uninstalling the completed Vagrant Box!";
 
 
 clean: 
-	@echo "Iniciando a exclusão dos arquivos do projeto packer [$(NEW_MODEL_NAME)]...";
-	@echo "--diretorio: $(NEW_MODEL_BUILD_PATH)";
+	@echo "Initiating deletion of files of packer project [$(NEW_MODEL_NAME)]...";
+	@echo "--affected directory: $(NEW_MODEL_BUILD_PATH)";
 
 	@rm -rf $(NEW_MODEL_BUILD_PATH); sleep 2s;
 	
-	@echo "Exclusão concluída!!!..."; 
+	@echo "cleaning completed!"; 
 
 
 clean-force: 
-	@echo "Iniciando a exclusão dos arquivos de BUILDs";
-	@echo "--diretorio: $(PACKER_BUILD_PATH)";
+	@echo "Initiating deletion all of files [packer-builds]";
+	@echo "--affected directory: $(PACKER_BUILD_PATH)";
 
 	@rm -rf $(PACKER_BUILD_PATH); sleep 2s;
 	
-	@echo "Exclusão concluída!!!..."; 
+	@echo "cleaning completed!"; 
 
 
 vagrant: 
-	@echo "Iniciando teste vagrant do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "Starting vagrant testing through a CLI [$(NEW_MODEL_NAME)]..."; 
 	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
+	@echo "--CLI: 'vagrant $(VAGRANT_CLI)'"; 
 
 	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant $(VAGRANT_CLI);
 
-	@echo "Teste executado!!!...";  
+	@echo "Completed vagrant test!";  
 
 
 vagrant-up: 
-	@echo "Iniciando teste vagrant do projeto packer [$(NEW_MODEL_NAME)]..."; 
+	@echo "Starting vagrant testing through a CLI UP [$(NEW_MODEL_NAME)]..."; 
 	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
+	@echo "--CLI: 'vagrant up'"; 
 
 	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant up;
 
-	@echo "Teste executado!!!...";  
+	@echo "Completed vagrant test!";  
 

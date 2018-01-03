@@ -34,6 +34,8 @@ function util.getParameterValue(){
 function StartCompilation {
     local param1=$(util.getParameterValue "(--param-01=)" "$@"); 
     local param2=$(util.getParameterValue "(--param-02=)" "$@"); 
+
+    echo -e "\nStarting script execution [compile-cfssl-certificates.sh]";
     
  
 

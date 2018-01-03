@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
+# @descr: Script to test the Makefile
 # @fonts: 	
 # @example:
 #       bash Makefile.test plan
@@ -11,6 +11,9 @@
 #       bash Makefile.test compile-all
 #-------------------------------------------------------------#
 
+# @descr: Main function of the script, it runs automatically on the script call.
+# @param: 
+#    $@ | array: (*)
 function MakefileTest {
     local new_model_name="coreos-vagrant";
     local coreos_release="alpha";
@@ -85,11 +88,13 @@ function MakefileTest {
                          COREOS_VERSION=${coreos_version};
         };;
         *) {
-            echo "AVISO: O tipo do teste não foi passado ou está incorreto.";
+            echo "WARNING: The test type has not been passed or is incorrect.";
         };;
     esac
 }
 
+# @descr: Call of execution of the script's main function.
 MakefileTest "$@" 2>&1 | tee Makefile.test.log;
 
+# @descr: Finishing the script!!! :P
 exit 0;

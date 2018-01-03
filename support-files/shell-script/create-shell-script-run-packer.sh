@@ -1,12 +1,16 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Sua Descrição da Instalação na Maquina.
-# @fonts: Fontes de referências
+# @descr: Script for generating a startup Packer CLI. 
+# @fonts: 
 # @example:
-#       bash script-example.sh --action='install' --param='{"version":"3.6.66"}'
-#   OR
-#       bash script-example.sh --action='uninstall' --param='{"version":"6.6.63"}'    
+#       bash create-shell-script-run-packer.sh \
+#   		                  --source-file="./packer-new-model/coreos-all-platforms.json" \
+#                             --output-file="./packer-builds/.../coreos-vagrant-template.json" \
+#                             --new-model-build-path="./packer-builds/coreos-vagrant-packer" \
+#                             --packer-modules="./packer-modules" \
+#                             --coreos-release="alpha" \
+#                             --coreos-version="1632.0.0";
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
@@ -25,36 +29,27 @@ function util.getParameterValue(){
     echo $valueEnd;
 }
 
-# @descr: Descrição da Função.
-# @fonts: Fontes de referências
+# @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
-#    action | text: (install, uninstall)
-#    param | json: '{"version":"..."}'
+#    $@ | array: (*)
 function StartCompilation {
-    # @descr: Descrição da Variavel.
     local new_mode_source_file=$(util.getParameterValue "(--new-model-source-file=)" "$@");  
-    # @descr: Descrição da Variavel.
     local new_mode_output_file=$(util.getParameterValue "(--new-model-output-file=)" "$@");  
-    # @descr: Descrição da Variavel.
     local new_mode_build_path=$(util.getParameterValue "(--new-model-build-path=)" "$@");  
-    # @descr: Descrição da Variavel.
     local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
-    # @descr: Descrição da Variavel.
-    local coreos_release=$(util.getParameterValue "(--coreos-release=)" "$@");  
-    # @descr: Descrição da Variavel.
+    local coreos_release=$(util.getParameterValue "(--coreos-release=)" "$@");
     local coreos_version=$(util.getParameterValue "(--coreos-version=)" "$@"); 
     
-    # @descr: Descrição da Variavel.
+    local packer_template=$(cat "${new_mode_source_file}" | jq -c ".packer_template"); 
+
     local compiled_template_name=$(basename "${new_mode_output_file}");  
     compiled_template_name="${compiled_template_name%.*}";
 
-    # @descr: Descrição da Variavel.
     local compiled_template_path=$(dirname "${new_mode_output_file}");
 
-    # @descr: Descrição da Variavel.
-    local packer_template=$(cat "${new_mode_source_file}" | jq -c ".packer_template"); 
+    echo -e "\nStarting script execution [create-shell-script-run-packer.sh]";
 
-    echo "Processando módulo [variables]...";
+    echo "Processing the [override variables] of Makefile...";
     if [ "${coreos_release}" == "" ]; then
         coreos_release="stable";
     fi
@@ -62,15 +57,16 @@ function StartCompilation {
         coreos_version="current";
     fi
 
-    echo "Processando módulo [list_variables]..."; 
+    echo "Processing the [variables list] module...";
     local list_variables="";   
     for variableJSON in $(echo "${packer_template}" | jq -r '.list_variables[]'); do
+        echo "--processing variable:: '${packer_modules}${variableJSON}'"; 
         local nameVariableJSON=$(basename ${packer_modules}${variableJSON});
-        list_variables+='\\n\t\t\t-var-file="${template_path}/'${nameVariableJSON}'" \'; 
+        list_variables+='\\n\t\t\t-var-file="${template_path}/'${nameVariableJSON}'" \';   
     done 
 
-    echo "Iniciando a criação do arquivo build.sh para packer";  
-    echo "--para o diretorio: ${module_build_path}"; 
+    echo "Starting the creation of the [start-packer.sh] for execution Packer CLI...";  
+    echo "--generated file: '${new_mode_build_path}/start-packer.sh'"; 
     touch "${new_mode_build_path}/start-packer.sh"
     {
         echo -e '#!/bin/bash';
@@ -107,6 +103,8 @@ function StartCompilation {
 
 } 
 
+# @descr: Call of execution of the script's main function.
 StartCompilation "$@";
 
+# @descr: Finishing the script!!! :P
 exit 0;
