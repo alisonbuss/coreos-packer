@@ -1,10 +1,8 @@
 {
     "packer_template": {
-        "description": "CoreOS stable image for a DigitalOcean platform.",
+        "description": "CoreOS image for a DigitalOcean platform.",
         "variables": {
-            "name": "coreos",
-            "release": "stable",
-            "version": "current"
+            
         },
         "list_variables": [
             "/variables/vars-global.json",

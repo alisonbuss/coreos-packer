@@ -1,27 +1,20 @@
 {
     "type": "amazon-ebs",
+
     "access_key": "{{user `aws_access_key`}}",
     "secret_key": "{{user `aws_secret_key`}}",
-    "region": "{{user `aws_region`}}",
-    "source_ami": "{{user `aws_ami_image`}}",
+    
+    "source_ami": "{{user `aws_source_ami`}}",
     "instance_type": "{{user `aws_instance_type`}}",
-    "ssh_username": "core",
-    "ami_name": "management_host {{timestamp}}",
-    "tags": {
-        "Name": "management_host {{timestamp}}",
-        "OS_Version": "LinuxCentOs7",
-        "Release": "7",
-        "Description": "CoreOS Stable Current image basic image"
-    },
-    "user_data_file": "config/user-data.sh",
+    "region": "{{user `aws_region`}}",
+    "ssh_username": "{{user `aws_ssh_username`}}",
+    "ami_name": "{{user `aws_ami_name`}}",
 
-    "subnet_id": "{{user `subnet_id`}}",
-    "ami_virtualization_type": "hvm",
-    "ami_block_device_mappings": [
-        {
-           "device_name": "/dev/xvda",
-           "volume_size": 100,
-           "delete_on_termination": true
-        }
-    ]
+    "tags": {
+        "Name": "Packer Builder",
+        "OS_Version": "{{user `coreos_name`}}-{{user `coreos_version`}}",
+        "Release": "{{user `coreos_release`}}",
+        "Runner": "Packer",
+        "Description": "CoreOS ({{user `coreos_release`}}-{{user `coreos_version`}}) basic image"
+    }
 }

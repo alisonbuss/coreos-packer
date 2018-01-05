@@ -1,3 +1,32 @@
 {
-    "type": "azure-arm"
+    "type": "azure-arm",
+
+    "client_id": "{{user `azure_client_id`}}",
+    "client_secret": "{{user `azure_client_secret`}}",
+    "resource_group_name": "packer",
+    "storage_account": "packerartifacts",
+    "subscription_id": "44cae533-4247-4093-42cf-897ded6e7823",
+    "tenant_id": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+
+    "capture_container_name": "images",
+    "capture_name_prefix": "coreosbaked",
+    "temp_compute_name":"{{user `resource_name`}}",
+
+    "azure_tags": {
+        "dept": "Engineering",
+        "task": "Image deployment"
+    },
+
+    "os_type": "Linux",
+    "image_publisher": "CoreOS",
+    "image_offer": "CoreOS",
+    "image_sku": "Stable",
+    "image_version": "14.04.4-LTS",
+    "location": "location",
+    "vm_size": "Standard_A2",
+
+    "ssh_pty": "true",
+    "ssh_username": "core",
+    "ssh_password": "ssh_pass"
+    
 }

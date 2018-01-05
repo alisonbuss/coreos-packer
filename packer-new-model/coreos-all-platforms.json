@@ -1,15 +1,22 @@
 {
     "packer_template": {
-        "description": "CoreOS stable image for all platform.",
+        "description": "CoreOS image for all platform.",
         "variables": {
-            "name": "coreos",
-            "release": "stable",
-            "version": "current"
+            "vagrant_cpus": "2", 
+            "vagrant_memory": "2048",
+            "vagrant_disk_size": "33666",
+
+            "aws_access_key": "",
+            "aws_secret_key": "",
+
+            "azure_client_id": "fe354398-d7sf-4dc9-87fd-c432cd8a7e09",
+            "azure_client_secret": "keepitsecret&#*$",
+            
+            "google_account_file": ""
         },
         "list_variables": [
             "/variables/vars-global.json",
             "/variables/vars-coreos.json",
-            "/variables/vars-machine-medium.json",
             "/variables/vars-vagrant.json",
             "/variables/vars-aws.json",
             "/variables/vars-azure.json",

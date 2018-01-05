@@ -5,6 +5,19 @@
 
 # coreos-packer
 
+https://grafana.com/
+
+https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
+
+https://www.youtube.com/watch?v=A760lwRDg9U
+https://www.youtube.com/watch?v=C20Ia-OqZt0
+
+https://cloud.google.com/solutions/automated-build-images-with-jenkins-kubernetes
+
+https://cloud.google.com/solutions/jenkins-on-kubernetes-engine#deploying_kubernetes_engine_clusters
+
+https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
+
 ### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
 
 Inspired by Satoshi Matsumoto [packer-templates](https://github.com/kaorimatz/packer-templates/)
@@ -87,6 +100,8 @@ Módulos para packer.io, basea-se em um file.json com uma sixtase simples para a
   Disponível: *[https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/](https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/)*.
 
 
+https://github.com/kelseyhightower/kubestack/blob/master/packer/kubestack.json
+
 https://github.com/ainoya/aws-coreos-clustering-kit/
 
 https://github.com/cloudurable/cassandra-image/wiki/Using-Packer-to-create-an-AMI-for-Amazon---EC2
@@ -155,4 +170,12 @@ https://apiumbrella.io/
 
 http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
 
+
+https://github.com/julienstroheker/DCOS-Azure/blob/master/packer/packer/packer.json
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/build-image-with-packer
+https://github.com/squasta/PackerAzureRM/blob/master/Packer-VMWin2016StanAzureBasicManagedDisk.json
+https://github.com/squasta/PackerAzureRM/blob/master/Packer-VMWin2016-IIS-Azure-squasta.json
+https://github.com/squasta/PackerAzureRM
+
+https://github.com/hashicorp/packer/tree/master/examples/azure
 

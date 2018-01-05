@@ -1,10 +1,10 @@
 {
     "packer_template": {
-        "description": "CoreOS stable image for a Google platform.",
+        "description": "CoreOS image for a Google platform.",
         "variables": {
-            "name": "coreos",
-            "release": "stable",
-            "version": "current"
+            "google_account_file": "",
+            "google_source_image": "",
+            "google_zone": ""
         },
         "list_variables": [
             "/variables/vars-global.json",

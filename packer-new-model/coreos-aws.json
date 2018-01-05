@@ -1,10 +1,9 @@
 {
     "packer_template": {
-        "description": "CoreOS stable image for a AWS platform.",
+        "description": "CoreOS image for a AWS platform.",
         "variables": {
-            "name": "coreos",
-            "release": "stable",
-            "version": "current"
+            "aws_access_key": "",
+            "aws_secret_key": ""
         },
         "list_variables": [
             "/variables/vars-global.json",

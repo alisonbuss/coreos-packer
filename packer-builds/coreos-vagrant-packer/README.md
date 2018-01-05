@@ -18,14 +18,15 @@
 ```bash
 {
     "packer_template": {
-        "description": "CoreOS alpha image for a Vagrant platform.",
+        "description": "CoreOS image for a Vagrant platform.",
         "variables": {
-            "custom_variables": "Values.. values..."
+            "vagrant_cpus": "2", 
+            "vagrant_memory": "2048",
+            "vagrant_disk_size": "33666"
         },
         "list_variables": [
             "/variables/vars-global.json",
             "/variables/vars-coreos.json",
-            "/variables/vars-machine-large.json",
             "/variables/vars-vagrant.json"
         ],
         "builders": [
@@ -46,33 +47,25 @@
 ```text
 ./packer-builds/coreos-vagrant-packer
 ├── files
-│   ├── ignitions
-│   │   ├── coreos-ignition-for-azure.json
-│   │   ├── coreos-ignition-for-digitalocean.json
-│   │   ├── coreos-ignition-for-ec2.json
-│   │   ├── coreos-ignition-for-gce.json
-│   │   ├── coreos-ignition-for-packet.json
-│   │   ├── coreos-ignition-for-virtualbox.json
-│   │   └── coreos-ignition.json
-│   └── vagrant_insecure_private_key
+│   └── ignitions
+│       ├── coreos-ignition-for-azure.json
+│       ├── coreos-ignition-for-digitalocean.json
+│       ├── coreos-ignition-for-ec2.json
+│       ├── coreos-ignition-for-gce.json
+│       ├── coreos-ignition-for-packet.json
+│       ├── coreos-ignition-for-virtualbox.json
+│       └── coreos-ignition.json
 ├── packer-template
 │   ├── coreos-vagrant-template.json
 │   ├── coreos-vagrant-template-min.json
 │   ├── vars-coreos.json
 │   ├── vars-custom-variables.json
 │   ├── vars-global.json
-│   ├── vars-machine-large.json
 │   └── vars-vagrant.json
-├── provisioners
-│   ├── ansible
-│   │   └── README.md
-│   └── shell
-│       └── README.md
 ├── README.md
-├── start-packer.sh
-└── Vagrantfile
+└── start-packer.sh
 
-6 directories, 20 files
+3 directories, 15 files
 
 ```
  
@@ -81,7 +74,9 @@
 ##### ./packer-builds/coreos-vagrant-packer/packer-template/vars-custom-variables.json
 ```json
 {
-  "custom_variables": "Values.. values..."
+  "vagrant_cpus": "2",
+  "vagrant_memory": "2048",
+  "vagrant_disk_size": "33666"
 }
 ```
  
@@ -89,7 +84,10 @@
 ##### ./packer-modules/variables/vars-global.json 
 ```json
 {
-    "global_build_path": "./"
+    "global_working_directory": "/",
+    
+    "global_build_path": "/packer-builds",
+    "global_provisioners_path": "/provisioners"
 }
 ```
  
@@ -99,29 +97,21 @@
     "coreos_name": "coreos",
     "coreos_release": "stable",
     "coreos_version": "current",
-    "coreos_iso_checksum": "",
-    "coreos_iso_checksum_type": "none",
     "coreos_ignition_path": "/files/ignitions/",
     "coreos_ignition_name": "coreos-ignition.json"
 }
 ```
  
-##### ./packer-modules/variables/vars-machine-large.json 
-```json
-{
-    "machine_memory": "2048",
-    "machine_cpus": "2",  
-    "machine_disk_size": "40000"
-}
-
-```
- 
 ##### ./packer-modules/variables/vars-vagrant.json 
 ```json
 {
-    "vagrant_box_name": "coreos-vagrant",
+    "vagrant_vm_name": "vm-coreos-packer",
+    "vagrant_iso_checksum": "",
+    "vagrant_iso_checksum_type": "none",
     "vagrant_insecure_private_key": "/files/vagrant_insecure_private_key",
-    "vagrant_insecure_public_key": "/files/vagrant_insecure_public_key.pub"
+    "vagrant_cpus": "1", 
+    "vagrant_memory": "512",
+    "vagrant_disk_size": "20000"
 }
 ```
  
@@ -132,32 +122,32 @@
 {
     "type": "virtualbox-iso",
         
-    "vm_name": "vm-{{user `name`}}-packer",
-    "iso_checksum": "{{user `iso_checksum`}}",
-    "iso_checksum_type": "{{user `iso_checksum_type`}}",
-    "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
-    "iso_target_path": "{{user `build_path`}}/coreos-{{user `release`}}-{{user `version`}}.iso", 
+    "vm_name": "{{user `vagrant_vm_name`}}",
+    "iso_checksum": "{{user `vagrant_iso_checksum`}}",
+    "iso_checksum_type": "{{user `vagrant_iso_checksum_type`}}",
+    "iso_url": "http://{{user `coreos_release`}}.release.core-os.net/amd64-usr/{{user `coreos_version`}}/coreos_production_iso_image.iso",
+    "iso_target_path": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.iso", 
     "guest_os_type": "Linux26_64",
     
     "hard_drive_interface": "sata",
-    "disk_size": "{{user `disk_size`}}",
+    "disk_size": "{{user `vagrant_disk_size`}}",
     "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `vagrant_memory`}}"],
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `vagrant_cpus`}}"]
     ],
-    "http_directory": "{{user `build_path`}}",
+    "http_directory": "{{user `global_build_path`}}",
 
     "headless": "false",
     "guest_additions_mode": "disable",
-    "output_directory": "{{user `build_path`}}/packer-vm-cache",
+    "output_directory": "{{user `global_build_path`}}/packer-vm-cache",
     
     "boot_wait": "33s",
     "boot_command": [
         "sudo -i;<enter>",
         "systemctl stop sshd.socket;<enter>",
-        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `ignition_path`}}{{user `ignition_name`}};<enter>",
-        "cat {{user `ignition_name`}};<enter>",
-        "coreos-install -d /dev/sda -C {{ user `release` }} -i {{user `ignition_name`}};<enter>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `coreos_ignition_path`}}{{user `coreos_ignition_name`}};<enter>",
+        "cat {{user `coreos_ignition_name`}};<enter>",
+        "coreos-install -d /dev/sda -C {{ user `coreos_release` }} -i {{user `coreos_ignition_name`}};<enter>",
         "sleep 3s;<enter>",
         "reboot;<enter>"
     ],  
@@ -165,7 +155,7 @@
     "communicator": "ssh",
     "ssh_port": 22,
     "ssh_username": "core",
-    "ssh_private_key_file": "{{user `build_path`}}{{user `vagrant_insecure_private_key`}}",
+    "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
     "ssh_timeout": "33m",
 
     "shutdown_command": "sudo -S shutdown -P now"
@@ -178,7 +168,8 @@
 ```json
 {
     "type": "shell",
-    "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"]
+    "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"],
+    "only": ["virtualbox-iso", "vmware-iso"]
 }
 ```
  
@@ -189,7 +180,7 @@
 {
     "type": "vagrant",
     "compression_level": "6",
-    "output": "{{user `build_path`}}/{{user `vagrant_box_name`}}.box"
+    "output": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.box"
 }
 ```
  
@@ -199,50 +190,50 @@
 ##### ./packer-builds/coreos-vagrant-packer/packer-template/coreos-vagrant-template.json
 ```json
 {
-  "description": "CoreOS alpha image for a Vagrant platform.",
+  "description": "CoreOS image for a Vagrant platform.",
   "builders": [
     {
       "type": "virtualbox-iso",
-      "vm_name": "vm-{{user `name`}}-packer",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-      "iso_url": "http://{{user `release`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
-      "iso_target_path": "{{user `build_path`}}/coreos-{{user `release`}}-{{user `version`}}.iso",
+      "vm_name": "{{user `vagrant_vm_name`}}",
+      "iso_checksum": "{{user `vagrant_iso_checksum`}}",
+      "iso_checksum_type": "{{user `vagrant_iso_checksum_type`}}",
+      "iso_url": "http://{{user `coreos_release`}}.release.core-os.net/amd64-usr/{{user `coreos_version`}}/coreos_production_iso_image.iso",
+      "iso_target_path": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.iso",
       "guest_os_type": "Linux26_64",
       "hard_drive_interface": "sata",
-      "disk_size": "{{user `disk_size`}}",
+      "disk_size": "{{user `vagrant_disk_size`}}",
       "vboxmanage": [
         [
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "{{user `memory`}}"
+          "{{user `vagrant_memory`}}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "{{user `cpus`}}"
+          "{{user `vagrant_cpus`}}"
         ]
       ],
-      "http_directory": "{{user `build_path`}}",
+      "http_directory": "{{user `global_build_path`}}",
       "headless": "false",
       "guest_additions_mode": "disable",
-      "output_directory": "{{user `build_path`}}/packer-vm-cache",
+      "output_directory": "{{user `global_build_path`}}/packer-vm-cache",
       "boot_wait": "33s",
       "boot_command": [
         "sudo -i;<enter>",
         "systemctl stop sshd.socket;<enter>",
-        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `ignition_path`}}{{user `ignition_name`}};<enter>",
-        "cat {{user `ignition_name`}};<enter>",
-        "coreos-install -d /dev/sda -C {{ user `release` }} -i {{user `ignition_name`}};<enter>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `coreos_ignition_path`}}{{user `coreos_ignition_name`}};<enter>",
+        "cat {{user `coreos_ignition_name`}};<enter>",
+        "coreos-install -d /dev/sda -C {{ user `coreos_release` }} -i {{user `coreos_ignition_name`}};<enter>",
         "sleep 3s;<enter>",
         "reboot;<enter>"
       ],
       "communicator": "ssh",
       "ssh_port": 22,
       "ssh_username": "core",
-      "ssh_private_key_file": "{{user `build_path`}}{{user `vagrant_insecure_private_key`}}",
+      "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
       "ssh_timeout": "33m",
       "shutdown_command": "sudo -S shutdown -P now"
     }
@@ -253,6 +244,10 @@
       "inline": [
         "echo 'Hello World!!!'",
         "echo 'Hello CoreOS!!!'"
+      ],
+      "only": [
+        "virtualbox-iso",
+        "vmware-iso"
       ]
     }
   ],
@@ -260,7 +255,7 @@
     {
       "type": "vagrant",
       "compression_level": "6",
-      "output": "{{user `build_path`}}/{{user `vagrant_box_name`}}.box"
+      "output": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.box"
     }
   ],
   "min_packer_version": "1.1.3"
@@ -278,22 +273,22 @@ function StartPacker {
     local coreos_release="alpha";
     local coreos_version="1632.0.0";
     local coreos_url_digests="http://${coreos_release}.release.core-os.net/amd64-usr/${coreos_version}/coreos_production_iso_image.iso.DIGESTS";
-    local coreos_iso_checksum_type="SHA512";
-    local coreos_iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk '{ print length, $1 | "sort -rg"}' | awk 'NR == 1 { print $2 }');
+    local iso_checksum_type="SHA512";
+    local iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk '{ print length, $1 | "sort -rg"}' | awk 'NR == 1 { print $2 }');
     local build_path="./packer-builds/coreos-vagrant-packer";
     local template_path="./packer-builds/coreos-vagrant-packer/packer-template";
     local template_file="${template_path}/coreos-vagrant-template-min.json";
     __run_packer() {
+        # FONT: https://www.packer.io/docs/templates/user-variables.html#from-a-file
         packer "$@" \
 			-var-file="${template_path}/vars-global.json" \
 			-var-file="${template_path}/vars-coreos.json" \
-			-var-file="${template_path}/vars-machine-large.json" \
 			-var-file="${template_path}/vars-vagrant.json" \
             -var-file="${template_path}/vars-custom-variables.json" \
             -var "coreos_release=${coreos_release}" \
             -var "coreos_version=${coreos_version}" \
-            -var "coreos_iso_checksum_type=${coreos_iso_checksum_type}" \
-            -var "coreos_iso_checksum=${coreos_iso_checksum}" \
+            -var "vagrant_iso_checksum_type=${iso_checksum_type}" \
+            -var "vagrant_iso_checksum=${iso_checksum}" \
             -var "global_build_path=${build_path}" \
             "${template_file}";
     }

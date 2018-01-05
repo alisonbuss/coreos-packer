@@ -1,10 +1,9 @@
 {
     "packer_template": {
-        "description": "CoreOS stable image for a Azure platform.",
+        "description": "CoreOS image for a Azure platform.",
         "variables": {
-            "name": "coreos",
-            "release": "stable",
-            "version": "current"
+            "azure_client_id": "fe354398-d7sf-4dc9-87fd-c432cd8a7e09",
+            "azure_client_secret": "keepitsecret&#*$"
         },
         "list_variables": [
             "/variables/vars-global.json",

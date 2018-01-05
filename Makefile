@@ -1,7 +1,8 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr: Makefile for project construction.
-# @fonts: https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
+# @fonts: https://vsupalov.com/packer-ami/
+#		  https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
 # 		  https://blog.pantuza.com/tutoriais/como-funciona-o-makefile
 #		  http://mindbending.org/pt/makefile-para-java
 #		  https://www.embarcados.com.br/introducao-ao-makefile/	
@@ -132,6 +133,15 @@ compile:
 		--output-file="$(NEW_MODEL_OUTPUT_FILE)" \
 		--packer-modules="$(PACKER_MODULES_PATH)";
 
+	@bash $(COMPILE_CERTIFICATE_CMD) \
+		--output-files="$(CFSSL_BUILD_PATH)";
+
+	@bash $(COMPILE_CONFIG_IGNITION_CMD) \
+		--source-file="$(IGNITION_SOURCE_FILE)" \
+		--build-path="$(IGNITION_BUILD_PATH)" \
+		--compiled-name="$(IGNITION_COMPILED_NAME)" \
+		--platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+
 	@bash $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD) \
 		--new-model-source-file="$(NEW_MODEL_SOURCE_FILE)" \
 		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
@@ -145,17 +155,6 @@ compile:
 		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
 		--new-model-build-path="$(NEW_MODEL_BUILD_PATH)" \
 		--packer-modules="$(PACKER_MODULES_PATH)";
-
-	@bash $(COMPILE_CONFIG_IGNITION_CMD) \
-		--source-file="$(IGNITION_SOURCE_FILE)" \
-		--build-path="$(IGNITION_BUILD_PATH)" \
-		--compiled-name="$(IGNITION_COMPILED_NAME)" \
-		--platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
-
-	@echo "Copying files from provisioners..."; 
-	@echo "--source: $(WORKING_DIRECTORY)/provisioners"; 
-	@echo "--output: $(NEW_MODEL_BUILD_PATH)"; 
-	@cp -r "$(WORKING_DIRECTORY)/provisioners" "$(NEW_MODEL_BUILD_PATH)/"; 
 
 	@echo "Copying files from Vagrantfile..."; 
 	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 

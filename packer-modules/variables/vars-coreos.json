@@ -2,8 +2,6 @@
     "coreos_name": "coreos",
     "coreos_release": "stable",
     "coreos_version": "current",
-    "coreos_iso_checksum": "",
-    "coreos_iso_checksum_type": "none",
     "coreos_ignition_path": "/files/ignitions/",
     "coreos_ignition_name": "coreos-ignition.json"
 }

@@ -1,3 +1,6 @@
 {
-    "global_build_path": "./"
+    "global_working_directory": "/",
+    
+    "global_build_path": "/packer-builds",
+    "global_provisioners_path": "/provisioners"
 }
