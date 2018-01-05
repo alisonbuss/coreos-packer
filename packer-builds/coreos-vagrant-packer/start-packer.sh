@@ -24,10 +24,10 @@ function StartPacker {
             "${template_file}";
     }
     case $params in
-        validate) { __run_packer "${params}"; };;
+        validate) { __run_packer $params; };;
         inspect)  { packer inspect "${template_file}"; };;
-        build)    { __run_packer "${params}"; };;
-        *)        { packer "${params}"; };;
+        *build*)    { __run_packer $params; };;
+        *)        { packer $params; };;
     esac
 }
 StartPacker "$@";

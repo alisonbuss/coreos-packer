@@ -169,7 +169,7 @@
 {
     "type": "shell",
     "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"],
-    "only": ["virtualbox-iso", "vmware-iso"]
+    "only": ["virtualbox-iso"]
 }
 ```
  
@@ -246,8 +246,7 @@
         "echo 'Hello CoreOS!!!'"
       ],
       "only": [
-        "virtualbox-iso",
-        "vmware-iso"
+        "virtualbox-iso"
       ]
     }
   ],
@@ -293,10 +292,10 @@ function StartPacker {
             "${template_file}";
     }
     case $params in
-        validate) { __run_packer "${params}"; };;
+        validate) { __run_packer $params; };;
         inspect)  { packer inspect "${template_file}"; };;
-        build)    { __run_packer "${params}"; };;
-        *)        { packer "${params}"; };;
+        *build*)    { __run_packer $params; };;
+        *)        { packer $params; };;
     esac
 }
 StartPacker "$@";

@@ -31,7 +31,7 @@ function MakefileTest {
 
         };;
         build) {
-            make plan compile build $ARGUMENTS;
+            make plan build $ARGUMENTS;
 
         };;
         build-force) {
@@ -39,7 +39,7 @@ function MakefileTest {
 
         };;
         install-box) {
-            make plan compile build install-box $ARGUMENTS;
+            make plan install-box $ARGUMENTS;
 
         };;
         uninstall-box) {

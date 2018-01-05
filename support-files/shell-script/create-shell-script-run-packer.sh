@@ -92,10 +92,10 @@ function StartCompilation {
         echo -e '            "${template_file}";';
         echo -e '    }';
         echo -e '    case $params in';
-        echo -e '        validate) { __run_packer "${params}"; };;';
+        echo -e '        validate) { __run_packer $params; };;';
         echo -e '        inspect)  { packer inspect "${template_file}"; };;';
-        echo -e '        build)    { __run_packer "${params}"; };;';
-        echo -e '        *)        { packer "${params}"; };;';
+        echo -e '        *build*)    { __run_packer $params; };;';
+        echo -e '        *)        { packer $params; };;';
         echo -e '    esac';
         echo -e '}';
         echo -e 'StartPacker "$@";';

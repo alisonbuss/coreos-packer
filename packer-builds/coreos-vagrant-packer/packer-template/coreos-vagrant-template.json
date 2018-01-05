@@ -55,8 +55,7 @@
         "echo 'Hello CoreOS!!!'"
       ],
       "only": [
-        "virtualbox-iso",
-        "vmware-iso"
+        "virtualbox-iso"
       ]
     }
   ],

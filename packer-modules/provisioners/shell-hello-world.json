@@ -1,5 +1,5 @@
 {
     "type": "shell",
     "inline": ["echo 'Hello World!!!'", "echo 'Hello CoreOS!!!'"],
-    "only": ["virtualbox-iso", "vmware-iso"]
+    "only": ["virtualbox-iso"]
 }
