@@ -4,19 +4,15 @@
 
 require 'json'
 
-Vagrant.require_version ">= 1.6.0"
-
-VAGRANTFILE_API_VERSION = "2"
 PROJECT_PATH = File.dirname(__FILE__)
-
 INSTANCES = JSON.parse(File.read(File.join(PROJECT_PATH, 'vagrant-instances.json')))
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
-    # plugin conflict
-    if Vagrant.has_plugin?("vagrant-vbguest") then
-        config.vbguest.auto_update = false
-    end    
+VAGRANTFILE_API_VERSION = "2"
 
+Vagrant.require_version ">= 1.6.0"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
+    #starting each instance of the JSON file. "vagrant-instances.json" 
     (INSTANCES).each_with_index do |instance, index|
         # define default values
         _count = (index + 1)
@@ -28,6 +24,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         _enableSharedFolders = (instance.key?("enable_shared_folders") ? instance["enable_shared_folders"] : false)
         _sharedFolders = [
             {host: "files/", guest: "/home/core/shared-folder"}
+            # Example: 
+            #{ host: "files/", guest: "/home/core/shared-folder", settings: { 
+            #    id: "shared-override-01", nfs: true, mount_options: ['nolock,vers=3,udp'] 
+            #}}
         ]
         _network = [
             { type: "private_network", settings: { ip: "172.17.8.#{100 + _count}" }},
@@ -36,10 +36,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ]
         _provision = [
             { type: "shell", settings: { inline: "echo Hello, World", privileged: true }}
+            # Example: 
+            #{ type: "ansible", settings: { playbook: "provision/install.yml", host_key_checking: false, sudo: true, tags: ["common", "jenkins"] }}
         ]
 
+        # starting the configuration of the virtual machine
         config.vm.define _hostname do |config|
             # This sets the username that Vagrant will SSH as by default.
+            # --> default: config.ssh.username = "vagrant"
             config.ssh.username = "core"
             # Always use Vagrants insecure key.
             config.ssh.insert_key = false
@@ -92,6 +96,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 end
             end
         end
-     
+        # plugin conflict
+        if Vagrant.has_plugin?("vagrant-vbguest") then
+            config.vbguest.auto_update = false
+        end   
     end
 end

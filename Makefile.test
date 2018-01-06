@@ -50,16 +50,12 @@ function MakefileTest {
             make clean $ARGUMENTS;
 
         };;
-        clean-force) {
-            make clean-force $ARGUMENTS;
-
-        };;
         vagrant) {
             make vagrant $ARGUMENTS;
 
         };;
         vagrant-up) {
-            make plan compile vagrant-up $ARGUMENTS;
+            make vagrant-up $ARGUMENTS;
 
         };;
         compile-all) {

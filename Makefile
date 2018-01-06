@@ -58,8 +58,10 @@ NEW_MODEL_COMPILED_PATH ?= $(NEW_MODEL_BUILD_PATH)/packer-template
 NEW_MODEL_OUTPUT_FILE   ?= $(NEW_MODEL_COMPILED_PATH)/$(NEW_MODEL_COMPILED_NAME).json
 
 # DEFAULT VARIABLE - CoreOS!!!
-COREOS_RELEASE ?= stable
-COREOS_VERSION ?= current
+#COREOS_RELEASE ?= stable
+#COREOS_VERSION ?= current
+COREOS_RELEASE  ?= alpha
+COREOS_VERSION  ?= 1632.0.0
 
 # DEFAULT VARIABLES - Ignition For CoreOS
 IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
@@ -211,26 +213,23 @@ uninstall-box:
 	@echo "--box be uninstall: lucifer/$(NEW_MODEL_NAME)"; 
 
 	@vagrant box list;
+	@vagrant global-status;
+
+	@VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant destroy --force;
+
 	@vagrant box remove lucifer/$(NEW_MODEL_NAME);
+
 	@vagrant box list;
+	@vagrant global-status;
 
 	@echo "Uninstalling the completed Vagrant Box!";
 
 
-clean: 
+clean: uninstall-box
 	@echo "Initiating deletion of files of packer project [$(NEW_MODEL_NAME)]...";
 	@echo "--affected directory: $(NEW_MODEL_BUILD_PATH)";
 
 	@rm -rf $(NEW_MODEL_BUILD_PATH); sleep 2s;
-	
-	@echo "cleaning completed!"; 
-
-
-clean-force: 
-	@echo "Initiating deletion all of files [packer-builds]";
-	@echo "--affected directory: $(PACKER_BUILD_PATH)";
-
-	@rm -rf $(PACKER_BUILD_PATH); sleep 2s;
 	
 	@echo "cleaning completed!"; 
 
@@ -240,7 +239,7 @@ vagrant:
 	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 	@echo "--CLI: 'vagrant $(VAGRANT_CLI)'"; 
 
-	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant $(VAGRANT_CLI);
+	@VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant $(VAGRANT_CLI);
 
 	@echo "Completed vagrant test!";  
 
@@ -250,7 +249,7 @@ vagrant-up:
 	@echo "--Vagrantfile: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 	@echo "--CLI: 'vagrant up'"; 
 
-	VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant up;
+	@VAGRANT_CWD=$(NEW_MODEL_BUILD_PATH)/ vagrant up;
 
 	@echo "Completed vagrant test!";  
 

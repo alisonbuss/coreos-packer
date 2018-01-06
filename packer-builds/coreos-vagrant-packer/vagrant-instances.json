@@ -10,6 +10,7 @@
         "box": "lucifer/coreos-vagrant",
         "cpus": 1,              
         "memory": 2048,
-        "enable_shared_folders": true
+        "enable_logging": false,
+        "enable_shared_folders": false
     }
 ]

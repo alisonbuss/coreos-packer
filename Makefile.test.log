@@ -1,6 +1,6 @@
 The default values to be used by this Makefile:
 
-    --> MAKECMDGOALS: 'make plan compile'
+    --> MAKECMDGOALS: 'make plan compile vagrant-up'
     --> WORKING_DIRECTORY: .
 
     --> PACKER_BUILD_PATH: ./packer-builds
@@ -97,3 +97,15 @@ Copying Vagrant SSH Private Key...
 --source: ./support-files/vagrant/vagrant_insecure_private_key
 --output: ./packer-builds/coreos-vagrant-packer/files/vagrant_insecure_private_key
 Complete compilation!
+Starting vagrant testing through a CLI UP [coreos-vagrant]...
+--Vagrantfile: ./packer-builds/coreos-vagrant-packer/Vagrantfile
+--CLI: 'vagrant up'
+VAGRANT_CWD=./packer-builds/coreos-vagrant-packer/ vagrant up;
+Bringing machine 'core01.dev.com' up with 'virtualbox' provider...
+Bringing machine 'core02.dev.com' up with 'virtualbox' provider...
+==> core01.dev.com: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> core01.dev.com: flag to force provisioning. Provisioners marked to run always will still run.
+==> core02.dev.com: Running provisioner: shell...
+    core02.dev.com: Running: inline script
+    core02.dev.com: Hello, World
+Completed vagrant test!
