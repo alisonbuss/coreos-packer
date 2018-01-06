@@ -161,6 +161,11 @@ compile:
 	@echo "--output: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
 	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile" "$(NEW_MODEL_BUILD_PATH)/"; 
 
+	@echo "Copying files from vagrant-instances.json..."; 
+	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant-instances.json"; 
+	@echo "--output: $(NEW_MODEL_BUILD_PATH)/vagrant-instances.json"; 
+	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/vagrant-instances.json" "$(NEW_MODEL_BUILD_PATH)/"; 
+
 	@echo "Copying Vagrant SSH Private Key..."; 
 	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 
 	@echo "--output: $(NEW_MODEL_BUILD_PATH)/files/vagrant_insecure_private_key"; 

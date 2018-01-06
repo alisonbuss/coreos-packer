@@ -59,7 +59,7 @@ function MakefileTest {
 
         };;
         vagrant-up) {
-            make vagrant-up $ARGUMENTS;
+            make plan compile vagrant-up $ARGUMENTS;
 
         };;
         compile-all) {

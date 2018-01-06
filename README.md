@@ -5,6 +5,12 @@
 
 # coreos-packer
 
+http://bitcubby.com/configuring-vagrant-json-ruby/
+https://github.com/tkambler/perfect-vagrant 
+https://blog.scottlowe.org/2016/01/18/multi-machine-vagrant-json/ 
+https://thornelabs.net/2014/11/13/multi-machine-vagrantfile-with-shorter-cleaner-syntax-using-json-and-loops.html
+
+
 https://grafana.com/
 
 https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
