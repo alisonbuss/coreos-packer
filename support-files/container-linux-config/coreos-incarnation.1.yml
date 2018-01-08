@@ -1,0 +1,128 @@
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: 
+# @fonts: https://coreos.com/os/docs/latest/provisioning.html
+#         https://coreos.com/ignition/docs/latest/metadata.html
+#         https://github.com/coreos/coreos-metadata/blob/master/README.md
+#         https://github.com/coreos/matchbox/tree/master/examples/ignition
+#         https://coreos.com/os/docs/latest/migrating-to-clcs.html
+#         https://github.com/kubernetes/kubernetes/tree/master/cluster/images/hyperkube
+#         https://coreos.com/os/docs/1649.0.0/clc-examples.html
+#         https://coreos.com/ignition/docs/latest/getting-started.html#troubleshooting
+#         https://coreos.com/ignition/docs/latest/what-is-ignition.html
+#         https://coreos.com/os/docs/1649.0.0/dynamic-data.html
+#         https://cursos.alura.com.br/forum/topico-diferenca-entre-o-dockerfile-e-o-docker-compose-30250
+#         http://brunoizidorio.com.br/blog/docker-multi-containers-com-docker-compose/
+#         https://www.mundodocker.com.br/docker-compose-v3/
+#-------------------------------------------------------------#
+
+passwd:
+  users:
+    - name: "vagrant"
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/vagrant"
+      no_create_home: false
+    
+    - name: "lucifer"
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/lucifer"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+        - "wheel"
+        - "plugdev"
+      shell: "/bin/bash"
+
+    - name: "core"
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+#update:
+#  group: "stable"
+#locksmith:
+#  reboot_strategy: "etcd-lock"
+#  window_start: "Sun 1:00"
+#  window_length: "2h"
+
+etcd:
+  name:                        "{HOSTNAME}"
+  advertise_client_urls:       "http://{PRIVATE_IPV4}:2379"
+  initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
+  listen_client_urls:          "http://0.0.0.0:2379"
+  listen_peer_urls:            "http://{PRIVATE_IPV4}:2380"
+  initial_cluster:             "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
+  #discovery:                   "https://discovery.etcd.io/c44d0693351db89c6539e7ec8888a280"
+
+systemd:
+  units:
+    - name: "etcd-member.service"
+      enable: true
+      
+    - name: "docker-tcp.socket"
+      enable: true
+      contents: |
+        [Unit]
+        Description=Docker Socket for the API
+
+        [Socket]
+        ListenStream=2375
+        Service=docker.service
+        BindIPv6Only=both
+
+        [Install]
+        WantedBy=sockets.target
+
+    - name: "flanneld.service"
+      dropins:
+        - name: "50-network-config.conf"
+          contents: |
+            [Service]
+            ExecStartPre=/usr/bin/etcdctl set /flannel/network/config '{ "Network": "10.1.0.0/16" }'
+    
+    - name: "install-docker-compose.service"
+      enable: true
+      contents: |
+        [Unit]
+        Description=Install docker-compose
+        Requires=network-online.target
+        After=network-online.target
+        Wants=network-online.target
+        Type=oneshot
+
+        [Service]
+        # create /opt/bin directory
+        ExecStart=/usr/bin/mkdir -p /opt/bin/
+
+        # sleep 2 seconds
+        ExecStart=/usr/bin/sleep 2
+
+        # get docker-compose from github
+        # -q quiet
+        # -nc don't fetch if file already exists (return 0)
+        ExecStart=/bin/wget -q -nc -O /opt/bin/docker-compose "https://github.com/docker/compose/releases/download/1.18.0/docker-compose-linux-x86_64"
+
+        # set execution rights
+        ExecStart=/usr/bin/chmod +x /opt/bin/docker-compose
+
+    - name: "hello.service"
+      enabled: true
+      contents: |
+        [Unit]
+        Description=A hello world unit!
+        Requires=network-online.target
+        After=network-online.target
+        Wants=network-online.target
+        Type=oneshot
+
+        [Service]
+        ExecStart=/usr/bin/echo "Hello, World!"
+        ExecStart=/usr/bin/echo "Run ping the Google..."
+        ExecStart=/usr/bin/ping www.google.com
+
+        [Install]
+        WantedBy=multi-user.target
+
+flannel:
+  etcd_prefix: "/flannel/network"

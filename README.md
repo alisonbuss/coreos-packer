@@ -5,6 +5,15 @@
 
 # coreos-packer
 
+http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/
+http://virtualelephant.com/2017/11/14/infrastructure-as-code-bootstrap-coreos-with-ignition/
+http://virtualelephant.com/2017/11/16/infrastructure-as-code-understanding-coreos-ignition/
+https://vadosware.io/post/installing-python-on-coreos-with-ansible/
+http://www.hanymichaels.com/2017/11/02/kubernetes-in-the-enterprise-the-design-guide/
+
+
+
+
 http://bitcubby.com/configuring-vagrant-json-ruby/
 https://github.com/tkambler/perfect-vagrant 
 https://blog.scottlowe.org/2016/01/18/multi-machine-vagrant-json/ 

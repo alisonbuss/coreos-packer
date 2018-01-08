@@ -44,7 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.define _hostname do |config|
             # This sets the username that Vagrant will SSH as by default.
             # --> default: config.ssh.username = "vagrant"
-            config.ssh.username = "core"
+            config.ssh.username = "vagrant"
             # Always use Vagrants insecure key.
             config.ssh.insert_key = false
             # Forward ssh agent to easily ssh into the different machines.
