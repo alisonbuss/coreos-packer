@@ -64,7 +64,7 @@ COREOS_RELEASE  ?= alpha
 COREOS_VERSION  ?= 1632.0.0
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-incarnation.yml
+IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
 IGNITION_BUILD_PATH    ?= $(NEW_MODEL_BUILD_PATH)/files/ignitions
 IGNITION_COMPILED_NAME ?= coreos-ignition
 

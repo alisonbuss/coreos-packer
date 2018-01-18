@@ -17,7 +17,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # define default values
         _count = (index + 1)
         _hostname = instance["name"]
-        _box = instance["box"]    
+        # IP (class B)
+        #_private_ip = "172.17.8.#{100 + _count}"
+        _private_ip = "128.66.63.#{10 + _count}" 
+        _box = instance["box"]      
         _cpus = (instance.key?("cpus") ? instance["cpus"] : 1)
         _memory = (instance.key?("memory") ? instance["memory"] : 512)
         _enableLogging = (instance.key?("enable_logging") ? instance["enable_logging"] : false)
@@ -30,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             #}}
         ]
         _network = [
-            { type: "private_network", settings: { ip: "172.17.8.#{100 + _count}" }},
+            { type: "private_network", settings: { ip: "#{_private_ip}" }},
             { type: "forwarded_port",  settings: { guest: 80, host: 8080, auto_correct: true }},
             { type: "forwarded_port",  settings: { guest: 2375, host: (2375 + _count - 1), host_ip: "127.0.0.1", auto_correct: true }}
         ]
@@ -43,8 +46,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # starting the configuration of the virtual machine
         config.vm.define _hostname do |config|
             # This sets the username that Vagrant will SSH as by default.
-            # --> default: config.ssh.username = "vagrant"
+            # --> default: (config.ssh.username = "vagrant") 
             config.ssh.username = "vagrant"
+            #config.ssh.password = "vagrant"
             # Always use Vagrants insecure key.
             config.ssh.insert_key = false
             # Forward ssh agent to easily ssh into the different machines.

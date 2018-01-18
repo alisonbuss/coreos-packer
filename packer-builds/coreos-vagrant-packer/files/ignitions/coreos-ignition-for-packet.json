@@ -18,72 +18,34 @@
         "sshAuthorizedKeys": [
           "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
         ]
-      },
-      {
-        "groups": [
-          "sudo",
-          "docker"
-        ],
-        "homeDir": "/home/lucifer",
-        "name": "lucifer",
-        "passwordHash": "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1",
-        "sshAuthorizedKeys": [
-          "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
-        ],
-        "shell": "/bin/bash"
       }
     ]
   },
-  "storage": {},
+  "storage": {
+    "files": [
+      {
+        "filesystem": "root",
+        "group": {
+          "id": 0
+        },
+        "path": "/etc/sudoers.d/vagrant",
+        "user": {
+          "id": 0
+        },
+        "contents": {
+          "source": "data:,vagrant%20ALL%3D(ALL)%20NOPASSWD%3A%20ALL",
+          "verification": {}
+        },
+        "mode": 420
+      }
+    ]
+  },
   "systemd": {
     "units": [
       {
-        "dropins": [
-          {
-            "contents": "[Unit]\nRequires=coreos-metadata.service\nAfter=coreos-metadata.service\n\n[Service]\nEnvironmentFile=/run/metadata/coreos\nExecStart=\nExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \\\n  --name=\"${COREOS_PACKET_HOSTNAME}\" \\\n  --listen-peer-urls=\"http://${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --listen-client-urls=\"http://0.0.0.0:2379\" \\\n  --initial-advertise-peer-urls=\"http://${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --initial-cluster=\"${COREOS_PACKET_HOSTNAME}=http://${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --advertise-client-urls=\"http://${COREOS_PACKET_IPV4_PRIVATE_0}:2379\"",
-            "name": "20-clct-etcd-member.conf"
-          }
-        ],
-        "enable": true,
-        "name": "etcd-member.service"
-      },
-      {
-        "dropins": [
-          {
-            "contents": "[Service]\nExecStart=\nExecStart=/usr/lib/coreos/flannel-wrapper $FLANNEL_OPTS \\\n  --etcd-prefix=\"/flannel/network\"",
-            "name": "20-clct-flannel.conf"
-          }
-        ],
-        "enable": true,
-        "name": "flanneld.service"
-      },
-      {
-        "enable": true,
-        "name": "etcd-member.service"
-      },
-      {
-        "contents": "[Unit]\nDescription=Docker Socket for the API\n\n[Socket]\nListenStream=2375\nService=docker.service\nBindIPv6Only=both\n\n[Install]\nWantedBy=sockets.target\n",
-        "enable": true,
-        "name": "docker-tcp.socket"
-      },
-      {
-        "dropins": [
-          {
-            "contents": "[Service]\nExecStartPre=/usr/bin/etcdctl set /flannel/network/config '{ \"Network\": \"10.1.0.0/16\" }'\n",
-            "name": "50-network-config.conf"
-          }
-        ],
-        "name": "flanneld.service"
-      },
-      {
-        "contents": "[Unit]\nDescription=Install docker-compose\nRequires=network-online.target\nAfter=network-online.target\nWants=network-online.target\nType=oneshot\n\n[Service]\n# create /opt/bin directory\nExecStart=/usr/bin/mkdir -p /opt/bin/\n\n# sleep 2 seconds\nExecStart=/usr/bin/sleep 2\n\n# get docker-compose from github\n# -q quiet\n# -nc don't fetch if file already exists (return 0)\nExecStart=/bin/wget -q -nc -O /opt/bin/docker-compose \"https://github.com/docker/compose/releases/download/1.18.0/docker-compose-linux-x86_64\"\n\n# set execution rights\nExecStart=/usr/bin/chmod +x /opt/bin/docker-compose\n",
+        "contents": "[Unit]\nDescription=Install docker-compose\n\n[Service]\nType=oneshot\n\n# create /opt/bin directory\nExecStart=/usr/bin/mkdir -p /opt/bin/\n\n# sleep 2 seconds\nExecStart=/usr/bin/sleep 2\n\n# get docker-compose from github\n# -q quiet\n# -nc don't fetch if file already exists (return 0)\nExecStart=/bin/wget -q -nc -O /opt/bin/docker-compose \"https://github.com/docker/compose/releases/download/1.13.0/docker-compose-linux-x86_64\"\n\n# set execution rights\nExecStart=/usr/bin/chmod +x /opt/bin/docker-compose",
         "enable": true,
         "name": "install-docker-compose.service"
-      },
-      {
-        "contents": "[Unit]\nDescription=A hello world unit!\nRequires=network-online.target\nAfter=network-online.target\nWants=network-online.target\nType=oneshot\n\n[Service]\nExecStart=/usr/bin/echo \"Hello, World!\"\nExecStart=/usr/bin/echo \"Run ping the Google...\"\nExecStart=/usr/bin/ping www.google.com\n\n[Install]\nWantedBy=multi-user.target\n",
-        "enabled": true,
-        "name": "hello.service"
       }
     ]
   }

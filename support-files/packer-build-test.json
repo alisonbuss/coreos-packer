@@ -1,0 +1,200 @@
+{
+  "variables": {
+    "name": "coreos-baseimage",
+    "release": "stable",
+    "iso_checksum": "",
+    "iso_checksum_type": "none",
+    "disk_size": "40000",
+    "cpus": "4",
+    "memory": "2048",
+    "boot_wait": "15s",
+    "ignition": "ignition.json",
+    "vsphere_host": "some host",
+    "vsphere_username": "user@vsphere.local",
+    "vsphere_password": "some password",
+    "vsphere_datacenter": "some DC",
+    "vsphere_resource_pool": "some pool",
+    "vsphere_folder": "some folder",
+    "vsphere_datastore": "some store"
+  },
+  "builders": [{
+    "name": "{{user `name`}}",
+    "guest_os_type": "Linux_64",
+    "headless": true,
+    "type": "virtualbox-iso",
+    "iso_url": "coreos_production_iso_image.iso",
+    "iso_checksum": "d97ed6c250f2037b6fd92471c2890176",
+    "iso_checksum_type": "md5",
+    "ssh_username": "core",
+    "ssh_password": "packer",
+    "shutdown_command": "sudo shutdown -h now",
+    "format": "ovf",
+    "boot_wait": "{{user `boot_wait`}}",
+    "boot_command": [
+      "sudo passwd core<enter><wait>",
+      "packer<enter>",
+      "packer<enter>",
+      "sudo systemctl start sshd.service<enter>"
+    ],
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory",  "{{user `memory`}}"],
+      ["modifyvm", "{{.Name}}", "--cpus",  "{{user `cpus`}}"],
+      ["modifyvm", "{{.Name}}", "--audio",  "none"]
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "{{ user `ignition` }}",
+      "destination": "/tmp/ignition.json"
+    },
+    {
+        "type": "shell",
+        "inline": [
+            "sudo coreos-install -d /dev/sda -C {{ user `release` }} -o vmware_raw"
+        ]
+    }
+  ],
+  "post-processors": [{
+    "type":            "vsphere-template",
+    "host":            "{{user `vsphere_host`}}",
+    "username":        "{{user `vsphere_username`}}",
+    "password":        "{{user `vsphere_password`}}",
+    "datacenter":      "{{user `vsphere_datacenter`}}",
+    "resource_pool":   "{{user `vsphere_resource_pool`}}",
+    "folder":          "{{user `vsphere_folder`}}",
+    "datastore":       "{{user `vsphere_datastore`}}",
+    "v_app_properties": [
+      {
+        "label": "Hostname",
+        "description": "Hostname",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.hostname",
+          "value": ""
+        }
+      },
+      {
+        "label": "CoreOS config data",
+        "description": "Inline cloud-config data",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.coreos.config.data",
+          "value": ""
+        }
+      },
+      {
+        "label": "CoreOS config url",
+        "description": "URL to cloud-config data",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.coreos.config.url",
+          "value": ""
+        }
+      },
+      {
+        "label": "CoreOS config data encoding",
+        "description": "Encoding for cloud-config data",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.coreos.config.data.encoding",
+          "value": ""
+        }
+      },
+      {
+        "label": "Name for network interface 0",
+        "description": "Name for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.name",
+          "value": ""
+        }
+      },
+      {
+        "label": "MAC for network interface 0",
+        "description": "MAC for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.mac",
+          "value": ""
+        }
+      },
+      {
+        "label": "DHCP support for network interface 0",
+        "description": "DHCP support for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.dhcp",
+          "value": ""
+        }
+      },
+      {
+        "label": "Role for network interface 0",
+        "description": "Role for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.role",
+          "value": ""
+        }
+      },
+      {
+        "label": "Main IP for network interface 0",
+        "description": "Main IP for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.ip.0.address",
+          "value": ""
+        }
+      },
+      {
+        "label": "Main route gateway for network interface 0",
+        "description": "Main route gateway for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.route.0.gateway",
+          "value": ""
+        }
+      },
+      {
+        "label": "Main route destination for network interface 0",
+        "description": "Main route destination for network interface 0",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.interface.0.route.0.destination",
+          "value": ""
+        }
+      },
+      {
+        "label": "Primary DNS",
+        "description": "Primary DNS",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.dns.server.0",
+          "value": ""
+        }
+      },
+      {
+        "label": "Secondary DNS",
+        "description": "Secondary DNS",
+        "metadata": {
+          "user_configurable": true,
+          "type": "string",
+          "key": "guestinfo.dns.server.1",
+          "value": ""
+        }
+      }
+    ]
+  }]
+}

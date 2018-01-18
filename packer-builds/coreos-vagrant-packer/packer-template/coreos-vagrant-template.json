@@ -41,10 +41,10 @@
       ],
       "communicator": "ssh",
       "ssh_port": 22,
-      "ssh_username": "vagrant",
+      "ssh_username": "core",
       "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
       "ssh_timeout": "33m",
-      "shutdown_command": "sudo /sbin/shutdown -hP now"
+      "shutdown_command": "sudo -S shutdown -P now"
     }
   ],
   "provisioners": [

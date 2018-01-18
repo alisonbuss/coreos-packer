@@ -13,6 +13,8 @@
 #         https://cursos.alura.com.br/forum/topico-diferenca-entre-o-dockerfile-e-o-docker-compose-30250
 #         http://brunoizidorio.com.br/blog/docker-multi-containers-com-docker-compose/
 #         https://www.mundodocker.com.br/docker-compose-v3/
+#         https://quickhash.com/
+#         https://coreos.com/ignition/docs/latest/getting-started.html
 #-------------------------------------------------------------#
 
 passwd:
@@ -21,39 +23,54 @@ passwd:
       ssh_authorized_keys:
         - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
 
-    - name: "vagrant"
-      password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
+    - name: "lucifer"
       ssh_authorized_keys:
         - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" 
 
-    - name: "lucifer"
+    - name: "vagrant"
+      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant)
+      password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
       ssh_authorized_keys:
         - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
-      home_dir: "/home/lucifer"
+      home_dir: "/home/vagrant"
       no_create_home: false
       groups:
         - "sudo"
         - "docker"
       shell: "/bin/bash"
-   
-#update:
-#  group: "stable"
-#locksmith:
-#  reboot_strategy: "etcd-lock"
-#  window_start: "Sun 1:00"
-#  window_length: "2h"
 
 etcd:
+  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=3
+  # specify the initial size of your cluster with ?size=X
+  discovery:                   "https://discovery.etcd.io/c44d0693351db89c6539e7ec8888a280"
   name:                        "{HOSTNAME}"
   advertise_client_urls:       "http://{PRIVATE_IPV4}:2379"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
   listen_client_urls:          "http://0.0.0.0:2379"
   listen_peer_urls:            "http://{PRIVATE_IPV4}:2380"
   initial_cluster:             "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
-  #discovery:                   "https://discovery.etcd.io/c44d0693351db89c6539e7ec8888a280"
+
+update:
+    group: "stable"
+  locksmith:
+    reboot_strategy: "etcd-lock"
+    window_start: "Sun 1:00"
+    window_length: "2h"
 
 systemd:
   units:
+    - name: "locksmithd.service"
+      mask: true
+
+    - name: "update-engine.service"
+      mask: true
+
+    - name: iptables-restore.service
+      enable: true
+
+    - name: "docker.service"
+      enable: true
+
     - name: "etcd-member.service"
       enable: true
       
@@ -77,7 +94,8 @@ systemd:
           contents: |
             [Service]
             ExecStartPre=/usr/bin/etcdctl set /flannel/network/config '{ "Network": "10.1.0.0/16" }'
-    
+
+    #FONT: https://github.com/coreos/bugs/issues/469#issuecomment-300817774
     - name: "install-docker-compose.service"
       enable: true
       contents: |
@@ -91,17 +109,42 @@ systemd:
         [Service]
         # create /opt/bin directory
         ExecStart=/usr/bin/mkdir -p /opt/bin/
-
         # sleep 2 seconds
         ExecStart=/usr/bin/sleep 2
-
         # get docker-compose from github
-        # -q quiet
         # -nc don't fetch if file already exists (return 0)
-        ExecStart=/bin/wget -q -nc -O /opt/bin/docker-compose "https://github.com/docker/compose/releases/download/1.18.0/docker-compose-linux-x86_64"
-
+        ExecStart=/bin/wget -nc -O /opt/bin/docker-compose "https://github.com/docker/compose/releases/download/1.18.0/docker-compose-linux-x86_64"
         # set execution rights
         ExecStart=/usr/bin/chmod +x /opt/bin/docker-compose
+
+        [Install]
+        WantedBy=multi-user.target
+    
+    # install ActivePython for Ansible!!
+    - name: "install-active-python.service"
+      enable: true
+      contents: |
+        [Unit]
+        Description=Install ActivePython
+        Requires=network-online.target
+        After=network-online.target
+        Wants=network-online.target
+        Type=oneshot
+
+        [Service]
+        ExecStart=/usr/bin/mkdir -p /temp/
+        ExecStart=/usr/bin/mkdir -p /opt/bin/
+        ExecStart=/usr/bin/wget -nc -O /temp/ActivePython.tar.gz "http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz"
+        ExecStart=/usr/bin/tar -xzvf /temp/ActivePython.tar.gz -C /temp
+        ExecStart=/usr/bin/bash /temp/ActivePython-*/install.sh -I /opt/python/
+        ExecStart=/usr/bin/ln -s /opt/python/bin/easy_install /opt/bin/easy_install
+        ExecStart=/usr/bin/ln -s /opt/python/bin/pip /opt/bin/pip
+        ExecStart=/usr/bin/ln -s /opt/python/bin/python /opt/bin/python
+        ExecStart=/usr/bin/ln -s /opt/python/bin/virtualenv /opt/bin/virtualenv
+        ExecStart=/usr/bin/rm -rf /temp/*
+
+        [Install]
+        WantedBy=multi-user.target
 
     - name: "hello.service"
       enabled: true
@@ -120,6 +163,83 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+
+storage:
+  files:
+    - path: "/etc/ssh/sshd_config"
+      filesystem: "root"
+      mode: 0600
+      contents:
+        inline: |
+          # Use most defaults for sshd configuration.
+          UsePrivilegeSeparation sandbox
+          Subsystem sftp internal-sftp
+          UseDNS no
+
+          PermitRootLogin no
+          AllowUsers core vagrant lucifer
+          PasswordAuthentication no
+          ChallengeResponseAuthentication no
+          AuthenticationMethods publickey
+
+    - path: "/etc/sudoers.d/vagrant"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/sudoers.d/lucifer"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "lucifer ALL=(ALL) NOPASSWD: ALL"
+
+    # write iptables rules
+    - path: "/var/lib/iptables/rules-save" 
+      filesystem: "root"
+      mode: 0644
+      user: 
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: |
+          *filter
+          :INPUT DROP [0:0]
+          :FORWARD DROP [0:0]
+          :OUTPUT ACCEPT [0:0]
+
+          # Accept all loopback (local) traffic:
+          -A INPUT -i lo -j ACCEPT
+
+          # Accept all CoreOS cluster traffic
+          -A INPUT -i eth1 -j ACCEPT
+
+          # Accept all traffic on the local network from other members of
+          # our CoreOS cluster:
+          #-A INPUT -i eth1 -p tcp -s coreos-1_private_ip -j ACCEPT
+          #-A INPUT -i eth1 -p tcp -s coreos-2_private_ip -j ACCEPT
+          #-A INPUT -i eth1 -p tcp -s coreos-3_private_ip -j ACCEPT
+
+          # Keep existing connections (like our SSH session) alive:
+          -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+          -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+          -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+          -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+
+          # Accept pings:
+          -A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+          -A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+          -A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+          COMMIT
 
 flannel:
   etcd_prefix: "/flannel/network"

@@ -58,6 +58,7 @@
 │   │   ├── coreos-ignition-for-virtualbox.json
 │   │   └── coreos-ignition.json
 │   └── vagrant_insecure_private_key
+├── ignition-for-vagrant-up.json
 ├── packer-template
 │   ├── coreos-vagrant-template.json
 │   ├── coreos-vagrant-template-min.json
@@ -70,7 +71,7 @@
 ├── Vagrantfile
 └── vagrant-instances.json
 
-3 directories, 19 files
+3 directories, 20 files
 
 ```
  
@@ -160,11 +161,11 @@
     
     "communicator": "ssh",
     "ssh_port": 22,
-    "ssh_username": "vagrant",
+    "ssh_username": "core",
     "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
     "ssh_timeout": "33m",
 
-    "shutdown_command": "sudo /sbin/shutdown -hP now"
+    "shutdown_command": "sudo -S shutdown -P now"
 }
 ```
  
@@ -238,10 +239,10 @@
       ],
       "communicator": "ssh",
       "ssh_port": 22,
-      "ssh_username": "vagrant",
+      "ssh_username": "core",
       "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
       "ssh_timeout": "33m",
-      "shutdown_command": "sudo /sbin/shutdown -hP now"
+      "shutdown_command": "sudo -S shutdown -P now"
     }
   ],
   "provisioners": [
