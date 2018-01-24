@@ -37,6 +37,7 @@ function StartCompilation {
     local new_mode_output_file=$(util.getParameterValue "(--new-model-output-file=)" "$@");  
     local new_mode_build_path=$(util.getParameterValue "(--new-model-build-path=)" "$@");  
     local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
+    local packer_provisioner_path=$(util.getParameterValue "(--packer-provisioner=)" "$@");  
     local coreos_release=$(util.getParameterValue "(--coreos-release=)" "$@");
     local coreos_version=$(util.getParameterValue "(--coreos-version=)" "$@"); 
     
@@ -89,12 +90,13 @@ function StartCompilation {
         echo -e '            -var "vagrant_iso_checksum_type=${iso_checksum_type}" \';
         echo -e '            -var "vagrant_iso_checksum=${iso_checksum}" \';
         echo -e '            -var "global_build_path=${build_path}" \';
+        echo -e '            -var "global_provisioner_path='${packer_provisioner_path}'" \';
         echo -e '            "${template_file}";';
         echo -e '    }';
         echo -e '    case $params in';
         echo -e '        validate) { __run_packer $params; };;';
         echo -e '        inspect)  { packer inspect "${template_file}"; };;';
-        echo -e '        *build*)    { __run_packer $params; };;';
+        echo -e '        *build*)  { __run_packer $params; };;';
         echo -e '        *)        { packer $params; };;';
         echo -e '    esac';
         echo -e '}';

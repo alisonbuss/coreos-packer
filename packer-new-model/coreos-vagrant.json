@@ -5,7 +5,7 @@
             "vagrant_cpus": "2", 
             "vagrant_memory": "2048",
             "vagrant_disk_size": "33666",
-            "coreos_ignition_name": "coreos-ignition-for-virtualbox.json"
+            "coreos_ignition_name": "keys-to-underworld"
         },
         "list_variables": [
             "/variables/vars-global.json",
@@ -16,7 +16,14 @@
             "/builders/vagrant.json"
         ],
         "provisioners": [
-            "/provisioners/shell-hello-world.json"
+            "/provisioners/install-cfssl.json",
+            "/provisioners/install-etcd3.json",
+            "/provisioners/install-flannel.json",
+            "/provisioners/install-docker.json",
+            "/provisioners/install-docker-compose.json",
+            "/provisioners/install-kubernetes.json",
+            "/provisioners/install-python.json",
+            "/provisioners/basic-security-settings.json"
         ],
         "post_processors": [
             "/post-processors/vagrant-box.json"

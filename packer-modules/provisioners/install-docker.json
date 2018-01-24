@@ -1,0 +1,9 @@
+{
+    "type": "shell",
+    "environment_vars" : [
+       
+    ],
+    "scripts": [
+        "{{user `global_provisioner_path`}}/install-docker.sh"
+    ]
+}

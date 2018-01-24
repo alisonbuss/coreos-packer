@@ -5,6 +5,10 @@
 
 # coreos-packer
 
+Entendimento:
+https://coreos.com/blog/cluster-osi-model.html
+
+
 http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/
 http://virtualelephant.com/2017/11/14/infrastructure-as-code-bootstrap-coreos-with-ignition/
 http://virtualelephant.com/2017/11/16/infrastructure-as-code-understanding-coreos-ignition/

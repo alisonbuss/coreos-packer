@@ -11,7 +11,7 @@ etcd:
   listen_client_urls:          "http://0.0.0.0:2379"
   listen_peer_urls:            "http://{PRIVATE_IPV4}:2380"
   initial_cluster:             "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
-  discovery:                   "https://discovery.etcd.io/c44d0693351db89c6539e7ec8888a280"
+  discovery:                   "https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
 systemd:
   units:
     - name: docker-tcp.socket

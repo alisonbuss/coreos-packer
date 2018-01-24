@@ -1,0 +1,16 @@
+{
+    "type": "shell",
+    "environment_vars" : [
+       
+    ],
+    "scripts": [
+        "{{user `global_provisioner_path`}}/install-cfssl.sh",
+        "{{user `global_provisioner_path`}}/install-etcd3.sh",
+        "{{user `global_provisioner_path`}}/install-flannel.sh",
+        "{{user `global_provisioner_path`}}/install-docker.sh",
+        "{{user `global_provisioner_path`}}/install-docker-compose.sh",
+        "{{user `global_provisioner_path`}}/install-kubernetes.sh",
+        "{{user `global_provisioner_path`}}/install-python.sh",
+        "{{user `global_provisioner_path`}}/basic-security-settings.sh"
+    ]
+}

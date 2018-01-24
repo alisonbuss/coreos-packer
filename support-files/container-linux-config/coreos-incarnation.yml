@@ -15,6 +15,7 @@
 #         https://www.mundodocker.com.br/docker-compose-v3/
 #         https://quickhash.com/
 #         https://coreos.com/ignition/docs/latest/getting-started.html
+#         https://makefile.blog/2017/06/02/install-python-on-coreos/
 #-------------------------------------------------------------#
 
 passwd:
@@ -40,9 +41,9 @@ passwd:
       shell: "/bin/bash"
 
 etcd:
-  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=3
+  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=666
   # specify the initial size of your cluster with ?size=X
-  discovery:                   "https://discovery.etcd.io/c44d0693351db89c6539e7ec8888a280"
+  discovery:                   "https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
   name:                        "{HOSTNAME}"
   advertise_client_urls:       "http://{PRIVATE_IPV4}:2379"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
@@ -121,6 +122,7 @@ systemd:
         WantedBy=multi-user.target
     
     # install ActivePython for Ansible!!
+    # font: https://makefile.blog/2017/06/02/install-python-on-coreos/
     - name: "install-active-python.service"
       enable: true
       contents: |

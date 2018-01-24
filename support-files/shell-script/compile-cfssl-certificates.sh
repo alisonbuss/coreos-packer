@@ -36,6 +36,16 @@ function StartCompilation {
     local param2=$(util.getParameterValue "(--param-02=)" "$@"); 
 
     echo -e "\nStarting script execution [compile-cfssl-certificates.sh]";
+
+
+
+
+
+
+
+
+
+    
     
  
 

@@ -40,12 +40,13 @@
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
-WORKING_DIRECTORY     ?= .
-#WORKING_DIRECTORY    ?= `pwd`
-PACKER_BUILD_PATH     ?= $(WORKING_DIRECTORY)/packer-builds
-PACKER_MODULES_PATH   ?= $(WORKING_DIRECTORY)/packer-modules
-PACKER_NEW_MODEL_PATH ?= $(WORKING_DIRECTORY)/packer-new-model
-PACKER_ONLY           ?= virtualbox-iso
+WORKING_DIRECTORY       ?= .
+#WORKING_DIRECTORY      ?= `pwd`
+PACKER_BUILD_PATH       ?= $(WORKING_DIRECTORY)/packer-builds
+PACKER_PROVISIONER_PATH ?= $(WORKING_DIRECTORY)/provisioners/shell
+PACKER_MODULES_PATH     ?= $(WORKING_DIRECTORY)/packer-modules
+PACKER_NEW_MODEL_PATH   ?= $(WORKING_DIRECTORY)/packer-new-model
+PACKER_ONLY             ?= virtualbox-iso
 
 # VARIABLE MAN!!!!!
 # DEFAULT VARIABLE - NEW MODEL!!! to be compiled!!!
@@ -64,9 +65,9 @@ COREOS_RELEASE  ?= alpha
 COREOS_VERSION  ?= 1632.0.0
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/coreos-vagrant-ignition.yml
+IGNITION_SOURCE_FILE   ?= $(WORKING_DIRECTORY)/support-files/container-linux-config/keys-to-underworld.yml
 IGNITION_BUILD_PATH    ?= $(NEW_MODEL_BUILD_PATH)/files/ignitions
-IGNITION_COMPILED_NAME ?= coreos-ignition
+IGNITION_COMPILED_NAME ?= keys-to-underworld
 
 # DEFAULT VARIABLES - Certificates CFSSL
 CFSSL_BUILD_PATH ?= $(NEW_MODEL_BUILD_PATH)/files/certificates
@@ -98,6 +99,7 @@ plan:
 	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
 	@echo "";
 	@echo "    --> PACKER_BUILD_PATH: $(PACKER_BUILD_PATH)";
+	@echo "    --> PACKER_PROVISIONER_PATH: $(PACKER_PROVISIONER_PATH)";
 	@echo "    --> PACKER_MODULES_PATH: $(PACKER_MODULES_PATH)";
 	@echo "    --> PACKER_NEW_MODEL_PATH: $(PACKER_NEW_MODEL_PATH)";
 	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
@@ -149,6 +151,7 @@ compile:
 		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
 		--new-model-build-path="$(NEW_MODEL_BUILD_PATH)" \
 		--packer-modules="$(PACKER_MODULES_PATH)" \
+		--packer-provisioner="$(PACKER_PROVISIONER_PATH)" \
 		--coreos-release="$(COREOS_RELEASE)" \
 		--coreos-version="$(COREOS_VERSION)";
 
@@ -157,16 +160,6 @@ compile:
 		--new-model-output-file="$(NEW_MODEL_OUTPUT_FILE)" \
 		--new-model-build-path="$(NEW_MODEL_BUILD_PATH)" \
 		--packer-modules="$(PACKER_MODULES_PATH)";
-
-	@echo "Copying files from Vagrantfile..."; 
-	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile"; 
-	@echo "--output: $(NEW_MODEL_BUILD_PATH)/Vagrantfile"; 
-	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/Vagrantfile" "$(NEW_MODEL_BUILD_PATH)/"; 
-
-	@echo "Copying files from vagrant-instances.json..."; 
-	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant-instances.json"; 
-	@echo "--output: $(NEW_MODEL_BUILD_PATH)/vagrant-instances.json"; 
-	@cp "$(WORKING_DIRECTORY)/support-files/vagrant/vagrant-instances.json" "$(NEW_MODEL_BUILD_PATH)/"; 
 
 	@echo "Copying Vagrant SSH Private Key..."; 
 	@echo "--source: $(WORKING_DIRECTORY)/support-files/vagrant/vagrant_insecure_private_key"; 

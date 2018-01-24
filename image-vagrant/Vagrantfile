@@ -5,7 +5,7 @@
 require 'json'
 
 PROJECT_PATH = File.dirname(__FILE__)
-INSTANCES = JSON.parse(File.read(File.join(PROJECT_PATH, 'vagrant-instances.json')))
+INSTANCES = JSON.parse(File.read(File.join(PROJECT_PATH, 'instances.json')))
 
 VAGRANTFILE_API_VERSION = "2"
 
