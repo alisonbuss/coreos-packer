@@ -8,7 +8,7 @@ function StartPacker {
     local coreos_iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk '{ print length, $1 | "sort -rg"}' | awk 'NR == 1 { print $2 }');
     local working_directory=".";
     local build_path="./packer-builds/coreos-vagrant-packer";
-    local provisioner_path="./provisioners/shell";
+    local provisioner_path="./pre-provision";
     local template_path="./packer-builds/coreos-vagrant-packer/packer-template";
     local template_file="${template_path}/coreos-vagrant-template-min.json";
     __run_packer() {

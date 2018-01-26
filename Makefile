@@ -33,7 +33,7 @@
 WORKING_DIRECTORY       ?= .
 #WORKING_DIRECTORY      ?= `pwd`
 PACKER_BUILD_PATH       ?= $(WORKING_DIRECTORY)/packer-builds
-PACKER_PROVISIONER_PATH ?= $(WORKING_DIRECTORY)/provisioners/shell
+PACKER_PROVISIONER_PATH ?= $(WORKING_DIRECTORY)/pre-provision
 PACKER_MODULES_PATH     ?= $(WORKING_DIRECTORY)/packer-modules
 PACKER_NEW_MODEL_PATH   ?= $(WORKING_DIRECTORY)/packer-new-model
 PACKER_ONLY             ?= virtualbox-iso
@@ -94,7 +94,6 @@ plan:
 	@echo "";
 	@echo "    --> COMPILE_NEW_MODEL_FOR_PACKER_CMD: $(COMPILE_NEW_MODEL_FOR_PACKER_CMD)";
 	@echo "    --> COMPILE_CONFIG_IGNITION_CMD: $(COMPILE_CONFIG_IGNITION_CMD)";
-	@echo "    --> COMPILE_CERTIFICATE_CMD: $(COMPILE_CERTIFICATE_CMD)";
 	@echo "    --> CREATE_SHELL_SCRIPT_RUN_PACKER_CMD: $(CREATE_SHELL_SCRIPT_RUN_PACKER_CMD)";
 	@echo "    --> CREATE_DOCUMENTATION_PACKER_CMD: $(CREATE_DOCUMENTATION_PACKER_CMD)";
 	@echo "    --> START_PACKER_CMD: $(START_PACKER_CMD)";
@@ -149,7 +148,7 @@ build:
 	@bash $(START_PACKER_CMD) inspect;
 
 	@echo "Applying build in the [Packer Template]:"; 
-	#@bash $(START_PACKER_CMD) build -only="$(PACKER_ONLY)";
+	@bash $(START_PACKER_CMD) build -only="$(PACKER_ONLY)";
 
 	@echo "Complete build!";  
 
