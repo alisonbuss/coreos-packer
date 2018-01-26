@@ -4,6 +4,6 @@
        
     ],
     "scripts": [
-        "{{user `global_provisioner_path`}}/basic-security-settings.sh"
+        "{{user `global_provisioner_path`}}/shell-script/config-basic-security.sh"
     ]
 }

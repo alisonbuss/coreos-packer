@@ -4,6 +4,6 @@
        
     ],
     "scripts": [
-        "{{user `global_provisioner_path`}}/install-docker-compose.sh"
+        "{{user `global_provisioner_path`}}/shell-script/install-docker-compose.sh"
     ]
 }

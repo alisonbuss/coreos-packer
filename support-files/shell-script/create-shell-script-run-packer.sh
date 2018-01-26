@@ -9,6 +9,8 @@
 #                             --output-file="./packer-builds/.../coreos-vagrant-template.json" \
 #                             --new-model-build-path="./packer-builds/coreos-vagrant-packer" \
 #                             --packer-modules="./packer-modules" \
+#                             --packer-provisioner="./packer-modules" \
+#                             --working-directory=="./" \
 #                             --coreos-release="alpha" \
 #                             --coreos-version="1632.0.0";
 #-------------------------------------------------------------#
@@ -38,6 +40,7 @@ function StartCompilation {
     local new_mode_build_path=$(util.getParameterValue "(--new-model-build-path=)" "$@");  
     local packer_modules=$(util.getParameterValue "(--packer-modules=)" "$@");  
     local packer_provisioner_path=$(util.getParameterValue "(--packer-provisioner=)" "$@");  
+    local working_directory=$(util.getParameterValue "(--working-directory=)" "$@");  
     local coreos_release=$(util.getParameterValue "(--coreos-release=)" "$@");
     local coreos_version=$(util.getParameterValue "(--coreos-version=)" "$@"); 
     
@@ -76,21 +79,24 @@ function StartCompilation {
         echo -e '    local coreos_release="'${coreos_release}'";';
         echo -e '    local coreos_version="'${coreos_version}'";';
         echo -e '    local coreos_url_digests="http://${coreos_release}.release.core-os.net/amd64-usr/${coreos_version}/coreos_production_iso_image.iso.DIGESTS";';
-        echo -e '    local iso_checksum_type="SHA512";';
-        echo   $'    local iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk \'{ print length, $1 | "sort -rg"}\' | awk \'NR == 1 { print $2 }\');';   
+        echo -e '    local coreos_iso_checksum_type="SHA512";';
+        echo   $'    local coreos_iso_checksum=$(wget -qO- "${coreos_url_digests}" | grep "coreos_production_iso_image.iso" | awk \'{ print length, $1 | "sort -rg"}\' | awk \'NR == 1 { print $2 }\');';   
+        echo -e '    local working_directory="'${working_directory}'";';
         echo -e '    local build_path="'${new_mode_build_path}'";';
+        echo -e '    local provisioner_path="'${packer_provisioner_path}'";';
         echo -e '    local template_path="'${compiled_template_path}'";';
         echo -e '    local template_file="${template_path}/'${compiled_template_name}'-min.json";';
         echo -e '    __run_packer() {';
         echo -e '        # FONT: https://www.packer.io/docs/templates/user-variables.html#from-a-file';
         echo -e '        packer "$@" \'$list_variables'';
         echo -e '            -var-file="${template_path}/vars-custom-variables.json" \';
-        echo -e '            -var "coreos_release=${coreos_release}" \';
-        echo -e '            -var "coreos_version=${coreos_version}" \';
-        echo -e '            -var "vagrant_iso_checksum_type=${iso_checksum_type}" \';
-        echo -e '            -var "vagrant_iso_checksum=${iso_checksum}" \';
+        echo -e '            -var "os_release=${coreos_release}" \';
+        echo -e '            -var "os_version=${coreos_version}" \';
+        echo -e '            -var "os_iso_checksum_type=${coreos_iso_checksum_type}" \';
+        echo -e '            -var "os_iso_checksum=${coreos_iso_checksum}" \';
+        echo -e '            -var "global_working_directory=${working_directory}" \';
         echo -e '            -var "global_build_path=${build_path}" \';
-        echo -e '            -var "global_provisioner_path='${packer_provisioner_path}'" \';
+        echo -e '            -var "global_provisioner_path=${provisioner_path}" \';
         echo -e '            "${template_file}";';
         echo -e '    }';
         echo -e '    case $params in';

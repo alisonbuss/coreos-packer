@@ -42,11 +42,12 @@ etcd:
   discovery: "https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
 
 update:
-    group: "stable"
-  locksmith:
-    reboot_strategy: "etcd-lock"
-    window_start: "Sun 0:33"
-    window_length: "2h"
+  group: "stable"
+  
+locksmith:
+  reboot_strategy: "etcd-lock"
+  window_start: "Sun 0:33"
+  window_length: "3h"
 
 systemd:
   units:

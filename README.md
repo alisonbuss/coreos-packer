@@ -5,6 +5,16 @@
 
 # coreos-packer
 
+- basic technology.
+
+
+- service technology.
+
+http://www.zdnet.com/article/snappy-ubuntu-challenges-coreos-and-project-atomic-on-lightweight-cloud-servers/
+https://blog.codeship.com/container-os-comparison/
+https://dcos.io/
+
+
 Entendimento:
 https://coreos.com/blog/cluster-osi-model.html
 
@@ -37,7 +47,7 @@ https://cloud.google.com/solutions/jenkins-on-kubernetes-engine#deploying_kubern
 
 https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
 
-### Projeto de criação de imagens CoreOS para múltiplas plataformas (Azure, Amazon EC2, Google GCE, DigitalOcean, Docker, VirtualBox).
+### Projeto de criação de imagens CoreOS para múltiplas plataformas (Amazon EC2, Google GCE, DigitalOcean, VirtualBox).
 
 Inspired by Satoshi Matsumoto [packer-templates](https://github.com/kaorimatz/packer-templates/)
 

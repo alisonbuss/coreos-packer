@@ -4,6 +4,6 @@
        
     ],
     "scripts": [
-        "{{user `global_provisioner_path`}}/install-etcd3.sh"
+        "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh"
     ]
 }

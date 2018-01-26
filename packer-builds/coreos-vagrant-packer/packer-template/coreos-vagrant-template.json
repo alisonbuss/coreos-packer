@@ -4,10 +4,10 @@
     {
       "type": "virtualbox-iso",
       "vm_name": "{{user `vagrant_vm_name`}}",
-      "iso_checksum": "{{user `vagrant_iso_checksum`}}",
-      "iso_checksum_type": "{{user `vagrant_iso_checksum_type`}}",
-      "iso_url": "http://{{user `coreos_release`}}.release.core-os.net/amd64-usr/{{user `coreos_version`}}/coreos_production_iso_image.iso",
-      "iso_target_path": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.iso",
+      "iso_checksum": "{{user `os_iso_checksum`}}",
+      "iso_checksum_type": "{{user `os_iso_checksum_type`}}",
+      "iso_url": "http://{{user `os_release`}}.release.core-os.net/amd64-usr/{{user `os_version`}}/coreos_production_iso_image.iso",
+      "iso_target_path": "{{user `global_build_path`}}/coreos-{{user `os_release`}}-{{user `os_version`}}.iso",
       "guest_os_type": "Linux26_64",
       "hard_drive_interface": "sata",
       "disk_size": "{{user `vagrant_disk_size`}}",
@@ -33,9 +33,9 @@
       "boot_command": [
         "sudo -i;<enter>",
         "systemctl stop sshd.socket;<enter>",
-        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `coreos_ignition_path`}}{{user `coreos_ignition_name`}};<enter>",
-        "cat {{user `coreos_ignition_name`}};<enter>",
-        "coreos-install -d /dev/sda -C {{ user `coreos_release` }} -i {{user `coreos_ignition_name`}};<enter>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `os_user_data_path`}}{{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
+        "cat {{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
+        "coreos-install -d /dev/sda -C {{ user `os_release` }} -i {{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
         "sleep 3s;<enter>",
         "reboot;<enter>"
       ],
@@ -50,12 +50,58 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": [
-        "echo 'Hello World!!!'",
-        "echo 'Hello CoreOS!!!'"
-      ],
-      "only": [
-        "virtualbox-iso"
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-flannel.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-docker-compose.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-kubernetes.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-python.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/config-basic-security.sh"
       ]
     }
   ],
@@ -63,7 +109,7 @@
     {
       "type": "vagrant",
       "compression_level": "6",
-      "output": "{{user `global_build_path`}}/coreos-{{user `coreos_release`}}-{{user `coreos_version`}}.box"
+      "output": "{{user `global_build_path`}}/coreos-{{user `os_release`}}-{{user `os_version`}}.box"
     }
   ],
   "min_packer_version": "1.1.3"

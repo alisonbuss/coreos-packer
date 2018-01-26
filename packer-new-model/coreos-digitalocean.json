@@ -13,7 +13,14 @@
             "/builders/digitalocean.json"
         ],
         "provisioners": [
-            "/provisioners/shell-hello-world.json"
+            "/provisioners/install-cfssl.json",
+            "/provisioners/install-etcd3.json",
+            "/provisioners/install-flannel.json",
+            "/provisioners/install-docker.json",
+            "/provisioners/install-docker-compose.json",
+            "/provisioners/install-kubernetes.json",
+            "/provisioners/install-python.json",
+            "/provisioners/config-basic-security.json"
         ],
         "post_processors": [
 

@@ -1,7 +1,16 @@
 {
-    "coreos_name": "coreos",
-    "coreos_release": "stable",
-    "coreos_version": "current",
-    "coreos_ignition_path": "/files/ignitions/",
-    "coreos_ignition_name": "coreos-ignition.json"
+    "os_name": "coreos",
+    "os_release": "stable",
+    "os_version": "1576.5.0",
+
+    "os_iso_url": "http://{{user `os_release`}}.release.core-os.net/amd64-usr/{{user `os_version`}}/coreos_production_iso_image.iso",
+    "os_iso_checksum_type": "SHA512",
+    "os_iso_checksum": "5d236b4fed05b782919f2f4e8f478d9e920e18461eed94e177fb41e77cc40fe241253c3d22de636a766e80bb340435ed4f83b64aa6dceb8e211d7962251ada7e",
+    
+    "os_img_aws": "ami-44a03c22",
+    "os_img_google": "coreos-stable",
+    "os_img_digitalocean": "coreos-stable",
+
+    "os_user_data_name": "keys-to-underworld",
+    "os_user_data_path": "/files/ignitions/"
 }

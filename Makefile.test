@@ -16,8 +16,8 @@
 #    $@ | array: (*)
 function MakefileTest {
     local new_model_name="coreos-vagrant";
-    local coreos_release="alpha";
-    local coreos_version="1632.0.0";
+    local coreos_release="stable";
+    local coreos_version="1576.5.0";
 
     local ARGUMENTS="NEW_MODEL_NAME=${new_model_name} COREOS_RELEASE=${coreos_release} COREOS_VERSION=${coreos_version}";
 
@@ -50,24 +50,12 @@ function MakefileTest {
             make clean $ARGUMENTS;
 
         };;
-        vagrant) {
-            make vagrant $ARGUMENTS;
-
-        };;
-        vagrant-up) {
-            make vagrant-up $ARGUMENTS;
-
-        };;
         compile-all) {
             make compile NEW_MODEL_NAME=coreos-all-platforms \
                          COREOS_RELEASE=${coreos_release} \
                          COREOS_VERSION=${coreos_version};
 
             make compile NEW_MODEL_NAME=coreos-aws \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
-
-            make compile NEW_MODEL_NAME=coreos-azure \
                          COREOS_RELEASE=${coreos_release} \
                          COREOS_VERSION=${coreos_version};
 

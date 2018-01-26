@@ -4,8 +4,7 @@
         "variables": {
             "vagrant_cpus": "2", 
             "vagrant_memory": "2048",
-            "vagrant_disk_size": "33666",
-            "coreos_ignition_name": "keys-to-underworld"
+            "vagrant_disk_size": "33666"
         },
         "list_variables": [
             "/variables/vars-global.json",
@@ -23,7 +22,7 @@
             "/provisioners/install-docker-compose.json",
             "/provisioners/install-kubernetes.json",
             "/provisioners/install-python.json",
-            "/provisioners/basic-security-settings.json"
+            "/provisioners/config-basic-security.json"
         ],
         "post_processors": [
             "/post-processors/vagrant-box.json"

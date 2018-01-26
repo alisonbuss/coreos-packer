@@ -4,6 +4,6 @@
        
     ],
     "scripts": [
-        "{{user `global_provisioner_path`}}/install-kubernetes.sh"
+        "{{user `global_provisioner_path`}}/shell-script/install-kubernetes.sh"
     ]
 }

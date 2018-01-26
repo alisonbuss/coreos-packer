@@ -4,34 +4,31 @@
         "variables": {
             "vagrant_cpus": "2", 
             "vagrant_memory": "2048",
-            "vagrant_disk_size": "33666",
-
-            "aws_access_key": "",
-            "aws_secret_key": "",
-
-            "azure_client_id": "fe354398-d7sf-4dc9-87fd-c432cd8a7e09",
-            "azure_client_secret": "keepitsecret&#*$",
-            
-            "google_account_file": ""
+            "vagrant_disk_size": "33666"
         },
         "list_variables": [
             "/variables/vars-global.json",
             "/variables/vars-coreos.json",
             "/variables/vars-vagrant.json",
             "/variables/vars-aws.json",
-            "/variables/vars-azure.json",
             "/variables/vars-digitalocean.json",
             "/variables/vars-google.json"
         ],
         "builders": [
             "/builders/vagrant.json",
             "/builders/aws.json",
-            "/builders/azure.json",
             "/builders/digitalocean.json",
             "/builders/google.json"
         ],
         "provisioners": [
-            "/provisioners/shell-hello-world.json"
+            "/provisioners/install-cfssl.json",
+            "/provisioners/install-etcd3.json",
+            "/provisioners/install-flannel.json",
+            "/provisioners/install-docker.json",
+            "/provisioners/install-docker-compose.json",
+            "/provisioners/install-kubernetes.json",
+            "/provisioners/install-python.json",
+            "/provisioners/config-basic-security.json"
         ],
         "post_processors": [
             "/post-processors/vagrant-box.json",
