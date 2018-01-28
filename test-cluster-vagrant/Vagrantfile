@@ -41,7 +41,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.network "forwarded_port",  guest: 2375, host: 2375, auto_correct: true, host_ip: "127.0.0.1"
         # provider base system -------------------------------------------------------
         _provide_base_system_path = "#{_provisioner_path}/provide-base-system"
-        puts "#{_provide_base_system_path}"
         config.vm.provision "shell", path: "#{_provide_base_system_path}/config-etcd3.sh", args: [
             "etcd-#{_hostname}", "#{_private_ip}"
         ]
