@@ -1,9 +1,0 @@
-{
-    "type": "shell",
-    "environment_vars" : [
-       
-    ],
-    "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/config-basic-security.sh"
-    ]
-}

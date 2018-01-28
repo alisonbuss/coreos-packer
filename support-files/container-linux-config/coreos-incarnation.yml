@@ -168,6 +168,26 @@ systemd:
 
 storage:
   files:
+    - path: "/etc/profile.env"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          # Enabling (ETCD-3) on the system.
+          export ETCDCTL_API=3
+          # Defines the type of environment.
+          export ENVIRONMENT=dev
+
+    - path: "/etc/bash/bashrc.env"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          # Enabling (ETCD-3) on the system.
+          export ETCDCTL_API=3
+          # Defines the type of environment.
+          export ENVIRONMENT=dev
+          
     - path: "/etc/ssh/sshd_config"
       filesystem: "root"
       mode: 0600

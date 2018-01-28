@@ -17,6 +17,6 @@
 packer-builds/*/packer-vm-cache/
 
 # All Vagrant Folder
-packer-builds/*/.vagrant/
+*/.vagrant/
 
 # End of https://www.gitignore.io/api/java

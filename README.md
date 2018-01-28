@@ -33,6 +33,7 @@ https://github.com/tkambler/perfect-vagrant
 https://blog.scottlowe.org/2016/01/18/multi-machine-vagrant-json/ 
 https://thornelabs.net/2014/11/13/multi-machine-vagrantfile-with-shorter-cleaner-syntax-using-json-and-loops.html
 
+https://www.tecmint.com/commands-to-collect-system-and-hardware-information-in-linux/
 
 https://grafana.com/
 

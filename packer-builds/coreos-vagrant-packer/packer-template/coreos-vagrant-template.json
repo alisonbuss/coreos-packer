@@ -41,7 +41,7 @@
       ],
       "communicator": "ssh",
       "ssh_port": 22,
-      "ssh_username": "core",
+      "ssh_username": "packer",
       "ssh_private_key_file": "{{user `global_build_path`}}{{user `vagrant_insecure_private_key`}}",
       "ssh_timeout": "33m",
       "shutdown_command": "sudo -S shutdown -P now"
@@ -51,6 +51,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
       ]
@@ -58,6 +59,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh"
       ]
@@ -65,6 +67,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-flannel.sh"
       ]
@@ -72,6 +75,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-docker.sh"
       ]
@@ -79,6 +83,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-docker-compose.sh"
       ]
@@ -86,6 +91,7 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-kubernetes.sh"
       ]
@@ -93,15 +99,9 @@
     {
       "type": "shell",
       "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-python.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [],
-      "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/config-basic-security.sh"
       ]
     }
   ],
