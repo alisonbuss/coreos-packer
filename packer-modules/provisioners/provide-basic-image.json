@@ -5,12 +5,12 @@
     ],
     "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
     "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh",
         "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh",
         "{{user `global_provisioner_path`}}/shell-script/install-flannel.sh",
         "{{user `global_provisioner_path`}}/shell-script/install-docker.sh",
         "{{user `global_provisioner_path`}}/shell-script/install-docker-compose.sh",
         "{{user `global_provisioner_path`}}/shell-script/install-kubernetes.sh",
-        "{{user `global_provisioner_path`}}/shell-script/install-python.sh"
+        "{{user `global_provisioner_path`}}/shell-script/install-python.sh",
+        "{{user `global_provisioner_path`}}/shell-script/provide-basic-security.sh"
     ]
 }

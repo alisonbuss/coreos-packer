@@ -5,6 +5,6 @@
     ],
     "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
     "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
+        "{{user `global_provisioner_path`}}/shell-script/provide-basic-security.sh"
     ]
 }

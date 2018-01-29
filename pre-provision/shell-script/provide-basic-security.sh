@@ -12,7 +12,7 @@
 #    $@ | array: (*)
 function StartInstallation {
 
-    printf '%b\n' "Start Installation - CFSSL";
+    printf '%b\n' "Start Installation - Docker";
     
 } 
 

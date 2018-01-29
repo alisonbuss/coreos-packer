@@ -12,5 +12,7 @@
     "os_img_digitalocean": "coreos-stable",
 
     "os_user_data_name": "keys-to-underworld",
-    "os_user_data_path": "/files/ignitions/"
+    "os_user_data_path": "/files/ignitions/",
+
+    "provide_execution_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'"
 }

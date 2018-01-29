@@ -33,13 +33,13 @@
             "/builders/vagrant.json"
         ],
         "provisioners": [
-            "/provisioners/install-cfssl.json",
             "/provisioners/install-etcd3.json",
             "/provisioners/install-flannel.json",
             "/provisioners/install-docker.json",
             "/provisioners/install-docker-compose.json",
             "/provisioners/install-kubernetes.json",
-            "/provisioners/install-python.json"
+            "/provisioners/install-python.json",
+            "/provisioners/provide-basic-security.json"
         ],
         "post_processors": [
             "/post-processors/vagrant-box.json"
@@ -71,9 +71,11 @@
 │   ├── vars-global.json
 │   └── vars-vagrant.json
 ├── README.md
-└── start-packer.sh
+├── start-packer.sh
+└── temp
+    └── coreos-stable-1576.5.0.box
 
-3 directories, 17 files
+4 directories, 18 files
 
 ```
  
@@ -94,7 +96,9 @@
 {
     "global_working_directory": ".",
     "global_build_path": "{{user `global_working_directory`}}/packer-builds/coreos-vagrant-packer",
-    "global_provisioner_path": "{{user `global_working_directory`}}/pre-provision"
+    "global_provisioner_path": "{{user `global_working_directory`}}/pre-provision",
+
+    "provide_execution_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
 }
 ```
  
@@ -114,7 +118,9 @@
     "os_img_digitalocean": "coreos-stable",
 
     "os_user_data_name": "keys-to-underworld",
-    "os_user_data_path": "/files/ignitions/"
+    "os_user_data_path": "/files/ignitions/",
+
+    "provide_execution_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'"
 }
 ```
  
@@ -178,20 +184,6 @@
  
  
 ## Provisioners of the New Model Packer:
-##### ./packer-modules/provisioners/install-cfssl.json 
-```json
-{
-    "type": "shell",
-    "environment_vars" : [
-       
-    ],
-    "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-    "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
-    ]
-}
-```
- 
 ##### ./packer-modules/provisioners/install-etcd3.json 
 ```json
 {
@@ -276,6 +268,20 @@
 }
 ```
  
+##### ./packer-modules/provisioners/provide-basic-security.json 
+```json
+{
+    "type": "shell",
+    "environment_vars" : [
+       
+    ],
+    "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+    "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/provide-basic-security.sh"
+    ]
+}
+```
+ 
  
 ## Post-Processors of the New Model Packer:
 ##### ./packer-modules/post-processors/vagrant-box.json 
@@ -347,14 +353,6 @@
       "environment_vars": [],
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [],
-      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-      "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh"
       ]
     },
@@ -396,6 +394,14 @@
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-python.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/provide-basic-security.sh"
       ]
     }
   ],

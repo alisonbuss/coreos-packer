@@ -53,14 +53,6 @@
       "environment_vars": [],
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
-        "{{user `global_provisioner_path`}}/shell-script/install-cfssl.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [],
-      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-      "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-etcd3.sh"
       ]
     },
@@ -102,6 +94,14 @@
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
       "scripts": [
         "{{user `global_provisioner_path`}}/shell-script/install-python.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [],
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/provide-basic-security.sh"
       ]
     }
   ],
