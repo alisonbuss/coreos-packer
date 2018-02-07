@@ -95,4 +95,4 @@ storage:
       mode: 0644
       contents:
         inline: #!/bin/bash
-        inline: curl -L https://raw.githubusercontent.com/alisonbuss/coreos-kids-vagrant/coreos-kids-vagrant/shared-folder/text.txt;
+        inline: curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;
