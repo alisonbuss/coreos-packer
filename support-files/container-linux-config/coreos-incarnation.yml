@@ -58,6 +58,19 @@ update:
     window_start: "Sun 1:00"
     window_length: "2h"
 
+
+networkd:
+  units:
+    - name: static.network
+      content: |
+        [Match]
+        Name=enp0s8
+
+        [Network]
+        Address=192.168.1.130/24
+        Gateway=192.168.1.1
+        DNS=8.8.8.8
+
 systemd:
   units:
     - name: "locksmithd.service"

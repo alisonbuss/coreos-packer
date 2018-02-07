@@ -2,7 +2,9 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts: 
+# @fonts: https://blog.kingj.net/2017/04/22/how-to/upgrading-a-etcd-cluster-from-version-2-3-to-version-3-0-on-coreos-container-linux/
+#         https://github.com/coreos/etcd/blob/master/Documentation/dev-guide/interacting_v3.md
+#         https://dzone.com/articles/upgrading-kubernetes-on-bare-metal-coreos-cluster-1    
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -36,6 +38,9 @@ function StartInstallation {
     source ${bashrcEnvFile};
 
     etcdctl v;
+    curl -L http://127.0.0.1:2379/version;
+    networkctl status;
+    etcdctl --write-out=table --endpoints=localhost:2379 member list;
 } 
 
 # @descr: Call of execution of the script's main function.

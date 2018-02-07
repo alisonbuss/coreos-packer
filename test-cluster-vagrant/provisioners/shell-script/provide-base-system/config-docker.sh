@@ -2,7 +2,7 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts: 
+# @fonts:
 # @example:
 #
 #-------------------------------------------------------------#
@@ -12,8 +12,30 @@
 #    $@ | array: (*)
 function StartConfiguration {
 
-    printf '%b\n' "Start Configuration - Docker";
-    
+    local dockerServicePath="/etc/systemd/system";
+    local dockerTCPSocketFile="docker-tcp.socket";
+
+    mkdir -p "${dockerServicePath}";
+    touch "${dockerServicePath}/${dockerTCPSocketFile}"
+    { 
+        echo '[Unit]';
+        echo 'Description=Docker Socket for the API';
+        echo '';
+        echo '[Socket]';
+        echo 'ListenStream=2375';
+        echo 'Service=docker.service';
+        echo 'BindIPv6Only=both';
+        echo '';
+        echo '[Install]';
+        echo 'WantedBy=sockets.target';
+
+    } > "${dockerServicePath}/${dockerTCPSocketFile}";
+    chmod 644 ${dockerServicePath}/${dockerTCPSocketFile};
+
+    systemctl daemon-reload;
+
+    systemctl enable docker;
+    systemctl enable docker-tcp.socket;
 } 
 
 # @descr: Call of execution of the script's main function.

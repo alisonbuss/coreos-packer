@@ -2,7 +2,7 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts: 
+# @fonts:
 # @example:
 #
 #-------------------------------------------------------------#
@@ -11,9 +11,32 @@
 # @param: 
 #    $@ | array: (*)
 function StartConfiguration {
+    local flanneldPath="/etc/systemd/system/flanneld.service.d";
+    local flannelConfFile="flannel.conf";
+    local networkConfigConfFile="network-config.conf";
 
-    printf '%b\n' "Start Configuration - Flannel";
-    
+    mkdir -p "${flanneldPath}";
+
+    touch "${flanneldPath}/${flannelConfFile}"
+    { 
+        echo '[Service]';
+        echo 'ExecStart=';
+        echo 'ExecStart=/usr/lib/coreos/flannel-wrapper $FLANNEL_OPTS \';
+        echo '  --etcd-prefix="/flannel/network"';
+
+    } > "${flanneldPath}/${flannelConfFile}";
+    chmod 644 ${flanneldPath}/${flannelConfFile};
+
+    touch "${flanneldPath}/${networkConfigConfFile}"
+    { 
+        echo '[Service]';
+        echo $'ExecStartPre=/usr/bin/etcdctl set /flannel/network/config \'{ "Network": "10.1.0.0/16" }\'';
+
+    } > "${flanneldPath}/${networkConfigConfFile}";
+    chmod 644 ${flanneldPath}/${networkConfigConfFile};
+
+    systemctl daemon-reload;
+    systemctl enable flanneld;
 } 
 
 # @descr: Call of execution of the script's main function.

@@ -10,7 +10,6 @@
 #         https://coreos.com/os/docs/latest/update-strategies.html
 #         https://coreos.com/os/docs/latest/customizing-sshd.html
 #         https://coreos.com/os/docs/latest/using-environment-variables-in-systemd-units.html#system-wide-environment-variables
-#         https://coreos.com/os/docs/latest/other-settings.html#adding-custom-messages-to-motd
 #-------------------------------------------------------------#
 
 passwd:
@@ -51,6 +50,14 @@ locksmith:
   window_start: "Sun 0:33"
   window_length: "3h"
 
+systemd:
+  units:
+    - name: "locksmithd.service"
+      mask: true
+
+    - name: "update-engine.service"
+      mask: true
+
 storage:
   files:
     - path: "/etc/ssh/sshd_config"
@@ -89,10 +96,3 @@ storage:
         id: 0
       contents:
         inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
-
-    - path: "/etc/profile.d/motd.sh"
-      filesystem: "root"
-      mode: 0644
-      contents:
-        inline: #!/bin/bash
-        inline: curl -L https://raw.githubusercontent.com/alisonbuss/coreos-kids-vagrant/coreos-kids-vagrant/shared-folder/text.txt;

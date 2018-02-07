@@ -2,7 +2,10 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts: 
+# @fonts: https://www.ibm.com/developerworks/library/l-flannel-overlay-network-VXLAN-docker-trs/
+#         http://cloudgeekz.com/1016/configure-flannel-docker-power.html
+#         http://docker-k8s-lab.readthedocs.io/en/latest/docker/docker-flannel.html
+#         http://blog.shippable.com/docker-overlay-network-using-flannel
 # @example:
 #
 #-------------------------------------------------------------#

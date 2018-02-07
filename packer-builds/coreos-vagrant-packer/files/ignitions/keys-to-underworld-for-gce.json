@@ -86,6 +86,17 @@
       {
         "filesystem": "root",
         "group": {},
+        "path": "/etc/profile.d/motd.sh",
+        "user": {},
+        "contents": {
+          "source": "data:,curl%20-L%20https%3A%2F%2Fraw.githubusercontent.com%2Falisonbuss%2Fcoreos-kids-vagrant%2Fcoreos-kids-vagrant%2Fshared-folder%2Ftext.txt%3B",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
         "path": "/etc/coreos/update.conf",
         "user": {},
         "contents": {
@@ -96,26 +107,5 @@
       }
     ]
   },
-  "systemd": {
-    "units": [
-      {
-        "dropins": [
-          {
-            "contents": "[Service]\nExecStart=\nExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \\\n  --discovery=\"https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6\"",
-            "name": "20-clct-etcd-member.conf"
-          }
-        ],
-        "enable": true,
-        "name": "etcd-member.service"
-      },
-      {
-        "mask": true,
-        "name": "locksmithd.service"
-      },
-      {
-        "mask": true,
-        "name": "update-engine.service"
-      }
-    ]
-  }
+  "systemd": {}
 }

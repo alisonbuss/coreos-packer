@@ -8,7 +8,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     _hostname = "coreos01"
     _domain   = _hostname + ".dev.com"
     # define default values ----------------------------------------------------------
-    _private_ip = "192.168.33.101"
+    #_private_ip = "192.168.33.101"
+    _private_ip = "192.168.1.130"
     _provisioner_path = "provisioners/shell-script"
     # starting the configuration of the virtual machine ------------------------------
     config.vm.define _domain do |config|
@@ -36,18 +37,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
         end
         # provider network -----------------------------------------------------------
-        #config.vm.network "private_network", ip: "#{_private_ip}"
+        config.vm.network "private_network", ip: "#{_private_ip}", auto_config: false
         config.vm.network "forwarded_port",  guest: 80,   host: 8080, auto_correct: true
         config.vm.network "forwarded_port",  guest: 2375, host: 2375, auto_correct: true, host_ip: "127.0.0.1"
         # provider base system -------------------------------------------------------
         _provide_base_system_path = "#{_provisioner_path}/provide-base-system"
-        config.vm.provision "shell", path: "#{_provide_base_system_path}/config-etcd3.sh", args: [
-            "etcd-#{_hostname}", "#{_private_ip}"
+        config.vm.provision "shell", path: "#{_provide_base_system_path}/config-network.sh", args: [
+            "#{_private_ip}"
         ]
+        config.vm.provision "shell", path: "#{_provide_base_system_path}/config-etcd3.sh", args: [
+            "#{_hostname}", "#{_private_ip}"
+        ]
+        config.vm.provision "shell", path: "#{_provide_base_system_path}/config-flannel.sh"
+        config.vm.provision "shell", path: "#{_provide_base_system_path}/config-docker.sh"
         # provider services ----------------------------------------------------------
         _provide_services_path = "#{_provisioner_path}/provide-services"
         # provider business ----------------------------------------------------------
         _provide_business_path = "#{_provisioner_path}/provide-business"
+        # restarting the system ------------------------------------------------------
+        config.vm.provision "shell", inline: "echo 'Restarting the system in 3 seconds...'; sleep 3s; reboot;"
     end
     # plugin conflict
     if Vagrant.has_plugin?("vagrant-vbguest") then

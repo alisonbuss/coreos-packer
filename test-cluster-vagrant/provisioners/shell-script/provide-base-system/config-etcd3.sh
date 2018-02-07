@@ -2,7 +2,7 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts: 
+# @fonts: https://github.com/coreos/etcd/blob/master/Documentation/dev-guide/interacting_v3.md
 # @example:
 #
 #-------------------------------------------------------------#
@@ -11,17 +11,37 @@
 # @param: 
 #    $@ | array: (*)
 function StartConfiguration {
-    local nameServerETCD="${1}";
-    local privateIP="${2}";
+    local HOSTNAME="${1}-etcd";
+    local PRIVATE_IPV4="${2}";
+    local CLUSTER_TOKEN=$(echo $(cat /etc/machine-id)-etcd);
 
     printf '%b\n' "Initializing the (ETCD-3) configuration on the system.";
+    printf '%b\n' "--> Private IP: ${PRIVATE_IPV4}";
+    printf '%b\n' "--> Name Server ETCD: ${HOSTNAME}";
 
-    printf '%b\n' "--> Name Server ETCD: ${nameServerETCD}";
-    printf '%b\n' "--> Private IP: ${privateIP}";
+    local etcdMemberPath="/etc/systemd/system/etcd-member.service.d";
+    local etcdMemberConfFile="etcd-member.conf";
 
-    etcdctl v;
+    mkdir -p "${etcdMemberPath}";
+    touch "${etcdMemberPath}/${etcdMemberConfFile}"
+    { 
+        echo '[Service]';
+        echo 'ExecStart=';
+        echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+        echo '  --name="'${HOSTNAME}'" \';
+        echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+        echo '  --listen-client-urls="http://0.0.0.0:2379" \';
+        echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-cluster="'${HOSTNAME}'=http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
+        echo '  --initial-cluster-state="new"';
 
-    echo "Name Server ETCD: ${nameServerETCD} | Private IP: ${privateIP}" >> data_etcd.txt;
+    } > "${etcdMemberPath}/${etcdMemberConfFile}";
+    chmod 644 ${etcdMemberPath}/${etcdMemberConfFile};
+
+    systemctl daemon-reload;
+    systemctl enable etcd-member;
 } 
 
 # @descr: Call of execution of the script's main function.

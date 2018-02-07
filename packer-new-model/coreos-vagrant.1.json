@@ -15,6 +15,12 @@
             "/builders/vagrant.json"
         ],
         "provisioners": [
+            "/provisioners/install-etcd3.json",
+            "/provisioners/install-flannel.json",
+            "/provisioners/install-docker.json",
+            "/provisioners/install-docker-compose.json",
+            "/provisioners/install-kubernetes.json",
+            "/provisioners/install-python.json",
             "/provisioners/provide-basic-security.json"
         ],
         "post_processors": [
