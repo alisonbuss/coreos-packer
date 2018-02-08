@@ -39,6 +39,7 @@ function StartInstallation {
     ln -sf /opt/python/bin/python /opt/bin/python;
     ln -sf /opt/python/bin/virtualenv /opt/bin/virtualenv;
 
+    /opt/bin/python --version;
     #export PATH=$PATH:/opt/python/bin;
 
     # Remove files.
