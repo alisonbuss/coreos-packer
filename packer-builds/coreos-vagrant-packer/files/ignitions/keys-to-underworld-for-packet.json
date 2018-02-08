@@ -89,7 +89,7 @@
         "path": "/etc/profile.d/motd.sh",
         "user": {},
         "contents": {
-          "source": "data:,curl%20-L%20https%3A%2F%2Fraw.githubusercontent.com%2Falisonbuss%2Fcoreos-kids-vagrant%2Fcoreos-kids-vagrant%2Fshared-folder%2Ftext.txt%3B",
+          "source": "data:,%23!%2Fbin%2Fbash%0Acurl%20-L%20https%3A%2F%2Fraw.githubusercontent.com%2Falisonbuss%2Fcoreos-packer%2Fmaster%2Fsupport-files%2Fascii-art.txt%3B%0A",
           "verification": {}
         },
         "mode": 420
