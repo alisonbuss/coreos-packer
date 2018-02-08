@@ -9,7 +9,8 @@
 # @param: 
 #    $@ | array: (*)
 function StartInstallation {
-    printf '%b\n' "Starting the installation of (Docker Compose).";
+    
+    printf '%b\n' "Starting the installation of (Docker Compose)...";
 
     # Creating installation directory: '/opt/bin/'
     mkdir -p /opt/bin/;

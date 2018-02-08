@@ -14,7 +14,7 @@
 #    $@ | array: (*)
 function StartInstallation {
 
-    printf '%b\n' "Start Installation - Kubernetes";
+    printf '%b\n' "Starting the installation of (Kubernetes)...";
 
     # new version "v1.9.2"
     # https://github.com/kubernetes/kubernetes/releases/download/v1.9.2/kubernetes.tar.gz

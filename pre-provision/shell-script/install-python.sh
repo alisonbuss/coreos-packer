@@ -13,7 +13,8 @@
 # @param: 
 #    $@ | array: (*)
 function StartInstallation {
-    printf '%b\n' "Starting the installation of (ActivePython).";
+    
+    printf '%b\n' "Starting the installation of (ActivePython)...";
 
     # Define default values.
     local VERSION="2.7.13.2714"

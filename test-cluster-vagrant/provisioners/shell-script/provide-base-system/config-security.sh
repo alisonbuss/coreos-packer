@@ -3,8 +3,6 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
 # @fonts: 
-# @example:
-#
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -12,8 +10,8 @@
 #    $@ | array: (*)
 function StartConfiguration {
 
-    printf '%b\n' "Start Configuration - Basic Security";
-    
+    printf '%b\n' "Initializing the (Basic Security) configuration on the system...";
+
 } 
 
 # @descr: Call of execution of the script's main function.

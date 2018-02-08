@@ -3,17 +3,16 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
 # @fonts:
-# @example:
-#
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
 #    $@ | array: (*)
 function StartConfiguration {
-
     local dockerServicePath="/etc/systemd/system";
     local dockerTCPSocketFile="docker-tcp.socket";
+
+    printf '%b\n' "Initializing the (Docker) configuration on the system...";
 
     mkdir -p "${dockerServicePath}";
     touch "${dockerServicePath}/${dockerTCPSocketFile}"

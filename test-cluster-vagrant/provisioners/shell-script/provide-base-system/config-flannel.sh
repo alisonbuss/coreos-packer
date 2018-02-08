@@ -2,9 +2,8 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
-# @fonts:
-# @example:
-#
+# @fonts: https://github.com/coreos/flannel/issues/554
+#         https://coreos.com/flannel/docs/latest/flannel-config.html  
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -14,6 +13,8 @@ function StartConfiguration {
     local flanneldPath="/etc/systemd/system/flanneld.service.d";
     local flannelConfFile="flannel.conf";
     local networkConfigConfFile="network-config.conf";
+
+    printf '%b\n' "Initializing the (Flannel) configuration on the system...";
 
     mkdir -p "${flanneldPath}";
 

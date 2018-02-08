@@ -3,8 +3,6 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
 # @fonts: https://github.com/coreos/etcd/blob/master/Documentation/dev-guide/interacting_v3.md
-# @example:
-#
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -15,7 +13,7 @@ function StartConfiguration {
     local PRIVATE_IPV4="${2}";
     local CLUSTER_TOKEN=$(echo $(cat /etc/machine-id)-etcd);
 
-    printf '%b\n' "Initializing the (ETCD-3) configuration on the system.";
+    printf '%b\n' "Initializing the (ETCD) configuration on the system...";
     printf '%b\n' "--> Private IP: ${PRIVATE_IPV4}";
     printf '%b\n' "--> Name Server ETCD: ${HOSTNAME}";
 

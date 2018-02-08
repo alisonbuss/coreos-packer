@@ -3,8 +3,6 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
 # @fonts: 
-# @example:
-#
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -12,7 +10,7 @@
 #    $@ | array: (*)
 function StartInstallation {
 
-    printf '%b\n' "Start Installation - Docker";
+    printf '%b\n' "CoreOS already has (Docker) installed on your system...";
     
 } 
 

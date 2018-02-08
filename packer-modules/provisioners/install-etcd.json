@@ -1,0 +1,10 @@
+{
+    "type": "shell",
+    "environment_vars" : [
+       
+    ],
+    "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+    "scripts": [
+        "{{user `global_provisioner_path`}}/shell-script/install-etcd.sh"
+    ]
+}

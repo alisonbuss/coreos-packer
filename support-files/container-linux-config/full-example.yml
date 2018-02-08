@@ -1,3 +1,4 @@
+
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr: 
 # @fonts: https://coreos.com/os/docs/latest/provisioning.html
@@ -16,21 +17,30 @@
 #         https://quickhash.com/
 #         https://coreos.com/ignition/docs/latest/getting-started.html
 #         https://makefile.blog/2017/06/02/install-python-on-coreos/
+#         https://github.com/coreos/bugs/issues/469#issuecomment-300817774
 #-------------------------------------------------------------#
 
 passwd:
   users:
     - name: "core"
+      # Vagrant insecure public key.
       ssh_authorized_keys:
         - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
 
     - name: "lucifer"
+      # Vagrant insecure public key.
       ssh_authorized_keys:
-        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" 
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
 
+    - name: "packer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        
     - name: "vagrant"
-      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant)
+      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant).
       password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
+      # Vagrant insecure public key.
       ssh_authorized_keys:
         - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
       home_dir: "/home/vagrant"
@@ -40,24 +50,27 @@ passwd:
         - "docker"
       shell: "/bin/bash"
 
+update:
+  group: "stable"
+
+locksmith:
+  reboot_strategy: "etcd-lock"
+  window_start: "Sun 0:33"
+  window_length: "3h"
+
 etcd:
-  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=666
-  # specify the initial size of your cluster with ?size=X
-  discovery:                   "https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
   name:                        "{HOSTNAME}"
   advertise_client_urls:       "http://{PRIVATE_IPV4}:2379"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
   listen_client_urls:          "http://0.0.0.0:2379"
   listen_peer_urls:            "http://{PRIVATE_IPV4}:2380"
   initial_cluster:             "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
+  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=666
+  # specify the initial size of your cluster with ?size=X
+  discovery:                   "https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
 
-update:
-    group: "stable"
-  locksmith:
-    reboot_strategy: "etcd-lock"
-    window_start: "Sun 1:00"
-    window_length: "2h"
-
+flannel:
+  etcd_prefix: "/flannel/network"
 
 networkd:
   units:
@@ -67,9 +80,9 @@ networkd:
         Name=enp0s8
 
         [Network]
-        Address=192.168.1.130/24
-        Gateway=192.168.1.1
-        DNS=8.8.8.8
+        Address={PRIVATE_IPV4}/24
+        #Gateway=192.168.1.1
+        #DNS=8.8.8.8
 
 systemd:
   units:
@@ -83,9 +96,6 @@ systemd:
       enable: true
 
     - name: "docker.service"
-      enable: true
-
-    - name: "etcd-member.service"
       enable: true
       
     - name: "docker-tcp.socket"
@@ -102,6 +112,9 @@ systemd:
         [Install]
         WantedBy=sockets.target
 
+    - name: "etcd-member.service"
+      enable: true
+
     - name: "flanneld.service"
       dropins:
         - name: "50-network-config.conf"
@@ -109,7 +122,6 @@ systemd:
             [Service]
             ExecStartPre=/usr/bin/etcdctl set /flannel/network/config '{ "Network": "10.1.0.0/16" }'
 
-    #FONT: https://github.com/coreos/bugs/issues/469#issuecomment-300817774
     - name: "install-docker-compose.service"
       enable: true
       contents: |
@@ -133,9 +145,7 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
-    
-    # install ActivePython for Ansible!!
-    # font: https://makefile.blog/2017/06/02/install-python-on-coreos/
+
     - name: "install-active-python.service"
       enable: true
       contents: |
@@ -147,34 +157,18 @@ systemd:
         Type=oneshot
 
         [Service]
-        ExecStart=/usr/bin/mkdir -p /temp/
         ExecStart=/usr/bin/mkdir -p /opt/bin/
-        ExecStart=/usr/bin/wget -nc -O /temp/ActivePython.tar.gz "http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz"
-        ExecStart=/usr/bin/tar -xzvf /temp/ActivePython.tar.gz -C /temp
-        ExecStart=/usr/bin/bash /temp/ActivePython-*/install.sh -I /opt/python/
-        ExecStart=/usr/bin/ln -s /opt/python/bin/easy_install /opt/bin/easy_install
-        ExecStart=/usr/bin/ln -s /opt/python/bin/pip /opt/bin/pip
-        ExecStart=/usr/bin/ln -s /opt/python/bin/python /opt/bin/python
-        ExecStart=/usr/bin/ln -s /opt/python/bin/virtualenv /opt/bin/virtualenv
-        ExecStart=/usr/bin/rm -rf /temp/*
-
-        [Install]
-        WantedBy=multi-user.target
-
-    - name: "hello.service"
-      enabled: true
-      contents: |
-        [Unit]
-        Description=A hello world unit!
-        Requires=network-online.target
-        After=network-online.target
-        Wants=network-online.target
-        Type=oneshot
-
-        [Service]
-        ExecStart=/usr/bin/echo "Hello, World!"
-        ExecStart=/usr/bin/echo "Run ping the Google..."
-        ExecStart=/usr/bin/ping www.google.com
+        ExecStart=/usr/bin/mkdir -p /opt/python/
+        ExecStart=/usr/bin/cd /opt
+        ExecStart=/usr/bin/wget "http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz"
+        ExecStart=/usr/bin/tar -xzvf ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz
+        ExecStart=/usr/bin/mv ActivePython-*/ apy && cd apy && ./install.sh -I /opt/python/
+        ExecStart=/usr/bin/ln -sf /opt/python/bin/easy_install /opt/bin/easy_install
+        ExecStart=/usr/bin/ln -sf /opt/python/bin/pip /opt/bin/pip
+        ExecStart=/usr/bin/ln -sf /opt/python/bin/python /opt/bin/python
+        ExecStart=/usr/bin/ln -sf /opt/python/bin/virtualenv /opt/bin/virtualenv
+        ExecStart=/usr/bin/rm -rf /opt/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz
+        ExecStart=/usr/bin/rm -rf /opt/apy
 
         [Install]
         WantedBy=multi-user.target
@@ -187,7 +181,7 @@ storage:
       contents:
         inline: |
           # Enabling (ETCD-3) on the system.
-          export ETCDCTL_API=3
+          #export ETCDCTL_API=3
           # Defines the type of environment.
           export ENVIRONMENT=dev
 
@@ -197,7 +191,7 @@ storage:
       contents:
         inline: |
           # Enabling (ETCD-3) on the system.
-          export ETCDCTL_API=3
+          #export ETCDCTL_API=3
           # Defines the type of environment.
           export ENVIRONMENT=dev
           
@@ -212,7 +206,8 @@ storage:
           UseDNS no
 
           PermitRootLogin no
-          AllowUsers core vagrant lucifer
+          # Apply to users: (core, lucifer, packer, vagrant).
+          AllowUsers core lucifer packer vagrant 
           PasswordAuthentication no
           ChallengeResponseAuthentication no
           AuthenticationMethods publickey
@@ -276,5 +271,10 @@ storage:
           -A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
           COMMIT
 
-flannel:
-  etcd_prefix: "/flannel/network"
+    - path: "/etc/profile.d/motd.sh"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          #!/bin/bash
+          curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;

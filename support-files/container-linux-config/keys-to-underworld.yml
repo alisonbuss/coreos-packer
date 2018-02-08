@@ -94,5 +94,6 @@ storage:
       filesystem: "root"
       mode: 0644
       contents:
-        inline: #!/bin/bash
-        inline: curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;
+        inline: |
+          #!/bin/bash
+          curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;

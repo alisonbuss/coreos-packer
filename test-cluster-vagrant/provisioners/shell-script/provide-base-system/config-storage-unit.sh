@@ -8,14 +8,14 @@
 # @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
 #    $@ | array: (*)
-function StartProvisioning {
+function StartConfiguration {
 
-    printf '%b\n' "Starting to provide Basic Security...";
-    
+    printf '%b\n' "Initializing the (Storage Unit) configuration on the system...";
+
 } 
 
 # @descr: Call of execution of the script's main function.
-StartProvisioning "$@";
+StartConfiguration "$@";
 
 # @descr: Finishing the script!!! :P
 exit 0;

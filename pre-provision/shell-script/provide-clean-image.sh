@@ -10,8 +10,12 @@
 #    $@ | array: (*)
 function StartProvisioning {
 
-    printf '%b\n' "Starting to provide Basic Security...";
+    printf '%b\n' "Starting to provide Clean Image...";
     
+    # font: https://github.com/stylelab-io/kubernetes-coreos-packer/blob/master/scripts/cleanup.sh
+    # remove the machine id. it will be regenerated on first boot.
+    rm -fr /etc/machine-id;
+
 } 
 
 # @descr: Call of execution of the script's main function.

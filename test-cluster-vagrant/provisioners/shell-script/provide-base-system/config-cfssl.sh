@@ -6,8 +6,6 @@
 #         http://cloudgeekz.com/1016/configure-flannel-docker-power.html
 #         http://docker-k8s-lab.readthedocs.io/en/latest/docker/docker-flannel.html
 #         http://blog.shippable.com/docker-overlay-network-using-flannel
-# @example:
-#
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -15,7 +13,7 @@
 #    $@ | array: (*)
 function StartConfiguration {
 
-    printf '%b\n' "Start Configuration - CFSSL";
+    printf '%b\n' "Initializing the (CFSSL) configuration on the system...";
     
 } 
 
