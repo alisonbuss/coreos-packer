@@ -12,6 +12,7 @@ function StartConfiguration {
     local HOSTNAME="${1}-etcd";
     local PRIVATE_IPV4="${2}";
     local CLUSTER_TOKEN=$(echo $(cat /etc/machine-id)-etcd);
+    local DISCOVERY="https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6";
 
     printf '%b\n' "Initializing the (ETCD) configuration on the system...";
     printf '%b\n' "--> Private IP: ${PRIVATE_IPV4}";
@@ -22,13 +23,13 @@ function StartConfiguration {
 
     mkdir -p "${etcdMemberPath}";
     touch "${etcdMemberPath}/${etcdMemberConfFile}"
-    { 
+    {
         echo '[Service]';
         echo 'ExecStart=';
         echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
         echo '  --name="'${HOSTNAME}'" \';
         echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
-        echo '  --listen-client-urls="http://0.0.0.0:2379" \';
+        echo '  --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \';
         echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
         echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
         echo '  --initial-cluster="'${HOSTNAME}'=http://'${PRIVATE_IPV4}':2380" \';

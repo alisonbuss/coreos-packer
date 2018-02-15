@@ -26,7 +26,7 @@ function StartConfiguration {
         echo '';
         echo '[Network]';
         echo 'Address='$PRIVATE_IPV4'';
-        echo '#Gateway=192.168.1.1';
+        echo '#Gateway=192.168.33.1';
         echo '#DNS=8.8.8.8';
 
     } > ${staticNetworkFile};
