@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     (1..INSTANCES).each do |i|
         # define host name and domain ----------------------------------------------------
         _hostname = "coreos-#{i}"
-        _domain   = _hostname + ".dev.com"
+        _domain   = "#{_hostname}.dev.com"
         # define default values ----------------------------------------------------------
         _private_ip = "192.168.33.10#{i}"
         _provisioner_path = "provisioners/shell-script"

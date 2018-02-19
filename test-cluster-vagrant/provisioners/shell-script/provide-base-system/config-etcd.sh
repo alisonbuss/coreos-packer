@@ -3,6 +3,10 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr:
 # @fonts: https://github.com/coreos/etcd/blob/master/Documentation/dev-guide/interacting_v3.md
+#         https://coreos.com/etcd/docs/latest/demo.html
+#         https://coreos.com/etcd/docs/latest/op-guide/clustering.html  
+#         https://coreos.com/etcd/docs/latest/v2/clustering.html
+#         https://stackoverflow.com/questions/37089387/coreos-member-node-will-not-start-when-using-etcdctl-member-add
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -11,9 +15,12 @@
 function StartConfiguration {
     local HOSTNAME="${1}-etcd";
     local PRIVATE_IPV4="${2}";
-    local CLUSTER_TOKEN=$(echo $(cat /etc/machine-id)-etcd);
-    local DISCOVERY="https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6";
+    local CLUSTER_TOKEN="Unique-token-for-ETCD-group";
 
+    # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=666
+    # specify the initial size of your cluster with ?size=X
+    local DISCOVERY="https://discovery.etcd.io/5fa982b08540a7a6c288b7710234febd";
+    
     printf '%b\n' "Initializing the (ETCD) configuration on the system...";
     printf '%b\n' "--> Private IP: ${PRIVATE_IPV4}";
     printf '%b\n' "--> Name Server ETCD: ${HOSTNAME}";
@@ -24,6 +31,29 @@ function StartConfiguration {
     mkdir -p "${etcdMemberPath}";
     touch "${etcdMemberPath}/${etcdMemberConfFile}"
     {
+        #echo '[Service]';
+        #echo 'ExecStart=';
+        #echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+        #echo '  --name="'${HOSTNAME}'" \';
+        #echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+        #echo '  --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \';
+        #echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        #echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        #echo '  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380,coreos-3-etcd=http://192.168.33.103:2380" \';
+        #echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
+        #echo '  --initial-cluster-state="new"';
+
+        #echo '[Service]';
+        #echo 'ExecStart=';
+        #echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+        #echo '  --name="'${HOSTNAME}'" \';
+        #echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+        #echo '  --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \';
+        #echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        #echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        #echo '  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380,coreos-3-etcd=http://192.168.33.103:2380,coreos-4-etcd=http://192.168.33.104:2380" \';
+        #echo '  --initial-cluster-state="existing"';
+
         echo '[Service]';
         echo 'ExecStart=';
         echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
@@ -32,9 +62,7 @@ function StartConfiguration {
         echo '  --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \';
         echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
         echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
-        echo '  --initial-cluster="'${HOSTNAME}'=http://'${PRIVATE_IPV4}':2380" \';
-        echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
-        echo '  --initial-cluster-state="new"';
+        echo '  --discovery="'${DISCOVERY}'"';
 
     } > "${etcdMemberPath}/${etcdMemberConfFile}";
     chmod 644 ${etcdMemberPath}/${etcdMemberConfFile};
