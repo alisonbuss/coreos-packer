@@ -2,9 +2,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 INSTANCES = 2
+@DISCOVERY = "The discovery token will be automatically generated."
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.require_version ">= 1.6.0"
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config| 
+    # Generating the "discovery token" of cluster ----------------------------------------
+    if ARGV[0].eql?('up') || ARGV[0].eql?('reload')
+        require "open-uri"
+        @DISCOVERY = open("https://discovery.etcd.io/new?size=#{INSTANCES}").read
+        puts "RUN: automatically replace the discovery token on 'vagrant up' or 'vagrant reload'"
+        puts "==> generate a new discovery token for cluster, example: 'https://discovery.etcd.io/new?size=#{INSTANCES}'"
+        puts "==> discovery token: '#{@DISCOVERY}'"
+    end
+    # Initiating virtual cluster configuration -------------------------------------------
     (1..INSTANCES).each do |i|
         # define host name and domain ----------------------------------------------------
         _hostname = "coreos-#{i}"
@@ -45,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-storage-unit.sh"
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-cfssl.sh"
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-docker.sh"
-            subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-etcd.sh", args: ["#{_hostname}", "#{_private_ip}"]
+            subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-etcd.sh", args: ["#{_hostname}", "#{_private_ip}", "#{@DISCOVERY}"]
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-flannel.sh"
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-kubernetes.sh"
             subconfig.vm.provision "shell", path: "#{_provide_base_path}/config-security.sh"
@@ -65,7 +75,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             #subconfig.vm.provision "shell", path: "#{_provide_business_path}/config-wp-theme-x.sh"
             #subconfig.vm.provision "shell", path: "#{_provide_business_path}/config-wp-mysite.sh"
             # restarting the system ------------------------------------------------------
-            #subconfig.vm.provision "shell", inline: "echo 'Restarting the system in 3 seconds...'; sleep 3s; reboot;"
             subconfig.vm.provision "shell", inline: "echo 'Restarting the system in 9 seconds...'; (sleep 9s; reboot;) &"
         end
     end

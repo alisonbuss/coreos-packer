@@ -15,12 +15,8 @@
 function StartConfiguration {
     local HOSTNAME="${1}-etcd";
     local PRIVATE_IPV4="${2}";
-    local CLUSTER_TOKEN="Unique-token-for-ETCD-group";
+    local DISCOVERY="${3}";
 
-    # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=666
-    # specify the initial size of your cluster with ?size=X
-    local DISCOVERY="https://discovery.etcd.io/5fa982b08540a7a6c288b7710234febd";
-    
     printf '%b\n' "Initializing the (ETCD) configuration on the system...";
     printf '%b\n' "--> Private IP: ${PRIVATE_IPV4}";
     printf '%b\n' "--> Name Server ETCD: ${HOSTNAME}";
@@ -40,6 +36,7 @@ function StartConfiguration {
         #echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
         #echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
         #echo '  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380,coreos-3-etcd=http://192.168.33.103:2380" \';
+        #local CLUSTER_TOKEN="Unique-token-for-ETCD-group";
         #echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
         #echo '  --initial-cluster-state="new"';
 
