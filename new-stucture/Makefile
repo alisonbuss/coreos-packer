@@ -88,7 +88,8 @@ validate:
 
 	@bash $(BUILD_IMAGE_CMD) --action="validate" \
 						     --template-file="$(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)" \
-							 --variables="$(PACKER_VARIABLES)";
+							 --variables="$(PACKER_VARIABLES)" \
+							 --working-directory="$(WORKING_DIRECTORY)";
 
 	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
 						     --template-file="$(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)";

@@ -1,6 +1,6 @@
 The default values to be used by this Makefile:
 
-    --> MAKECMDGOALS: make plan compile
+    --> MAKECMDGOALS: make plan validate
     --> WORKING_DIRECTORY: .
 
     --> PACKER_TEMPLATE: coreos-virtualbox-template.json
@@ -18,25 +18,35 @@ The default values to be used by this Makefile:
 
     --> BUILD_IMAGE_CMD: ./build-image.sh
 
-Starting the compilation of the (IGNITION COREOS)...
---source file: ./pre-provision/container-linux-config/keys-to-underworld.yml
---compilation path: ./pre-provision/ignitions
-Creating directory for the creation of ignitions...
---affected directory: './pre-provision/ignitions'
-Starting the compilation process from "Container Linux Config" to "ignition"...
---affected platforms: ['vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet']
-Converting to (no-platform)...
---generated file: 'keys-to-underworld.json'
-Converting to (vagrant-virtualbox)...
---generated file: 'keys-to-underworld-for-virtualbox.json'
-Converting to (digitalocean)...
---generated file: 'keys-to-underworld-for-digitalocean.json'
-Converting to (ec2)...
---generated file: 'keys-to-underworld-for-ec2.json'
-Converting to (gce)...
---generated file: 'keys-to-underworld-for-gce.json'
-Converting to (azure)...
---generated file: 'keys-to-underworld-for-azure.json'
-Converting to (packet)...
---generated file: 'keys-to-underworld-for-packet.json'
-Complete compilation!
+Starting the validation of the template Packer...
+--template file: ./templates/coreos-virtualbox-template.json
+Template validation failed. Errors are shown below.
+
+Errors validating build 'virtualbox-iso'. 7 error(s) occurred:
+
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/install-python.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/install-python.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/install-docker.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/install-docker.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/install-docker-compose.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/install-docker-compose.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/install-etcd.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/install-etcd.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/install-flannel.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/install-flannel.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/provide-basic-security.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/provide-basic-security.sh: no such file or directory
+* Bad script '{{user `global_working_directory`}}/pre-provision/shell-script/provide-clean-image.sh': stat {{user `global_working_directory`}}/pre-provision/shell-script/provide-clean-image.sh: no such file or directory
+Description:
+
+CoreOS image for a VirtualBox platform.
+
+Variables:
+
+  <No variables>
+
+Builders:
+
+  virtualbox-iso
+
+Provisioners:
+
+  shell
+
+Note: If your build names contain user variables or template
+functions such as 'timestamp', these are processed at build time,
+and therefore only show in their raw form here.

@@ -1,18 +1,19 @@
-Creating directory for the creation of ignitions...
---affected directory: './pre-provision/ignitions'
-Starting the compilation process from "Container Linux Config" to "ignition"...
---affected platforms: ['vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet']
-Converting to (no-platform)...
---generated file: 'keys-to-underworld.json'
-Converting to (vagrant-virtualbox)...
---generated file: 'keys-to-underworld-for-virtualbox.json'
-Converting to (digitalocean)...
---generated file: 'keys-to-underworld-for-digitalocean.json'
-Converting to (ec2)...
---generated file: 'keys-to-underworld-for-ec2.json'
-Converting to (gce)...
---generated file: 'keys-to-underworld-for-gce.json'
-Converting to (azure)...
---generated file: 'keys-to-underworld-for-azure.json'
-Converting to (packet)...
---generated file: 'keys-to-underworld-for-packet.json'
+Description:
+
+CoreOS image for a VirtualBox platform.
+
+Variables:
+
+  <No variables>
+
+Builders:
+
+  virtualbox-iso
+
+Provisioners:
+
+  shell
+
+Note: If your build names contain user variables or template
+functions such as 'timestamp', these are processed at build time,
+and therefore only show in their raw form here.
