@@ -1,0 +1,22 @@
+# Created by https://www.gitignore.io/api/java
+
+# ISO file
+*.iso
+
+# BOX file
+*.box
+
+# Log file
+#*.log
+
+# Log Folder
+[Ll]ogs/
+[Ll]ogs/*.log
+
+# All Packer Folder
+packer-builds/*/packer-vm-cache/
+
+# All Vagrant Folder
+*/.vagrant/
+
+# End of https://www.gitignore.io/api/java

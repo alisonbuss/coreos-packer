@@ -1,0 +1,115 @@
+{
+  "ignition": {
+    "config": {},
+    "timeouts": {},
+    "version": "2.1.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        ]
+      },
+      {
+        "name": "lucifer",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        ]
+      },
+      {
+        "groups": [
+          "sudo",
+          "docker"
+        ],
+        "homeDir": "/home/vagrant",
+        "name": "vagrant",
+        "passwordHash": "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        ],
+        "shell": "/bin/bash"
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/ssh/sshd_config",
+        "user": {},
+        "contents": {
+          "source": "data:,%23%20Use%20most%20defaults%20for%20sshd%20configuration.%0AUsePrivilegeSeparation%20sandbox%0ASubsystem%20sftp%20internal-sftp%0AUseDNS%20no%0A%0APermitRootLogin%20no%0A%23%20Apply%20to%20users%3A%20(core%2C%20vagrant%2C%20lucifer).%0AAllowUsers%20core%20vagrant%20lucifer%0APasswordAuthentication%20no%0AChallengeResponseAuthentication%20no%0AAuthenticationMethods%20publickey%0A",
+          "verification": {}
+        },
+        "mode": 384
+      },
+      {
+        "filesystem": "root",
+        "group": {
+          "id": 0
+        },
+        "path": "/etc/sudoers.d/lucifer",
+        "user": {
+          "id": 0
+        },
+        "contents": {
+          "source": "data:,lucifer%20ALL%3D(ALL)%20NOPASSWD%3A%20ALL",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {
+          "id": 0
+        },
+        "path": "/etc/sudoers.d/vagrant",
+        "user": {
+          "id": 0
+        },
+        "contents": {
+          "source": "data:,vagrant%20ALL%3D(ALL)%20NOPASSWD%3A%20ALL",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/coreos/update.conf",
+        "user": {},
+        "contents": {
+          "source": "data:,GROUP%3Dstable%0AREBOOT_STRATEGY%3D%22etcd-lock%22%0ALOCKSMITHD_REBOOT_WINDOW_START%3D%22Sun%200%3A33%22%0ALOCKSMITHD_REBOOT_WINDOW_LENGTH%3D%223h%22",
+          "verification": {}
+        },
+        "mode": 420
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "dropins": [
+          {
+            "contents": "[Service]\nExecStart=\nExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \\\n  --discovery=\"https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6\"",
+            "name": "20-clct-etcd-member.conf"
+          }
+        ],
+        "enable": true,
+        "name": "etcd-member.service"
+      },
+      {
+        "mask": true,
+        "name": "locksmithd.service"
+      },
+      {
+        "mask": true,
+        "name": "update-engine.service"
+      }
+    ]
+  }
+}

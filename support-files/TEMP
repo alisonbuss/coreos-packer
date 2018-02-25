@@ -27,7 +27,9 @@ ETCDCTL_API=3 etcdctl --endpoints=http://192.168.33.101:2379,http://192.168.33.1
 
 
 
+## Project depreciated!!!
 
+## Moved to the project: **[Constellations (C12S)](https://github.com/alisonbuss/constellations/)**.
 
 
 

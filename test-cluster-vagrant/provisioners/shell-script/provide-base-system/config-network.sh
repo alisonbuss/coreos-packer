@@ -17,7 +17,7 @@ function StartConfiguration {
 
     printf '%b\n' "Initializing the (Network) configuration on the system...";
 
-    # add static network configuration in file: '/etc/systemd/network/static.network'
+    # add static network configuration in file: '/etc/systemd/network/00-enp0s8.network'
     local staticNetworkFile="/etc/systemd/network/static.network";
     touch ${staticNetworkFile}
     { 

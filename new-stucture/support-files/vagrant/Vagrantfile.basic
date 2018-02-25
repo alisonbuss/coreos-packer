@@ -1,0 +1,73 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.require_version ">= 1.6.0"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
+    # define host name and domain ----------------------------------------------------
+    _hostname = "coreos01"
+    _domain   = _hostname + ".dev.com"
+    # define default values ----------------------------------------------------------
+    #_private_ip = "192.168.33.101"
+    _private_ip = "192.168.1.130"
+    _provisioner_path = "provisioners/shell-script"
+    # starting the configuration of the virtual machine ------------------------------
+    config.vm.define _domain do |config|
+        config.vm.hostname = _hostname
+        # define box -----------------------------------------------------------------
+        config.vm.box = "lucifer/coreos-vagrant"
+        # define access --------------------------------------------------------------
+        # This sets the username that Vagrant will SSH as by default.
+        # --> default: (config.ssh.username = "vagrant") 
+        # --> default: (config.ssh.password = "vagrant") 
+        # Always use Vagrants insecure key.
+        config.ssh.insert_key = false
+        # Forward ssh agent to easily ssh into the different machines.
+        config.ssh.forward_agent = true   
+        # provider virtualbox --------------------------------------------------------
+        config.vm.provider "virtualbox" do |vb|
+            vb.name = "vm-" + _hostname
+            vb.gui = false
+            vb.cpus = 2
+            vb.memory = 2048
+            vb.functional_vboxsf = false
+            vb.check_guest_additions = false
+            vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
+        end
+        # provider network -----------------------------------------------------------
+        config.vm.network "private_network", ip: "#{_private_ip}", auto_config: false
+        config.vm.network "forwarded_port",  guest: 80,   host: 8080, auto_correct: true
+        config.vm.network "forwarded_port",  guest: 2375, host: 2375, auto_correct: true, host_ip: "127.0.0.1"
+        # provider base system -------------------------------------------------------
+        _provide_base_path = "#{_provisioner_path}/provide-base-system"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-network.sh", args: ["#{_private_ip}"]
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-storage-unit.sh"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-cfssl.sh"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-docker.sh"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-etcd.sh", args: ["#{_hostname}", "#{_private_ip}"]
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-flannel.sh"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-kubernetes.sh"
+        config.vm.provision "shell", path: "#{_provide_base_path}/config-security.sh"
+        config.vm.provision "shell", inline: "echo 'Restarting the system in 3 seconds...'; sleep 3s; reboot;"
+        # provider services ----------------------------------------------------------
+        _provide_services_path = "#{_provisioner_path}/provide-services"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-graylog.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-netdata.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-prometheus.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-grafana.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-konga.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-k8s-ui.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-jenkins.sh"
+        #config.vm.provision "shell", path: "#{_provide_services_path}/config-rocket-chat.sh"
+        # provider business ----------------------------------------------------------
+        _provide_business_path = "#{_provisioner_path}/provide-business"
+        #config.vm.provision "shell", path: "#{_provide_business_path}/config-wp-db.sh"
+        #config.vm.provision "shell", path: "#{_provide_business_path}/config-wp-admin.sh"
+        #config.vm.provision "shell", path: "#{_provide_business_path}/config-wp-theme-x.sh"
+        #config.vm.provision "shell", path: "#{_provide_business_path}/config-wp-mysite.sh"
+    end
+    # plugin conflict
+    if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = false
+    end
+end

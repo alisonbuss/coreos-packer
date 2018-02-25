@@ -7,6 +7,7 @@
 #         https://coreos.com/etcd/docs/latest/op-guide/clustering.html  
 #         https://coreos.com/etcd/docs/latest/v2/clustering.html
 #         https://stackoverflow.com/questions/37089387/coreos-member-node-will-not-start-when-using-etcdctl-member-add
+#         https://github.com/coreos/etcd/issues/7436
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.

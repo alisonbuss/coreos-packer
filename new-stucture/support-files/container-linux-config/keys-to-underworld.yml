@@ -1,0 +1,99 @@
+
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Ignição para criação de chaves de acesso SSH e configurações 
+#         de acesso de usuario, atualização do SO e fornecer a URL do "discovery" do "ETCD 3".
+# @descr: Ignition to create SSH access keys and user access settings,
+#         update the OS and provide the URL of the "discovery" of the "ETCD 3".
+# @fonts: https://coreos.com/os/docs/latest/provisioning.html
+#         https://coreos.com/os/docs/latest/migrating-to-clcs.html
+#         https://coreos.com/os/docs/latest/adding-users.html
+#         https://coreos.com/os/docs/latest/update-strategies.html
+#         https://coreos.com/os/docs/latest/customizing-sshd.html
+#         https://coreos.com/os/docs/latest/using-environment-variables-in-systemd-units.html#system-wide-environment-variables
+#         https://coreos.com/os/docs/latest/other-settings.html#adding-custom-messages-to-motd
+#-------------------------------------------------------------#
+
+passwd:
+  users:
+    - name: "core"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+    - name: "lucifer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+    - name: "packer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        
+    - name: "vagrant"
+      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant).
+      password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/vagrant"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+      shell: "/bin/bash"
+
+update:
+  group: "stable"
+  
+locksmith:
+  reboot_strategy: "etcd-lock"
+  window_start: "Sun 0:33"
+  window_length: "3h"
+
+storage:
+  files:
+    - path: "/etc/ssh/sshd_config"
+      filesystem: "root"
+      mode: 0600
+      contents:
+        inline: |
+          # Use most defaults for sshd configuration.
+          UsePrivilegeSeparation sandbox
+          Subsystem sftp internal-sftp
+          UseDNS no
+
+          PermitRootLogin no
+          # Apply to users: (core, lucifer, packer, vagrant).
+          AllowUsers core lucifer packer vagrant 
+          PasswordAuthentication no
+          ChallengeResponseAuthentication no
+          AuthenticationMethods publickey
+
+    - path: "/etc/sudoers.d/packer"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "packer ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/sudoers.d/vagrant"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/profile.d/motd.sh"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          #!/bin/bash
+          curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;

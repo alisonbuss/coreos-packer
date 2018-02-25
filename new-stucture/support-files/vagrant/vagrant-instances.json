@@ -1,0 +1,16 @@
+[
+    {
+        "name": "core01.dev.com",
+        "box": "lucifer/coreos-vagrant",
+        "cpus": 1,              
+        "memory": 2048
+    },
+    {
+        "name": "core02.dev.com",
+        "box": "lucifer/coreos-vagrant",
+        "cpus": 1,              
+        "memory": 2048,
+        "enable_logging": false,
+        "enable_shared_folders": false
+    }
+]

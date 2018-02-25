@@ -1,0 +1,108 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'json'
+
+PROJECT_PATH = File.dirname(__FILE__)
+INSTANCES = JSON.parse(File.read(File.join(PROJECT_PATH, 'vagrant-instances.json')))
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.require_version ">= 1.6.0"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
+    #starting each instance of the JSON file. "vagrant-instances.json" 
+    (INSTANCES).each_with_index do |instance, index|
+        # define default values
+        _count = (index + 1)
+        _hostname = instance["name"]
+        # IP (class B)
+        #_private_ip = "172.17.8.#{100 + _count}"
+        _private_ip = "128.66.63.#{10 + _count}" 
+        _box = instance["box"]      
+        _cpus = (instance.key?("cpus") ? instance["cpus"] : 1)
+        _memory = (instance.key?("memory") ? instance["memory"] : 512)
+        _enableLogging = (instance.key?("enable_logging") ? instance["enable_logging"] : false)
+        _enableSharedFolders = (instance.key?("enable_shared_folders") ? instance["enable_shared_folders"] : false)
+        _sharedFolders = [
+            {host: "files/", guest: "/home/core/shared-folder"}
+            # Example: 
+            #{ host: "files/", guest: "/home/core/shared-folder", settings: { 
+            #    id: "shared-override-01", nfs: true, mount_options: ['nolock,vers=3,udp'] 
+            #}}
+        ]
+        _network = [
+            { type: "private_network", settings: { ip: "#{_private_ip}" }},
+            { type: "forwarded_port",  settings: { guest: 80, host: 8080, auto_correct: true }},
+            { type: "forwarded_port",  settings: { guest: 2375, host: (2375 + _count - 1), host_ip: "127.0.0.1", auto_correct: true }}
+        ]
+        _provision = [
+            { type: "shell", settings: { inline: "echo Hello, World", privileged: true }}
+            # Example: 
+            #{ type: "ansible", settings: { playbook: "provision/install.yml", host_key_checking: false, sudo: true, tags: ["common", "jenkins"] }}
+        ]
+
+        # starting the configuration of the virtual machine
+        config.vm.define _hostname do |config|
+            # This sets the username that Vagrant will SSH as by default.
+            # --> default: (config.ssh.username = "vagrant") 
+            config.ssh.username = "vagrant"
+            #config.ssh.password = "vagrant"
+            # Always use Vagrants insecure key.
+            config.ssh.insert_key = false
+            # Forward ssh agent to easily ssh into the different machines.
+            config.ssh.forward_agent = true   
+  
+            # define access --------------------------------------------------------------
+            config.vm.hostname = _hostname
+
+            # define box -----------------------------------------------------------------
+            config.vm.box = _box
+
+            # provider virtualbox --------------------------------------------------------
+            config.vm.provider "virtualbox" do |vb|
+                vb.name = _hostname
+                vb.gui = false
+                vb.cpus = _cpus
+                vb.memory = _memory
+                vb.functional_vboxsf = false
+                vb.check_guest_additions = false
+                vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
+            end
+            # provider network -----------------------------------------------------------
+            if _network.nil? == false then
+                (_network).each do |(item)|
+                    config.vm.network "#{item[:type]}", item[:settings]
+                end
+            end 
+            # provider VM ----------------------------------------------------------------
+            if _provision.nil? == false then
+                (_provision).each do |(item)|
+                    config.vm.provision "#{item[:type]}", item[:settings]
+                end
+            end 
+            # provider shared folders ----------------------------------------------------
+            if _enableSharedFolders == true then
+                (_sharedFolders).each do |(item)|
+                    config.vm.synced_folder item[:host], item[:guest], (item.key?(:settings) ? item[:settings] : {})
+                end
+            end 
+            # generates log --------------------------------------------------------------
+            if _enableLogging == true then
+                logdir = File.join("#{PROJECT_PATH}", "log")
+                FileUtils.mkdir_p(logdir)
+                serialFile = File.join(logdir, "%s-serial.txt" % _hostname)
+                FileUtils.touch(serialFile)
+                config.vm.provider :virtualbox do |vb, override|
+                    vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+                    vb.customize ["modifyvm", :id, "--uartmode1", serialFile]
+                end
+            end
+        end
+        # plugin conflict
+        if Vagrant.has_plugin?("vagrant-vbguest") then
+            config.vbguest.auto_update = false
+        end   
+    end
+end

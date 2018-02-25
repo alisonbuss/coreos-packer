@@ -1,0 +1,202 @@
+The default values to be used by this Makefile:
+
+    --> MAKECMDGOALS: 'make plan compile build'
+    --> WORKING_DIRECTORY: .
+
+    --> PACKER_BUILD_PATH: ./packer-builds
+    --> PACKER_PROVISIONER_PATH: ./pre-provision
+    --> PACKER_MODULES_PATH: ./packer-modules
+    --> PACKER_NEW_MODEL_PATH: ./packer-new-model
+    --> PACKER_ONLY: virtualbox-iso
+
+    --> NEW_MODEL_NAME: coreos-vagrant
+    --> NEW_MODEL_SOURCE_FILE: ./packer-new-model/coreos-vagrant.json
+    --> NEW_MODEL_BUILD_PATH: ./packer-builds/coreos-vagrant-packer
+    --> NEW_MODEL_COMPILED_NAME: coreos-vagrant-template
+    --> NEW_MODEL_COMPILED_PATH: ./packer-builds/coreos-vagrant-packer/packer-template
+    --> NEW_MODEL_OUTPUT_FILE: ./packer-builds/coreos-vagrant-packer/packer-template/coreos-vagrant-template.json
+
+    --> COREOS_RELEASE: stable
+    --> COREOS_VERSION: 1576.5.0
+
+    --> IGNITION_SOURCE_FILE: ./support-files/container-linux-config/keys-to-underworld.yml
+    --> IGNITION_BUILD_PATH: ./packer-builds/coreos-vagrant-packer/files/ignitions
+    --> IGNITION_COMPILED_NAME: keys-to-underworld
+
+    --> COMPILE_NEW_MODEL_FOR_PACKER_CMD: ./support-files/shell-script/compile-new-model-for-packer.sh
+    --> COMPILE_CONFIG_IGNITION_CMD: ./support-files/shell-script/compile-container-linux-config.sh
+    --> CREATE_SHELL_SCRIPT_RUN_PACKER_CMD: ./support-files/shell-script/create-shell-script-run-packer.sh
+    --> CREATE_DOCUMENTATION_PACKER_CMD: ./support-files/shell-script/create-documentation-packer.sh
+    --> START_PACKER_CMD: ./packer-builds/coreos-vagrant-packer/start-packer.sh
+
+Starting the compilation of the [coreos-vagrant] project...
+
+Starting script execution [compile-new-model-for-packer.sh]
+Creating directory for the creation of packer template...
+--affected directory: './packer-builds/coreos-vagrant-packer/packer-template'
+Processing and compiling the [variables] module...
+--generated file: './packer-builds/coreos-vagrant-packer/packer-template/vars-custom-variables.json'
+Processing and compiling the [variables list] module...
+--generated file: './packer-modules/variables/vars-global.json'
+--generated file: './packer-modules/variables/vars-coreos.json'
+--generated file: './packer-modules/variables/vars-vagrant.json'
+Processing and compiling the [builders] module...
+--reading file: './packer-modules/builders/vagrant.json'
+Processing and compiling the [provisioners] module...
+--reading file: './packer-modules/provisioners/install-cfssl.json'
+--reading file: './packer-modules/provisioners/install-etcd3.json'
+--reading file: './packer-modules/provisioners/install-flannel.json'
+--reading file: './packer-modules/provisioners/install-docker.json'
+--reading file: './packer-modules/provisioners/install-docker-compose.json'
+--reading file: './packer-modules/provisioners/install-kubernetes.json'
+--reading file: './packer-modules/provisioners/install-python.json'
+--reading file: './packer-modules/provisioners/config-basic-security.json'
+Processing and compiling the [post processors] module...
+--reading file: './packer-modules/post-processors/vagrant-box.json'
+Starting the compilation of the [new model] for a Packer Template...
+--affected directory: ./packer-builds/coreos-vagrant-packer/packer-template
+--generated file: 'coreos-vagrant-template-min.json'
+--generated file: 'coreos-vagrant-template.json'
+
+Starting script execution [compile-container-linux-config.sh]
+Creating directory for the creation of ignitions...
+--affected directory: './packer-builds/coreos-vagrant-packer/files/ignitions'
+Starting the compilation process from "Container Linux Config" to "ignition"...
+--affected platforms: ['vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet']
+Converting to (no-platform)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld.json'
+Converting to (vagrant-virtualbox)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-virtualbox.json'
+Converting to (digitalocean)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-digitalocean.json'
+Converting to (ec2)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-ec2.json'
+Converting to (gce)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-gce.json'
+Converting to (azure)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-azure.json'
+Converting to (packet)...
+--generated file: './packer-builds/coreos-vagrant-packer/files/ignitions/keys-to-underworld-for-packet.json'
+
+Starting script execution [create-shell-script-run-packer.sh]
+Processing the [override variables] of Makefile...
+Processing the [variables list] module...
+--processing variable:: './packer-modules/variables/vars-global.json'
+--processing variable:: './packer-modules/variables/vars-coreos.json'
+--processing variable:: './packer-modules/variables/vars-vagrant.json'
+Starting the creation of the [start-packer.sh] for execution Packer CLI...
+--generated file: './packer-builds/coreos-vagrant-packer/start-packer.sh'
+
+Starting script execution [create-documentation-packer.sh]
+Starting the creation of the README.md documentation file...
+--generated file: './packer-builds/coreos-vagrant-packer/README.md'
+Copying Vagrant SSH Private Key...
+--source: ./support-files/vagrant/vagrant_insecure_private_key
+--output: ./packer-builds/coreos-vagrant-packer/files/vagrant_insecure_private_key
+Complete compilation!
+Starting the BUILD of the [coreos-vagrant] project...
+Applying validation in the [Packer Template]:
+Template validated successfully.
+Applying inspect in the [Packer Template]:
+Description:
+
+CoreOS image for a Vagrant platform.
+
+Variables:
+
+  <No variables>
+
+Builders:
+
+  virtualbox-iso
+
+Provisioners:
+
+  shell
+  shell
+  shell
+  shell
+  shell
+  shell
+  shell
+  shell
+
+Note: If your build names contain user variables or template
+functions such as 'timestamp', these are processed at build time,
+and therefore only show in their raw form here.
+Applying build in the [Packer Template]:
+virtualbox-iso output will be in this color.
+
+==> virtualbox-iso: Downloading or copying ISO
+    virtualbox-iso: Downloading or copying: http://stable.release.core-os.net/amd64-usr/1576.5.0/coreos_production_iso_image.iso
+    virtualbox-iso: Download progress: 3%
+    virtualbox-iso: Download progress: 6%
+    virtualbox-iso: Download progress: 11%
+    virtualbox-iso: Download progress: 15%
+    virtualbox-iso: Download progress: 18%
+    virtualbox-iso: Download progress: 22%
+    virtualbox-iso: Download progress: 25%
+    virtualbox-iso: Download progress: 29%
+    virtualbox-iso: Download progress: 33%
+    virtualbox-iso: Download progress: 36%
+    virtualbox-iso: Download progress: 40%
+    virtualbox-iso: Download progress: 43%
+    virtualbox-iso: Download progress: 43%
+    virtualbox-iso: Download progress: 44%
+    virtualbox-iso: Download progress: 46%
+    virtualbox-iso: Download progress: 49%
+    virtualbox-iso: Download progress: 53%
+    virtualbox-iso: Download progress: 56%
+    virtualbox-iso: Download progress: 59%
+    virtualbox-iso: Download progress: 63%
+    virtualbox-iso: Download progress: 67%
+    virtualbox-iso: Download progress: 71%
+    virtualbox-iso: Download progress: 75%
+    virtualbox-iso: Download progress: 78%
+    virtualbox-iso: Download progress: 82%
+    virtualbox-iso: Download progress: 86%
+    virtualbox-iso: Download progress: 89%
+    virtualbox-iso: Download progress: 93%
+    virtualbox-iso: Download progress: 96%
+    virtualbox-iso: Download progress: 100%
+==> virtualbox-iso: Starting HTTP server on port 8239
+==> virtualbox-iso: Creating virtual machine...
+==> virtualbox-iso: Creating hard drive...
+==> virtualbox-iso: Creating forwarded port mapping for communicator (SSH, WinRM, etc) (host port 4180)
+==> virtualbox-iso: Executing custom VBoxManage commands...
+    virtualbox-iso: Executing: modifyvm vm-coreos-packer --memory 2048
+    virtualbox-iso: Executing: modifyvm vm-coreos-packer --cpus 2
+==> virtualbox-iso: Starting the virtual machine...
+==> virtualbox-iso: Waiting 33s for boot...
+==> virtualbox-iso: Typing the boot command...
+==> virtualbox-iso: Waiting for SSH to become available...
+==> virtualbox-iso: Connected to SSH!
+==> virtualbox-iso: Uploading VirtualBox version info (5.2.6)
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-cfssl.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-etcd3.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-flannel.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-docker.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-docker-compose.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-kubernetes.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/install-python.sh
+==> virtualbox-iso: Provisioning with shell script: ./pre-provision/shell-script/config-basic-security.sh
+==> virtualbox-iso: Gracefully halting virtual machine...
+==> virtualbox-iso: Preparing to export machine...
+    virtualbox-iso: Deleting forwarded port mapping for the communicator (SSH, WinRM, etc) (host port 4180)
+==> virtualbox-iso: Exporting virtual machine...
+    virtualbox-iso: Executing: export vm-coreos-packer --output packer-builds/coreos-vagrant-packer/packer-vm-cache/vm-coreos-packer.ovf
+==> virtualbox-iso: Deregistering and deleting VM...
+==> virtualbox-iso: Running post-processor: vagrant
+==> virtualbox-iso (vagrant): Creating Vagrant box for 'virtualbox' provider
+    virtualbox-iso (vagrant): Copying from artifact: packer-builds/coreos-vagrant-packer/packer-vm-cache/vm-coreos-packer-disk001.vmdk
+    virtualbox-iso (vagrant): Copying from artifact: packer-builds/coreos-vagrant-packer/packer-vm-cache/vm-coreos-packer.ovf
+    virtualbox-iso (vagrant): Renaming the OVF to box.ovf...
+    virtualbox-iso (vagrant): Compressing: Vagrantfile
+    virtualbox-iso (vagrant): Compressing: box.ovf
+    virtualbox-iso (vagrant): Compressing: metadata.json
+    virtualbox-iso (vagrant): Compressing: vm-coreos-packer-disk001.vmdk
+Build 'virtualbox-iso' finished.
+
+==> Builds finished. The artifacts of successful builds are:
+--> virtualbox-iso: 'virtualbox' provider box: ./packer-builds/coreos-vagrant-packer/coreos-stable-1576.5.0.box
+Complete build!

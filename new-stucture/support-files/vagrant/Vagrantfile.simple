@@ -1,0 +1,44 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.require_version ">= 1.6.0"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|   
+    # define host name and domain ----------------------------------------------------
+    _hostname = "coreos01"
+    _domain   = _hostname + ".dev.com"
+    # starting the configuration of the virtual machine
+    config.vm.define _domain do |config|
+        # define access --------------------------------------------------------------
+        config.vm.hostname = _hostname
+        # define box -----------------------------------------------------------------
+        config.vm.box = "lucifer/coreos-vagrant"
+        # This sets the username that Vagrant will SSH as by default.
+        # --> default: (config.ssh.username = "vagrant") 
+        # --> default: (config.ssh.password = "vagrant") 
+        #config.ssh.username = "vagrant"
+        #config.ssh.password = "vagrant"
+        # Always use Vagrants insecure key.
+        config.ssh.insert_key = false
+        # Forward ssh agent to easily ssh into the different machines.
+        config.ssh.forward_agent = true   
+        # provider virtualbox --------------------------------------------------------
+        config.vm.provider "virtualbox" do |vb|
+            vb.name = "vm-" + _hostname
+            vb.gui = false
+            vb.cpus = 2
+            vb.memory = 2048
+            vb.functional_vboxsf = false
+            vb.check_guest_additions = false
+            vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
+        end
+        # provider network -----------------------------------------------------------
+        config.vm.network "private_network", ip: "192.168.33.101"
+        config.vm.network "forwarded_port",  guest: 80,   host: 8080, auto_correct: true
+        config.vm.network "forwarded_port",  guest: 2375, host: 2375, auto_correct: true, host_ip: "127.0.0.1"
+    end
+    # plugin conflict
+    if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = false
+    end
+end

@@ -1,0 +1,225 @@
+
+
+
+
+# FOR ETCD 2
+
+etcdctl member list
+
+etcdctl cluster-health
+
+etcdctl member add coreos-1-etcd http://192.168.33.101:2380
+
+etcdctl member add coreos-2-etcd http://192.168.33.102:2380
+
+etcdctl member add coreos-3-etcd http://192.168.33.103:2380
+
+
+# FOR ETCD 3
+
+ETCDCTL_API=3 etcdctl member list
+
+ETCDCTL_API=3 etcdctl --endpoints=http://localhost:2379 --write-out=table endpoint status
+
+ETCDCTL_API=3 etcdctl --endpoints=http://192.168.33.101:2379 --write-out=table endpoint status
+
+ETCDCTL_API=3 etcdctl --endpoints=http://192.168.33.101:2379,http://192.168.33.102:2379 --write-out=table endpoint status
+
+
+
+## Project depreciated!!!
+
+## Moved to the project: **[Constellations (C12S)](https://github.com/alisonbuss/constellations/)**.
+
+
+
+TOKEN=token-01
+CLUSTER_STATE=new
+NAME_1=machine-1
+NAME_2=machine-2
+NAME_3=machine-3
+HOST_1=10.240.0.17
+HOST_2=10.240.0.18
+HOST_3=10.240.0.19
+CLUSTER=${NAME_1}=http://${HOST_1}:2380,${NAME_2}=http://${HOST_2}:2380,${NAME_3}=http://${HOST_3}:2380
+Run this on each machine:
+
+# For machine 1
+THIS_NAME=${NAME_1}
+THIS_IP=${HOST_1}
+etcd --data-dir=data.etcd --name ${THIS_NAME} \
+	--initial-advertise-peer-urls http://${THIS_IP}:2380 --listen-peer-urls http://${THIS_IP}:2380 \
+	--advertise-client-urls http://${THIS_IP}:2379 --listen-client-urls http://${THIS_IP}:2379 \
+	--initial-cluster ${CLUSTER} \
+	--initial-cluster-state ${CLUSTER_STATE} --initial-cluster-token ${TOKEN}
+
+
+--------------------------------------------------------------------------------------------------------------------------
+
+
+$ etcd --name infra0 --initial-advertise-peer-urls http://10.0.1.10:2380 \
+  --listen-peer-urls http://10.0.1.10:2380 \
+  --listen-client-urls http://10.0.1.10:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.1.10:2379 \
+  --initial-cluster-token etcd-cluster-1 \
+  --initial-cluster infra0=http://10.0.1.10:2380,infra1=http://10.0.1.11:2380,infra2=http://10.0.1.12:2380 \
+  --initial-cluster-state new
+
+
+--------------------------------------------------------------------------------------------------------------------------
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="demo-etcd-1" \
+  --listen-peer-urls="http://0.0.0.0:2380" \
+  --listen-client-urls="http://10.240.0.1:2379,http://0.0.0.0:4001" \
+  --initial-advertise-peer-urls="http://10.240.0.1:2380" \
+  --initial-cluster="demo-etcd-1=http://10.240.0.1:2380,demo-etcd-2=http://10.240.0.2:2380,demo-etcd-3=http://10.240.0.3:2380" \
+  --initial-cluster-state="new" \
+  --initial-cluster-token="demo-etcd-token" \
+  --advertise-client-urls="http://10.240.0.1:2379"
+
+
+
+
+
+
+[Service]
+Environment="ETCD_ADVERTISE_CLIENT_URLS=http://172.17.8.102:2379"
+Environment="ETCD_DISCOVERY=https://discovery.etcd.io/5a591f871cbf0d4875726da42cbdbfa8"
+Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.17.8.102:2380"
+Environment="ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379,http://0.0.0.0:4001"
+Environment="ETCD_LISTEN_PEER_URLS=http://172.17.8.102:2380,http://172.17.8.102:7001"
+
+
+
+
+
+
+
+echo '[Service]';
+        echo 'ExecStart=';
+        echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+        echo '  --name="'${HOSTNAME}'" \';
+        echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+        echo '  --listen-client-urls="http://'${PRIVATE_IPV4}':2379,http://127.0.0.1:2379" \';
+        echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380" \';
+        echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
+        echo '  --initial-cluster-state="new"';
+
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-1-etcd" \
+  --advertise-client-urls="http://192.168.33.101:2379" \
+  --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \
+  --listen-peer-urls="http://192.168.33.101:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.101:2380" \
+  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380,coreos-3-etcd=http://192.168.33.103:2380" \
+  --initial-cluster-token="0d7980d914b9e85332e2a0e63cf8ebb2" \
+  --initial-cluster-state="new"
+
+
+
+
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-1-etcd" \
+  --advertise-client-urls="http://192.168.33.101:2379" \
+  --listen-client-urls="http://192.168.33.101:2379,http://127.0.0.1:2379" \
+  --listen-peer-urls="http://192.168.33.101:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.101:2380" \
+  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380" \
+  --initial-cluster-token="c05956b9d5f244da9088f665ee7a07f9-etcd" \
+  --initial-cluster-state="new"
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-1-etcd" \
+  --advertise-client-urls="http://192.168.33.101:2379" \
+  --listen-client-urls="http://192.168.33.101:2379,http://0.0.0.0:4001" \
+  --listen-peer-urls="http://0.0.0.0:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.101:2380" \
+  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380" \
+  --initial-cluster-token="coreos-1-etcd-token" \
+  --initial-cluster-state="new"
+
+
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-2-etcd" \
+  --advertise-client-urls="http://192.168.33.102:2379" \
+  --listen-client-urls="http://192.168.33.102:2379,http://127.0.0.1:2379" \
+  --listen-peer-urls="http://192.168.33.102:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.102:2380" \
+  --discovery="https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
+
+
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-1-etcd" \
+  --advertise-client-urls="http://192.168.33.101:2379" \
+  --listen-client-urls="http://192.168.33.101:2379,http://0.0.0.0:4001" \
+  --listen-peer-urls="http://0.0.0.0:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.101:2380" \
+  --discovery="https://discovery.etcd.io/e5597f9643afc34da23a2db11cce54a6"
+
+
+
+
+
+
+
+
+
+
+
+
+#FUNCIONO!!!!!!!!!!!!!!!!!!!
+
+[Service]
+ExecStart=
+ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \
+  --name="coreos-1-etcd" \
+  --advertise-client-urls="http://192.168.33.101:2379" \
+  --listen-client-urls="http://192.168.33.101:2379,http://127.0.0.1:2379" \
+  --listen-peer-urls="http://192.168.33.101:2380" \
+  --initial-advertise-peer-urls="http://192.168.33.101:2380" \
+  --discovery="https://discovery.etcd.io/0d7980d914b9e85332e2a0e63cf8ebb2"
+
+echo '[Service]';
+echo 'ExecStart=';
+echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+echo '  --name="'${HOSTNAME}'" \';
+echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+echo '  --listen-client-urls="http://'${PRIVATE_IPV4}':2379,http://127.0.0.1:2379" \';
+echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+echo '  --discovery="'${DISCOVERY}'"';
+
+
+ echo '[Service]';
+        echo 'ExecStart=';
+        echo 'ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \';
+        echo '  --name="'${HOSTNAME}'" \';
+        echo '  --advertise-client-urls="http://'${PRIVATE_IPV4}':2379" \';
+        #echo '  --listen-client-urls="http://'${PRIVATE_IPV4}':2379,http://127.0.0.1:2379" \';
+        echo '  --listen-client-urls="http://'${PRIVATE_IPV4}':2379,http://0.0.0.0:4001" \';
+        #echo '  --listen-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --listen-peer-urls="http://0.0.0.0:2380" \';
+        echo '  --initial-advertise-peer-urls="http://'${PRIVATE_IPV4}':2380" \';
+        echo '  --initial-cluster="coreos-1-etcd=http://192.168.33.101:2380,coreos-2-etcd=http://192.168.33.102:2380" \';
+        echo '  --initial-cluster-token="'${CLUSTER_TOKEN}'" \';
+        echo '  --initial-cluster-state="new"';
+
