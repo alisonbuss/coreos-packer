@@ -1,5 +1,0 @@
-{
-    "type": "vagrant",
-    "compression_level": "6",
-    "output": "{{user `global_build_path`}}/coreos-{{user `os_release`}}-{{user `os_version`}}.box"
-}

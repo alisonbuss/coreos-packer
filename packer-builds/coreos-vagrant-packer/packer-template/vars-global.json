@@ -1,5 +1,0 @@
-{
-    "global_working_directory": ".",
-    "global_build_path": "{{user `global_working_directory`}}/packer-builds/coreos-vagrant-packer",
-    "global_provisioner_path": "{{user `global_working_directory`}}/pre-provision"
-}

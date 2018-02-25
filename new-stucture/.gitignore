@@ -1,9 +1,0 @@
-# Created by https://www.gitignore.io/api/java
-
-# Log Folder
-[Bb]uilds/
-[Bb]uilds/*.iso
-[Bb]uilds/*.box
-[Bb]uilds/*.log
-
-# End of https://www.gitignore.io/api/java

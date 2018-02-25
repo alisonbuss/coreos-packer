@@ -1,7 +1,0 @@
-{
-    "vagrant_vm_name": "vm-coreos-packer",
-    "vagrant_cpus": "1", 
-    "vagrant_memory": "512",
-    "vagrant_disk_size": "20000",
-    "vagrant_insecure_private_key": "/files/vagrant_insecure_private_key"
-}

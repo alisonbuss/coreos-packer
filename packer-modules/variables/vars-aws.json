@@ -1,9 +1,0 @@
-{
-    "aws_access_key": "",
-    "aws_secret_key": "",
-    "aws_source_ami": "ami-d2c924b2",
-    "aws_instance_type": "m4.large",
-    "aws_region": "us-west-2",
-    "aws_ssh_username": "",
-    "aws_ami_name": ""
-}

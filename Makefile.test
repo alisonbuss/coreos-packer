@@ -7,69 +7,58 @@
 #       bash Makefile.test plan
 #    OR
 #       bash Makefile.test compile
-#    OR
-#       bash Makefile.test compile-all
 #-------------------------------------------------------------#
 
 # @descr: Main function of the script, it runs automatically on the script call.
 # @param: 
 #    $@ | array: (*)
 function MakefileTest {
-    local new_model_name="coreos-vagrant";
     local coreos_release="stable";
     local coreos_version="1576.5.0";
 
-    local ARGUMENTS="NEW_MODEL_NAME=${new_model_name} COREOS_RELEASE=${coreos_release} COREOS_VERSION=${coreos_version}";
+    local template="coreos-virtualbox-template.json";
+    local variables="vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json";
+    local packer_only="virtualbox-iso";
+
+    local ARG_COREOS="COREOS_RELEASE='${coreos_release}' COREOS_VERSION='${coreos_version}'";
+    local ARG_PACKER="PACKER_TEMPLATE='${template}' PACKER_VARIABLES='${variables}' PACKER_ONLY='${packer_only}'";
 
     case "$@" in
         plan) {
-            make plan $ARGUMENTS;
+            sh -c "make plan ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         compile) {
-            make plan compile $ARGUMENTS;
+            bash -c "make plan compile ${ARG_PACKER} ${ARG_COREOS}";
+
+        };;
+        validate) {
+            bash -c "make plan validate ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         build) {
-            make plan build $ARGUMENTS;
+            bash -c "make plan build ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         build-force) {
-            make build-force $ARGUMENTS;
+            bash -c "make build-force ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         install-box) {
-            make plan install-box $ARGUMENTS;
+            bash -c "make plan install-box ${ARG_PACKER} ${ARG_COREOS}";
+
+        };;
+        publish-box) {
+            bash -c "make plan publish-box ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         uninstall-box) {
-            make uninstall-box $ARGUMENTS;
+            bash -c "make plan uninstall-box ${ARG_PACKER} ${ARG_COREOS}";
 
         };;
         clean) {
-            make clean $ARGUMENTS;
+            bash -c "make plan clean ${ARG_PACKER} ${ARG_COREOS}";
 
-        };;
-        compile-all) {
-            make compile NEW_MODEL_NAME=coreos-all-platforms \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
-
-            make compile NEW_MODEL_NAME=coreos-aws \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
-
-            make compile NEW_MODEL_NAME=coreos-digitalocean \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
-
-            make compile NEW_MODEL_NAME=coreos-google \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
-                         
-            make compile NEW_MODEL_NAME=coreos-vagrant \
-                         COREOS_RELEASE=${coreos_release} \
-                         COREOS_VERSION=${coreos_version};
         };;
         *) {
             echo "WARNING: The test type has not been passed or is incorrect.";
@@ -77,8 +66,12 @@ function MakefileTest {
     esac
 }
 
+
+# @descr: Create folder for log.
+mkdir -p "${PWD}/builds";
+
 # @descr: Call of execution of the script's main function.
-MakefileTest "$@" 2>&1 | tee Makefile.test.log;
+MakefileTest "$@" 2>&1 | tee "${PWD}/builds/Makefile.test.log";
 
 # @descr: Finishing the script!!! :P
 exit 0;
