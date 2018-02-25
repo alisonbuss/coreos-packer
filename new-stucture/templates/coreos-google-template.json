@@ -1,0 +1,20 @@
+{
+    "_comment": "Missing the implementation for this platform!!!",
+
+    "description": "CoreOS image for a Google platform.",
+
+    "builders": [{
+        "type": "googlecompute"
+
+    }],
+
+    "provisioners": [{
+        
+    }],
+
+    "post-processors": [{
+
+    }],
+
+    "min_packer_version": "1.1.3"
+}

@@ -26,8 +26,8 @@
 WORKING_DIRECTORY         ?= .
 #WORKING_DIRECTORY        ?= `pwd`
 
-PACKER_TEMPLATE           ?= coreos-vagrant-template.json
-PACKER_VARIABLES		  ?= vars-global.json vars-coreos.json vars-vagrant.json vars-custom.json
+PACKER_TEMPLATE           ?= coreos-virtualbox-template.json
+PACKER_VARIABLES		  ?= vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json
 PACKER_ONLY               ?= virtualbox-iso
 
 # DEFAULT VARIABLES - CoreOS!!!
@@ -42,19 +42,18 @@ IGNITION_COMPILATION_PATH ?= $(WORKING_DIRECTORY)/pre-provision/ignitions
 VAGRANT_BOX_NAME          ?= lucifer/coreos-$(COREOS_RELEASE)
 VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/coreos-$(COREOS_RELEASE)-$(COREOS_VERSION).box
 
-# DEFAULT VARIABLES - Building and compiling files for Packer 
-#					 (Construção e compilação de arquivos para o Packer) 
+# DEFAULT VARIABLES - Compile, validate and build image files for Project Packer.
 BUILD_IMAGE_CMD           ?= $(WORKING_DIRECTORY)/build-image.sh
 
 
 plan: 
 	@echo "The default values to be used by this Makefile:";
 	@echo "";
-	@echo "    --> MAKECMDGOALS: 'make $(MAKECMDGOALS)'";
+	@echo "    --> MAKECMDGOALS: make $(MAKECMDGOALS)";
 	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
 	@echo "";
 	@echo "    --> PACKER_TEMPLATE: $(PACKER_TEMPLATE)";
-	@echo "    --> PACKER_VARIABLES: $(PACKER_VARIABLES)";
+	@echo "    --> PACKER_VARIABLES: [$(PACKER_VARIABLES)]";
 	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
 	@echo "";
 	@echo "    --> COREOS_RELEASE: $(COREOS_RELEASE)";

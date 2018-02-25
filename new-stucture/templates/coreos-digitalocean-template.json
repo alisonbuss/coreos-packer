@@ -1,0 +1,20 @@
+{
+    "_comment": "Missing the implementation for this platform!!!",
+
+    "description": "CoreOS image for a DigitalOcean platform.",
+
+    "builders": [{
+        "type": "digitalocean"
+
+    }],
+
+    "provisioners": [{
+        
+    }],
+
+    "post-processors": [{
+
+    }],
+
+    "min_packer_version": "1.1.3"
+}
