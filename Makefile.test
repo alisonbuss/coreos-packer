@@ -13,6 +13,8 @@
 # @param: 
 #    $@ | array: (*)
 function MakefileTest {
+    # WARNING: When you change the RELEASE of CoreOS, you should also change the 
+    # file in ".../container-linux-config/keys-to-underworld.yml" for (update: group: "stable")
     local coreos_release="stable";
     local coreos_version="1632.3.0";
 

@@ -40,10 +40,23 @@ passwd:
         - "sudo"
         - "docker"
       shell: "/bin/bash"
+    
+    - name: "ansible"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/ansible"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+      shell: "/bin/bash"
 
+# WARNING: When you change the RELEASE of CoreOS, you should also change thes 
+# files "Makefile OR Makefile.test" for "COREOS_RELEASE=stable"
 update:
   group: "stable"
-  
+
 locksmith:
   reboot_strategy: "etcd-lock"
   window_start: "Sun 0:33"
@@ -56,17 +69,14 @@ storage:
       mode: 0600
       contents:
         inline: |
-          # Use most defaults for sshd configuration.
-          UsePrivilegeSeparation sandbox
-          Subsystem sftp internal-sftp
+          # Apply to users: (core, lucifer, packer, vagrant, ansible).
+          AllowUsers core lucifer packer vagrant ansible
+          AuthenticationMethods publickey
           UseDNS no
-
           PermitRootLogin no
-          # Apply to users: (core, lucifer, packer, vagrant).
-          AllowUsers core lucifer packer vagrant 
           PasswordAuthentication no
           ChallengeResponseAuthentication no
-          AuthenticationMethods publickey
+          Subsystem sftp internal-sftp
 
     - path: "/etc/sudoers.d/packer"
       filesystem: "root"
@@ -88,6 +98,16 @@ storage:
       contents:
         inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
 
+    - path: "/etc/sudoers.d/ansible"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "ansible ALL=(ALL) NOPASSWD: ALL"
+
     - path: "/etc/profile.d/motd.sh"
       filesystem: "root"
       mode: 0644
@@ -96,7 +116,7 @@ storage:
           #!/bin/bash
           echo -e "\033[01;32m";
           cat <<'EOF'
-          Project: 'https://github.com/alisonbuss/coreos-packer/'                
+          Project 'https://github.com/alisonbuss/coreos-packer/'                
                ____                ___  ____    ____            _                
               / ___|___  _ __ ___ / _ \/ ___|  |  _ \ __ _  ___| | _____ _ __    
              | |   / _ \| '__/ _ \ | | \___ \  | |_) / _` |/ __| |/ / _ \ '__|   

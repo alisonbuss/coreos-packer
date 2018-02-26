@@ -14,6 +14,8 @@
 #   OR
 #       $ make clean  
 #	OR
+#       WARNING: When you change the RELEASE of CoreOS, you should also change the 
+#       file in ".../container-linux-config/keys-to-underworld.yml" for (update: group: "alpha")
 #		$ make plan compile build install-box \
 #			   PACKER_ONLY="virtualbox-iso" \
 #			   COREOS_RELEASE="alpha" \
@@ -32,6 +34,8 @@ PACKER_VARIABLES		  ?= vars-global.json vars-coreos.json vars-virtualbox.json va
 PACKER_ONLY               ?= virtualbox-iso
 
 # DEFAULT VARIABLES - CoreOS!!!
+# WARNING: When you change the RELEASE of CoreOS, you should also change the 
+# file in ".../container-linux-config/keys-to-underworld.yml" for (update: group: "stable")
 COREOS_RELEASE            ?= stable
 COREOS_VERSION            ?= 1632.3.0
 
