@@ -2,7 +2,9 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr: 
-# @fonts: 	     
+# @fonts: https://github.com/coreos/container-linux-config-transpiler
+#         https://coreos.com/os/docs/latest/configuration.html
+#         https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile	     
 #-------------------------------------------------------------#
 
 # @fonts: https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux
@@ -29,7 +31,7 @@ function BuildImagePacker {
     # @descr: ...
     local ACTION=$(util.getParameterValue "(--action=|-a=)" "$@");
 
-    # @descr: ...
+    # @descr:
     # @example: 
     #     $ bash build-image.sh --action="validate" \
     #                           --template-file="./templates/coreos-virtualbox-template.json" \
@@ -101,7 +103,7 @@ function BuildImagePacker {
               "${template_file}";
     }
 
-    # @descr: ...
+    # @descr: Function for compiling the "Container Linux Config" for CoreOS "Ignition"
     # @example: 
     #     $ bash build-image.sh --action="compile" \
 	#					        --source-file="./pre-provision/container-linux-config/keys-to-underworld.yml" \

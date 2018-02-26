@@ -12,7 +12,7 @@
 #    $@ | array: (*)
 function StartInstallation {
     
-    printf '%b\n' "CoreOS already has (ETCD-3) installed on your system...";
+    printf '%b\n' "CoreOS already has (ETCD) installed on your system...";
     
     # Define default values.
     #local profileEnvFile="/etc/profile.env";

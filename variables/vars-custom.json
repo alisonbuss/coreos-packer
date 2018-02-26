@@ -1,5 +1,5 @@
 {
-    "vagrant_cpus":"2",
-    "vagrant_memory":"2048",
-    "vagrant_disk_size":"33666"
+    "virtualbox_cpus":"2",
+    "virtualbox_memory":"2048",
+    "virtualbox_disk_size":"33666"
 }

@@ -8,7 +8,7 @@
         "iso_checksum": "{{user `os_iso_checksum`}}",
         "iso_checksum_type": "{{user `os_iso_checksum_type`}}",
         "iso_url": "http://{{user `os_release`}}.release.core-os.net/amd64-usr/{{user `os_version`}}/coreos_production_iso_image.iso",
-        "iso_target_path": "{{user `global_build_path`}}/coreos-{{user `os_release`}}-{{user `os_version`}}.iso", 
+        "iso_target_path": "{{user `global_working_directory`}}/builds/coreos-{{user `os_release`}}-{{user `os_version`}}.iso", 
         "guest_os_type": "Linux26_64",
         
         "hard_drive_interface": "sata",
@@ -16,12 +16,11 @@
         "vboxmanage": [
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `virtualbox_cpus`}}"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `virtualbox_memory`}}"]
-           
         ],
     
         "headless": "false",
         "guest_additions_mode": "disable",
-        "output_directory": "{{user `global_build_path`}}/packer-vm-cache",
+        "output_directory": "{{user `global_working_directory`}}/builds/packer-vm-cache",
         
         "http_directory": "{{user `global_working_directory`}}",
         "boot_wait": "33s",
@@ -49,20 +48,20 @@
         "environment_vars" : [],
         "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
         "scripts": [
-            "{{user `global_provisioner_path`}}/install-python.sh",
-            "{{user `global_provisioner_path`}}/install-docker.sh",
-            "{{user `global_provisioner_path`}}/install-docker-compose.sh",
-            "{{user `global_provisioner_path`}}/install-etcd.sh",
-            "{{user `global_provisioner_path`}}/install-flannel.sh",
-            "{{user `global_provisioner_path`}}/provide-basic-security.sh",
-            "{{user `global_provisioner_path`}}/provide-clean-image.sh"
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-python.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker-compose.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-etcd.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-flannel.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/provide-basic-security.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/provide-clean-image.sh"
         ]
     }],
 
     "post-processors": [{
         "type": "vagrant",
         "compression_level": "6",
-        "output": "{{user `global_build_path`}}/coreos-{{user `os_release`}}-{{user `os_version`}}.box"
+        "output": "{{user `global_working_directory`}}/builds/coreos-{{user `os_release`}}-{{user `os_version`}}.box"
     }],
 
     "min_packer_version": "1.1.3"

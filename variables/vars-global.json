@@ -1,5 +1,3 @@
 {
-    "global_working_directory": ".",
-    "global_build_path": "{{user `global_working_directory`}}/builds",
-    "global_provisioner_path": "{{user `global_working_directory`}}/pre-provision/shell-script"
+    "global_working_directory": "."
 }

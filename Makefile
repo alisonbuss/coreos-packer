@@ -26,6 +26,7 @@
 WORKING_DIRECTORY         ?= .
 #WORKING_DIRECTORY        ?= `pwd`
 
+# DEFAULT VARIABLES - Packer!!!
 PACKER_TEMPLATE           ?= coreos-virtualbox-template.json
 PACKER_VARIABLES		  ?= vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json
 PACKER_ONLY               ?= virtualbox-iso
@@ -108,7 +109,7 @@ build:
 							 --working-directory="$(WORKING_DIRECTORY)";
 
 
-build-force: clean compile build
+build-force: clean compile validate build
 
 
 clean:

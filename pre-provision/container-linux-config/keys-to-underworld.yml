@@ -96,4 +96,4 @@ storage:
       contents:
         inline: |
           #!/bin/bash
-          curl -L https://raw.githubusercontent.com/alisonbuss/coreos-packer/master/support-files/ascii-art.txt;
+          curl -L https://raw.githubusercontent.com/alisonbuss/coreos-kids-vagrant/coreos-kids-vagrant/shared-folder/text.txt;
