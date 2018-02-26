@@ -14,7 +14,7 @@
 #    $@ | array: (*)
 function MakefileTest {
     local coreos_release="stable";
-    local coreos_version="1576.5.0";
+    local coreos_version="1632.3.0";
 
     local template="coreos-virtualbox-template.json";
     local variables="vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json";

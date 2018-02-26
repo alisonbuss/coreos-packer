@@ -33,7 +33,7 @@ PACKER_ONLY               ?= virtualbox-iso
 
 # DEFAULT VARIABLES - CoreOS!!!
 COREOS_RELEASE            ?= stable
-COREOS_VERSION            ?= 1576.5.0
+COREOS_VERSION            ?= 1632.3.0
 
 # DEFAULT VARIABLES - Ignition For CoreOS
 IGNITION_SOURCE_FILE      ?= $(WORKING_DIRECTORY)/pre-provision/container-linux-config/keys-to-underworld.yml
