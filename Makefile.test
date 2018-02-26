@@ -22,44 +22,43 @@ function MakefileTest {
     local variables="vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json";
     local packer_only="virtualbox-iso";
 
-    local ARG_COREOS="COREOS_RELEASE='${coreos_release}' COREOS_VERSION='${coreos_version}'";
-    local ARG_PACKER="PACKER_TEMPLATE='${template}' PACKER_VARIABLES='${variables}' PACKER_ONLY='${packer_only}'";
+    local ARGUMENTS="COREOS_RELEASE='${coreos_release}' COREOS_VERSION='${coreos_version}' PACKER_TEMPLATE='${template}' PACKER_VARIABLES='${variables}' PACKER_ONLY='${packer_only}'";
 
     case "$@" in
         plan) {
-            sh -c "make plan ${ARG_PACKER} ${ARG_COREOS}";
+            sh -c "make plan ${ARGUMENTS}";
 
         };;
         compile) {
-            bash -c "make plan compile ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan compile ${ARGUMENTS}";
 
         };;
         validate) {
-            bash -c "make plan validate ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan validate ${ARGUMENTS}";
 
         };;
         build) {
-            bash -c "make plan build ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan compile validate build ${ARGUMENTS}";
 
         };;
         build-force) {
-            bash -c "make build-force ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make build-force ${ARGUMENTS}";
 
         };;
         install-box) {
-            bash -c "make plan install-box ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan install-box ${ARGUMENTS}";
 
         };;
         publish-box) {
-            bash -c "make plan publish-box ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan publish-box ${ARGUMENTS}";
 
         };;
         uninstall-box) {
-            bash -c "make plan uninstall-box ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan uninstall-box ${ARGUMENTS}";
 
         };;
         clean) {
-            bash -c "make plan clean ${ARG_PACKER} ${ARG_COREOS}";
+            bash -c "make plan clean ${ARGUMENTS}";
 
         };;
         *) {
@@ -67,7 +66,6 @@ function MakefileTest {
         };;
     esac
 }
-
 
 # @descr: Create folder for log.
 mkdir -p "${PWD}/builds";
