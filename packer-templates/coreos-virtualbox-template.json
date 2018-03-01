@@ -4,11 +4,11 @@
     "builders": [{
         "type": "virtualbox-iso",
             
-        "vm_name": "{{user `virtualbox_name`}}",
+        "vm_name": "vm-{{timestamp}}-packer",
         "iso_checksum": "{{user `os_iso_checksum`}}",
         "iso_checksum_type": "{{user `os_iso_checksum_type`}}",
-        "iso_url": "http://{{user `os_release`}}.release.core-os.net/amd64-usr/{{user `os_version`}}/coreos_production_iso_image.iso",
-        "iso_target_path": "{{user `global_working_directory`}}/builds/coreos-{{user `os_release`}}-{{user `os_version`}}.iso", 
+        "iso_url": "{{user `os_iso_url`}}",
+        "iso_target_path": "{{user `global_working_directory`}}/builds/{{user `os_name`}}-{{user `os_release`}}-{{user `os_version`}}.iso", 
         "guest_os_type": "Linux26_64",
         
         "hard_drive_interface": "sata",
@@ -36,7 +36,7 @@
         
         "communicator": "ssh",
         "ssh_port": 22,
-        "ssh_username": "packer",
+        "ssh_username": "{{user `virtualbox_ssh_username`}}",
         "ssh_private_key_file": "{{user `global_working_directory`}}{{user `virtualbox_ssh_private_key`}}",
         "ssh_timeout": "33m",
     
@@ -61,7 +61,7 @@
     "post-processors": [{
         "type": "vagrant",
         "compression_level": "6",
-        "output": "{{user `global_working_directory`}}/builds/coreos-{{user `os_release`}}-{{user `os_version`}}.box"
+        "output": "{{user `global_working_directory`}}/builds/{{user `virtualbox_vagrant_box_file`}}"
     }],
 
     "min_packer_version": "1.1.3"

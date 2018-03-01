@@ -14,12 +14,7 @@
 #   OR
 #       $ make clean  
 #	OR
-#       WARNING: When you change the RELEASE of CoreOS, you should also change the 
-#       file in ".../container-linux-config/keys-to-underworld.yml" for (update: group: "alpha")
-#		$ make plan compile build install-box \
-#			   PACKER_ONLY="virtualbox-iso" \
-#			   COREOS_RELEASE="alpha" \
-#			   COREOS_VERSION="1688.0.0"
+#		$ make plan compile build install-box PACKER_ONLY="virtualbox-iso" 
 #   OR
 #       $ make uninstall-box  
 #-------------------------------------------------------------#
@@ -30,22 +25,19 @@ WORKING_DIRECTORY         ?= .
 
 # DEFAULT VARIABLES - Packer!!!
 PACKER_TEMPLATE           ?= coreos-virtualbox-template.json
-PACKER_VARIABLES		  ?= vars-global.json vars-coreos.json vars-virtualbox.json vars-custom.json
+PACKER_VARIABLES		  ?= global.json /operational-system/coreos.json /platform/virtualbox.json custom.json
 PACKER_ONLY               ?= virtualbox-iso
 
-# DEFAULT VARIABLES - CoreOS!!!
-# WARNING: When you change the RELEASE of CoreOS, you should also change the 
-# file in ".../container-linux-config/keys-to-underworld.yml" for (update: group: "stable")
-COREOS_RELEASE            ?= stable
-COREOS_VERSION            ?= 1632.3.0
+PACKER_TEMPLATES_PATH     ?= $(WORKING_DIRECTORY)/packer-templates
+PACKER_VARIABLES_PATH     ?= $(WORKING_DIRECTORY)/packer-variables
 
 # DEFAULT VARIABLES - Ignition For CoreOS
 IGNITION_SOURCE_FILE      ?= $(WORKING_DIRECTORY)/pre-provision/container-linux-config/keys-to-underworld.yml
 IGNITION_COMPILATION_PATH ?= $(WORKING_DIRECTORY)/pre-provision/ignitions
 
 # DEFAULT VARIABLES - Vagrant
-VAGRANT_BOX_NAME          ?= lucifer/coreos-$(COREOS_RELEASE)
-VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/coreos-$(COREOS_RELEASE)-$(COREOS_VERSION).box
+VAGRANT_BOX_NAME          ?= packer/coreos-vagrant-box
+VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/image-coreos-vagrant.box
 
 # DEFAULT VARIABLES - Compile, validate and build image files for Project Packer.
 BUILD_IMAGE_CMD           ?= $(WORKING_DIRECTORY)/build-image.sh
@@ -61,8 +53,8 @@ plan:
 	@echo "    --> PACKER_VARIABLES: [$(PACKER_VARIABLES)]";
 	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
 	@echo "";
-	@echo "    --> COREOS_RELEASE: $(COREOS_RELEASE)";
-	@echo "    --> COREOS_VERSION: $(COREOS_VERSION)";
+	@echo "    --> PACKER_TEMPLATES_PATH: $(PACKER_TEMPLATES_PATH)";
+	@echo "    --> PACKER_VARIABLES_PATH: $(PACKER_VARIABLES_PATH)";
 	@echo "";
 	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
 	@echo "    --> IGNITION_COMPILATION_PATH: $(IGNITION_COMPILATION_PATH)";
@@ -89,27 +81,26 @@ compile:
 
 validate:
 	@echo "Starting the validation of the template Packer..."; 
-	@echo "--template file: $(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)"; 
+	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)"; 
 
 	@bash $(BUILD_IMAGE_CMD) --action="validate" \
-						     --template-file="$(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
 							 --variables="$(PACKER_VARIABLES)" \
-							 --working-directory="$(WORKING_DIRECTORY)";
+							 --variables-path="$(PACKER_VARIABLES_PATH)";
 
 	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
-						     --template-file="$(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)";
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)";
 
 
 build:
 	@echo "Starting the BUILD of the template Packer..."; 
-	@echo "--template file: $(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)";
+	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)";
 
 	@bash $(BUILD_IMAGE_CMD) --action="build" \
-						     --template-file="$(WORKING_DIRECTORY)/templates/$(PACKER_TEMPLATE)" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
 							 --variables="$(PACKER_VARIABLES)" \
+							 --variables-path="$(PACKER_VARIABLES_PATH)" \
 							 --packer-only="$(PACKER_ONLY)" \
-							 --coreos-release="$(COREOS_RELEASE)" \
-							 --coreos-version="$(COREOS_VERSION)" \
 							 --working-directory="$(WORKING_DIRECTORY)";
 
 

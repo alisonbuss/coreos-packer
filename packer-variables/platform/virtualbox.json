@@ -1,0 +1,10 @@
+{
+    "virtualbox_cpus": "1", 
+    "virtualbox_memory": "512",
+    "virtualbox_disk_size": "20000",
+
+    "virtualbox_ssh_username": "packer",
+    "virtualbox_ssh_private_key": "/pre-provision/vagrant_insecure_private_key",
+
+    "virtualbox_vagrant_box_file": "image-coreos-vagrant.box"
+}
