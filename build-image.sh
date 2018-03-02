@@ -56,6 +56,7 @@ function BuildImagePacker {
 
         local variables_files_str="";
 
+        # FONT: https://www.packer.io/docs/templates/user-variables.html#from-a-file
         for variable in ${variables}; do
             variables_files_str="${variables_files_str} -var-file=${variables_path}/${variable}";
         done
@@ -81,65 +82,54 @@ function BuildImagePacker {
      
         local variables_files_str="";
 
+        # FONT: https://www.packer.io/docs/templates/user-variables.html#from-a-file
         for variable in ${variables}; do
             variables_files_str="${variables_files_str} -var-file=${variables_path}/${variable}";
         done
 
-        packer build ${variables_files_str} \
-               -var "global_working_directory=${working_directory}" \
+        packer build -only="${packer_only}" -parallel="true" ${variables_files_str} \
+               -var="global_working_directory=${working_directory}" \
                "${template_file}";
     }
 
     # @descr: Function for compiling the "Container Linux Config" for CoreOS "Ignition"
+    # @fonts: https://github.com/coreos/container-linux-config-transpiler
+    #         https://github.com/coreos/container-linux-config-transpiler/blob/master/doc/dynamic-data.md#supported-data-by-provider
     # @example: 
     #     $ bash build-image.sh --action="compile" \
 	#					        --source-file="./pre-provision/container-linux-config/keys-to-underworld.yml" \
 	#						    --compilation-path="./pre-provision/ignitions" \
-	#						    --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+	#						    --platforms="vagrant-virtualbox digitalocean ec2 gce";
     #
     __compile_ignition() {
         local source_file=$(util.getParameterValue "(--source-file=)" "$@");
         local compilation_path=$(util.getParameterValue "(--compilation-path=)" "$@");
+        local compiled_name=$(basename "${source_file}");
+        local compiled_file="${compilation_path}/${compiled_name%.*}";
+        
+        # Platform to target. Accepted values: [
+        #    azure digitalocean ec2 gce packet openstack-metadata vagrant-virtualbox cloudstack-configdrive
+        # ]
         local platforms=$(util.getParameterValue "(--platforms=)" "$@");
 
-        local compiled_name=$(basename "${source_file}");  
-        compiled_name="${compiled_name%.*}";
-        local compiled_file="${compilation_path}/${compiled_name}";
-
-        echo "Creating directory for the creation of ignitions...";  
-        echo "--affected directory: '${compilation_path}'";  
+        # Creating directory for the creation of ignitions...
         mkdir -p "${compilation_path}";
 
-        echo 'Starting the compilation process from "Container Linux Config" to "ignition"...';  
-        echo "--affected platforms: [${platforms[@]}]"; 
+        echo 'Starting the compilation process from "Container Linux Config" to "ignition"...';
+        echo "--affected platforms: [${platforms[@]}]";
 
         echo "Converting to (no-platform)...";
-        echo "--generated file: '${compiled_name}.json'";  
-        ct -in-file "${source_file}" -out-file "${compiled_file}.json" --pretty;
+        echo "--generated file: '${compiled_name%.*}.json'";
+        ct --in-file "${source_file}" --out-file "${compiled_file}.json" --pretty;
 
-        echo "Converting to (vagrant-virtualbox)...";
-        echo "--generated file: '${compiled_name}-for-virtualbox.json'";
-        ct --platform=vagrant-virtualbox -in-file "${source_file}" -out-file "${compiled_file}-for-virtualbox.json" --pretty;
-
-        echo "Converting to (digitalocean)...";
-        echo "--generated file: '${compiled_name}-for-digitalocean.json'";
-        ct --platform=digitalocean -in-file "${source_file}" -out-file "${compiled_file}-for-digitalocean.json" --pretty;
-
-        echo "Converting to (ec2)...";
-        echo "--generated file: '${compiled_name}-for-ec2.json'";
-        ct --platform=ec2 -in-file "${source_file}" -out-file "${compiled_file}-for-ec2.json" --pretty;
-
-        echo "Converting to (gce)...";
-        echo "--generated file: '${compiled_name}-for-gce.json'";
-        ct --platform=gce -in-file "${source_file}" -out-file "${compiled_file}-for-gce.json" --pretty;
-
-        echo "Converting to (azure)...";
-        echo "--generated file: '${compiled_name}-for-azure.json'";
-        ct --platform=azure -in-file "${source_file}" -out-file "${compiled_file}-for-azure.json" --pretty;
-
-        echo "Converting to (packet)...";
-        echo "--generated file: '${compiled_name}-for-packet.json'";
-        ct --platform=packet -in-file "${source_file}" -out-file "${compiled_file}-for-packet.json" --pretty;
+        for platform in ${platforms}; do
+            echo "Converting to (${platform})...";
+            echo "--generated file: '${compiled_name%.*}-for-${platform}.json'";
+            ct --platform="${platform}" \
+               --in-file="${source_file}" \
+               --out-file="${compiled_file}-for-${platform}.json" \
+               --pretty;
+        done
     }
 
     # --------------------------------------------------------------------------------------
@@ -189,7 +179,7 @@ function BuildImagePacker {
              --action="compile" \
              --source-file="./pre-provision/container-linux-config/keys-to-underworld.yml" \
              --compilation-path="./pre-provision/ignitions" \
-             --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+             --platforms="vagrant-virtualbox digitalocean ec2 gce";
 
         # 2ª) Step -> inspect
         bash build-image.sh 
@@ -247,7 +237,7 @@ function BuildImagePacker {
                 __armageddon; 
             };;
             *) {
-                echo "Error: ...";
+                echo "ERROR: The 'ACTION' type has not been passed or is incorrect.";
             };;
         esac
     }

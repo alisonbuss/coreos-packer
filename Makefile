@@ -34,7 +34,8 @@ PACKER_VARIABLES_PATH     ?= $(WORKING_DIRECTORY)/packer-variables
 # DEFAULT VARIABLES - Ignition For CoreOS
 IGNITION_SOURCE_FILE      ?= $(WORKING_DIRECTORY)/pre-provision/container-linux-config/keys-to-underworld.yml
 IGNITION_COMPILATION_PATH ?= $(WORKING_DIRECTORY)/pre-provision/ignitions
-
+IGNITION_PLATFORMS        ?= vagrant-virtualbox digitalocean ec2 gce
+         
 # DEFAULT VARIABLES - Vagrant
 VAGRANT_BOX_NAME          ?= packer/coreos-vagrant-box
 VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/image-coreos-vagrant.box
@@ -52,12 +53,12 @@ plan:
 	@echo "    --> PACKER_TEMPLATE: $(PACKER_TEMPLATE)";
 	@echo "    --> PACKER_VARIABLES: [$(PACKER_VARIABLES)]";
 	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
-	@echo "";
 	@echo "    --> PACKER_TEMPLATES_PATH: $(PACKER_TEMPLATES_PATH)";
 	@echo "    --> PACKER_VARIABLES_PATH: $(PACKER_VARIABLES_PATH)";
 	@echo "";
 	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
 	@echo "    --> IGNITION_COMPILATION_PATH: $(IGNITION_COMPILATION_PATH)";
+	@echo "    --> IGNITION_PLATFORMS: $(IGNITION_PLATFORMS)";
 	@echo "";
 	@echo "    --> VAGRANT_BOX_NAME: $(VAGRANT_BOX_NAME)";
 	@echo "    --> VAGRANT_BOX_PATH: $(VAGRANT_BOX_PATH)";
@@ -74,7 +75,7 @@ compile:
 	@bash $(BUILD_IMAGE_CMD) --action="compile" \
 						     --source-file="$(IGNITION_SOURCE_FILE)" \
 							 --compilation-path="$(IGNITION_COMPILATION_PATH)" \
-							 --platforms="'vagrant-virtualbox' 'digitalocean' 'ec2' 'gce' 'azure' 'packet'";
+							 --platforms="$(IGNITION_PLATFORMS)";
 
 	@echo "Complete compilation!";  
 
@@ -83,13 +84,13 @@ validate:
 	@echo "Starting the validation of the template Packer..."; 
 	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)"; 
 
+	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)";
+
 	@bash $(BUILD_IMAGE_CMD) --action="validate" \
 						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
 							 --variables="$(PACKER_VARIABLES)" \
 							 --variables-path="$(PACKER_VARIABLES_PATH)";
-
-	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
-						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)";
 
 
 build:

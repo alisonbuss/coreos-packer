@@ -27,9 +27,9 @@
         "boot_command": [
             "sudo -i;<enter>",
             "systemctl stop sshd.socket;<enter>",
-            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `os_user_data_path`}}/{{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
-            "cat {{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
-            "coreos-install -d /dev/sda -C {{ user `os_release` }} -i {{user `os_user_data_name`}}-for-virtualbox.json;<enter>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `os_user_data_path`}}/{{user `os_user_data_name`}}-for-vagrant-virtualbox.json;<enter>",
+            "cat {{user `os_user_data_name`}}-for-vagrant-virtualbox.json;<enter>",
+            "coreos-install -d /dev/sda -C {{ user `os_release` }} -i {{user `os_user_data_name`}}-for-vagrant-virtualbox.json;<enter>",
             "sleep 3s;<enter>",
             "reboot;<enter>"
         ],  
