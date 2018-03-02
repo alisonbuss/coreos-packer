@@ -12,6 +12,8 @@ function StartInstallation {
 
     printf '%b\n' "CoreOS already has (Docker) installed on your system...";
     
+    docker version;
+    
 } 
 
 # @descr: Call of execution of the script's main function.

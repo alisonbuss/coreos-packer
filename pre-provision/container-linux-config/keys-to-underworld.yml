@@ -2,7 +2,8 @@
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr: Ignition for creating SSH access keys and user access 
 #         settings, updating the operating system.
-# @fonts: https://coreos.com/os/docs/latest/provisioning.html
+# @fonts: https://coreos.com/os/docs/latest/clc-examples.html
+#         https://coreos.com/os/docs/latest/provisioning.html
 #         https://coreos.com/os/docs/latest/migrating-to-clcs.html
 #         https://coreos.com/os/docs/latest/adding-users.html
 #         https://coreos.com/os/docs/latest/update-strategies.html
@@ -115,9 +116,9 @@ storage:
       contents:
         inline: |
           #!/bin/bash
-          echo -e "\e[32m \e[1m";
+          echo -e -n "\e[32m\e[1m";
           cat <<'EOF'
-          -- Origin Project: 'https://github.com/alisonbuss/coreos-packer/'
+          ---Origin Project: 'https://github.com/alisonbuss/coreos-packer/'
                _   _      _ _        __        __         _     _   _      
               | | |D| ___|E|V| ___   \O\      /P/__  _ __|S| __| | | |     
               | |_| |/ _ \ | |/ _ \   \ \ /\ / / _ \| '__| |/ _` | | |     

@@ -1,5 +1,5 @@
 {
-    "_comment": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './pre-provision/container-linux-config/keys-to-underworld.yml' for 'stable' line 59.",
+    "_comment": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './pre-provision/container-linux-config/keys-to-underworld.yml' for 'stable' line 60.",
 
     "os_name": "coreos",
     "os_release": "stable",
