@@ -49,6 +49,7 @@
         "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
         "scripts": [
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-python.sh",
+            "{{user `global_working_directory`}}/pre-provision/shell-script/install-rkt.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker-compose.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-etcd.sh",
