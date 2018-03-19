@@ -1,9 +1,9 @@
 
 # Documentation:
- 
+
 ## Custom Variables:
 
-##### ./packer-variables/custom.json
+#### ./packer-variables/custom.json
 ```json
 {
     "virtualbox_cpus":"2",
@@ -14,14 +14,16 @@
  
 ## List Variables Packer:
 
-##### ./packer-variables/global.json 
+#### ./packer-variables/global.json
+
 ```json
 {
     "global_working_directory": "."
 }
 ```
  
-##### ./packer-variables/operational-system/coreos.json 
+#### ./packer-variables/operational-system/coreos.json
+
 ```json
 {
     "_comment": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './pre-provision/container-linux-config/keys-to-underworld.yml' for 'stable' line 60.",
@@ -44,7 +46,8 @@
 }
 ```
  
-##### ./packer-variables/platform/virtualbox.json 
+#### ./packer-variables/platform/virtualbox.json
+
 ```json
 {
     "virtualbox_cpus": "1",
@@ -58,21 +61,24 @@
 }
 ```
 
-##### ./packer-variables/platform/aws.json 
+#### ./packer-variables/platform/aws.json
+
 ```json
 {
     "_comment": "Missing the definition of the variables of this platform!!!"
 }
 ```
 
-##### ./packer-variables/platform/digitalocean.json 
+#### ./packer-variables/platform/digitalocean.json
+
 ```json
 {
     "_comment": "Missing the definition of the variables of this platform!!!"
 }
 ```
 
-##### ./packer-variables/platform/google.json 
+#### ./packer-variables/platform/google.json
+
 ```json
 {
     "_comment": "Missing the definition of the variables of this platform!!!"
@@ -81,7 +87,8 @@
 
 ## Templates Packer:
 
-##### ./packer-templates/coreos-virtualbox-template.json 
+#### ./packer-templates/coreos-virtualbox-template.json
+
 ```json
 {
     "description": "CoreOS image for a VirtualBox platform.",
@@ -154,7 +161,8 @@
 }
 ```
 
-##### ./packer-templates/coreos-aws-template.json 
+#### ./packer-templates/coreos-aws-template.json
+
 ```json
 {
     "_comment": "Missing the implementation for this platform!!!",
@@ -178,7 +186,8 @@
 }
 ```
 
-##### ./packer-templates/coreos-digitalocean-template.json 
+#### ./packer-templates/coreos-digitalocean-template.json
+
 ```json
 {
     "_comment": "Missing the implementation for this platform!!!",
@@ -202,7 +211,8 @@
 }
 ```
 
-##### ./packer-templates/coreos-google-template.json 
+#### ./packer-templates/coreos-google-template.json
+
 ```json
 {
     "_comment": "Missing the implementation for this platform!!!",
@@ -226,7 +236,8 @@
 }
 ```
 
-##### ./packer-templates/coreos-all-platforms-template.json 
+#### ./packer-templates/coreos-all-platforms-template.json
+
 ```json
 {
     "_comment": "Missing the implementation of all platforms!!!",
@@ -260,6 +271,134 @@
 }
 ```
 
+## Initial provisioning file "Container Linux Config" for CoreOS.
+
+#### ./pre-provision/container-linux-config/keys-to-underworld.yaml
+
+```yaml
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Ignition for creating SSH access keys and user access 
+#         settings, updating the operating system.
+#-------------------------------------------------------------#
+
+passwd:
+  users:
+    - name: "core"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+    - name: "lucifer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+    - name: "packer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        
+    - name: "vagrant"
+      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant).
+      password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/vagrant"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+      shell: "/bin/bash"
+    
+    - name: "ansible"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/ansible"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+      shell: "/bin/bash"
+
+# WARNING: When you change the RELEASE of CoreOS, you should also change thes
+# files "./packer-variables/operational-system/coreos.json" for {..."os_release":"stable"...}
+update:
+  group: "stable"
+
+locksmith:
+  reboot_strategy: "etcd-lock"
+  window_start: "Sun 0:33"
+  window_length: "3h"
+
+storage:
+  files:
+    - path: "/etc/ssh/sshd_config"
+      filesystem: "root"
+      mode: 0600
+      contents:
+        inline: |
+          # Apply to users: (core, lucifer, packer, vagrant, ansible).
+          AllowUsers core lucifer packer vagrant ansible
+          AuthenticationMethods publickey
+          UseDNS no
+          PermitRootLogin no
+          PasswordAuthentication no
+          ChallengeResponseAuthentication no
+          Subsystem sftp internal-sftp
+
+    - path: "/etc/sudoers.d/packer"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "packer ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/sudoers.d/vagrant"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/sudoers.d/ansible"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "ansible ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/profile.d/motd.sh"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          #!/bin/bash
+          echo -e -n "\e[32m\e[1m";
+          cat <<'EOF'
+          ---Origin Project: 'https://github.com/alisonbuss/coreos-packer/'
+               _   _      _ _        __        __         _     _   _      
+              | | |D| ___|E|V| ___   \O\      /P/__  _ __|S| __| | | |     
+              | |_| |/ _ \ | |/ _ \   \ \ /\ / / _ \| '__| |/ _` | | |     
+              |  _  |  __/ | | (_) |   \ V  V / (_) | |  | | (_| | |_|     
+              |_| |_|\___|_|_|\___/     \_/\_/ \___/|_|  |_|\__,_| (_)     
+                                                                           
+          ...............................Image generated by Packer.........
+          EOF
+          echo -e "\033[00m";
+          echo -e -n "This image contains installed: \e[93m\e[1m"; /opt/bin/python --version; 
+          echo -e "\033[00m";
+```
 
 ## Execution script for the compilation, validation and construction of the Image Packer.
 
