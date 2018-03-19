@@ -4,9 +4,9 @@
 
 #### Status do Projeto: *(Em Desenvolvimento)*.
 
-<h1 align="center">
+<h2 align="center">
     Projeto de criação de imagens CoreOS <br/> para múltiplas plataformas <br/>(Amazon EC2, Google GCE, DigitalOcean, VirtualBox)
-</h1>
+</h2>
 
 ### Inspirado nos projetos:
  
@@ -43,7 +43,7 @@
 
 Fornecer um projeto de "Infrastructure as Code (IaC)" usando **Packer Templates** e **Shell Script** para provisionar uma imagem básica para as múltiplas plataformas **(Amazon EC2, Google GCE, DigitalOcean, VirtualBox)**.
 
-### Plataformas Suportadas no Projeto:
+### Plataformas Suportadas:
 
   - **[Digital Ocean]** - :x: *Não Implementado...*
   - **[Amazon EC2 AMI]** - :x: *Não Implementado...*
@@ -64,7 +64,7 @@ Fornecer um projeto de "Infrastructure as Code (IaC)" usando **Packer Templates*
     - flannel v0.9.1
     - active-python: v2.7.13
 
-  - **Variáveis do sistema operacional CoreOS**
+  - **Variáveis do Sistema Operacional "CoreOS"**
     - "os_name": "coreos",
     - "os_release": "stable",
     - "os_version": "1632.3.0",
@@ -371,7 +371,7 @@ PRONTO!!! se tudo funcionou como o esperado agora podemos executar o projeto [co
 > - *Caso ocorra **ERROS** nas validações acima, **Boa Sorte!!!  "O Google é o seu pastor e nada te faltará..."***
 
 
-### Executando o projeto "[coreos-packer](https://github.com/alisonbuss/coreos-packer/)" usando a ferramenta Packer.
+### Executando o projeto "[coreos-packer](https://github.com/alisonbuss/coreos-packer/)".
 
 1ª) Vamos criar uma pasta que vai ser o nosso ambiente e fazer o download do projeto **[coreos-packer](https://github.com/alisonbuss/coreos-packer/archive/master.zip)** via terminal:
 
@@ -421,7 +421,7 @@ The default values to be used by this Makefile:
     --> BUILD_IMAGE_CMD: ./build-image.sh
 ```
 
-3ª) Pronto agora vamos executar o projeto **coreos-packer** e gerar uma imagem **"Vagrant Box"**:
+3ª) Pronto agora vamos executar o projeto **coreos-packer** e gerar uma imagem e o **"Vagrant Box"**:
 
 ```bash
 $ ls
@@ -432,7 +432,7 @@ $ make plan compile validate build install-box
 ...
 ```
 
-PRONTO!!! só isso para gerar uma imagem personalizado do CoreOS para um **"Vagrant Box"**
+PRONTO!!! só isso para gerar uma imagem personalizado do CoreOS com um **"Vagrant Box"**
 
 Resultado semelhante abaixo:
 <img alt="print-packer" src="https://github.com/alisonbuss/cluster-coreos-basic-vagrant/raw/master/files/print-coreos-packer.png"/>
@@ -442,17 +442,16 @@ Resultado semelhante abaixo:
 <h2 align="center">
     <i>
         Pronto!!! <br/>
-        Agora você tem um ambiente virtual em cluster CoreOS<br/>
-        Provisionado pelas ferramentas Packer, Vagrant e Shell Script.
+        Agora você tem uma imagem personalizada CoreOS<br/>
+        Provisionado pela ferramenta Packer e Shell Script.
     </i>
 </h2>
 
-Resultado final semelhante a imagem abaixo:
-<p align="center">
-    <img src="https://github.com/alisonbuss/cluster-coreos-basic-vagrant/raw/master/files/print-vagrant-cluster.png" alt="print-vagrant"/>
-</p>
-
 ### Referências:
+
+* Packer - Official Site, Packer Documentation. ***Welcome to the Packer documentation!*** <br/>
+  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
+  Disponível: *[https://www.packer.io/docs/index.html](https://www.packer.io/docs/index.html)*
 
 * Professor José de Assis - YouTube, Playlist ***Curso - Primeiros passos com Servidor Linux*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
@@ -466,351 +465,100 @@ Resultado final semelhante a imagem abaixo:
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
   Disponível: *[https://www.vagrantup.com/docs/cli/](https://www.vagrantup.com/docs/cli/)*
 
-* Vagrant - Official Site, Vagrant Documentation. ***Vagrantfile*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://www.vagrantup.com/docs/vagrantfile/](https://www.vagrantup.com/docs/vagrantfile/)*
-
 * Yet Emerging Technologies - Blog, by Sébastien Braun. ***CoreOS Container Linux*** <br/>
   Acessado: *Sei lá da pesti, foi em 2018 por ai...* <br/>
   Disponível: *[http://www.yet.org/2017/03/01-container-linux/](http://www.yet.org/2017/03/01-container-linux/)*
 
-* CoreOS - GitHub, Rep: coreos-vagrant. ***Minimal Vagrantfile for Container Linux*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://github.com/coreos/coreos-vagrant/](https://github.com/coreos/coreos-vagrant/)*
+* ChurrOps on DevOps, Blog. ***Customizando e automatizando suas imagens - Parte 1*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://churrops.io/2017/10/13/packer-customizando-e-automatizando-suas-imagens-parte-1/](https://churrops.io/2017/10/13/packer-customizando-e-automatizando-suas-imagens-parte-1/)*.
 
-* Alison Buss - GitHub, Rep: coreos-kids-vagrant. ***Exemplo de um Vagrantfile subindo varias VM CoreOS sobre uma configuração simples*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://github.com/alisonbuss/coreos-kids-vagrant/](https://github.com/alisonbuss/coreos-kids-vagrant/)*
+* Giovanni dos Reis Nunes, Blog. ***Introdução ao Packer*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://giovannireisnunes.wordpress.com/2016/05/27/introducao-ao-packer/](https://giovannireisnunes.wordpress.com/2016/05/27/introducao-ao-packer/)*.
 
-* Alison Buss - GitHub, Rep: coreos-packer. ***Projeto de criação de imagens CoreOS para múltiplas plataformas (Amazon EC2, Google GCE, DigitalOcean, VirtualBox)*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://github.com/alisonbuss/coreos-packer/](https://github.com/alisonbuss/coreos-packer/)*
+* Ricardo Martins, Blog. ***Conhecendo o Terraform, Packer e Ansible*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[http://www.ricardomartins.com.br/conhecendo-o-terraform-packer-e-ansible/](http://www.ricardomartins.com.br/conhecendo-o-terraform-packer-e-ansible/)*.
 
-* CoreOS - Official Site, CoreOS Documentation. ***Running CoreOS Container Linux on Vagrant*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/os/docs/latest/booting-on-vagrant.html](https://coreos.com/os/docs/latest/booting-on-vagrant.html)*
+* Andre Tadeu, Blog. ***Packer – um breve tutorial*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://andretdecarvalho.wordpress.com/2014/03/25/packer-um-breve-tutorial/](https://andretdecarvalho.wordpress.com/2014/03/25/packer-um-breve-tutorial/)*.
 
-* CoreOS - Official Site, CoreOS Documentation. ***Container Linux automates machine provisioning with a specialized system for applying initial configuration*** <br/>
+* kelseyhightower - GitHub, By Kelsey Hightower. ***Manage Kubernetes with Packer and Terraform on Google Compute Engine.*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/os/docs/latest/provisioning.html](https://coreos.com/os/docs/latest/provisioning.html)*
+  Disponível: *[https://github.com/kelseyhightower/kubestack](https://github.com/kelseyhightower/kubestack)*.
 
-* LinuxConfig - Blog, Official Blog. ***How to set/change a hostname on CoreOS Linux*** <br/>
+* CoreOS, Container Linux. ***Using Cloud-Config*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://coreos.com/os/docs/latest/cloud-config.html](https://coreos.com/os/docs/latest/cloud-config.html)*.
+
+* CoreOS, Container Linux. ***Migrating from Cloud-Config to Container Linux Config*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://coreos.com/os/docs/latest/migrating-to-clcs.html](https://coreos.com/os/docs/latest/migrating-to-clcs.html)*.
+
+* Matt Carrier, Blog. ***Setup CoreOS with iptables on DigitalOcean*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://mattcarrier.com/post/core-os-iptables/](https://mattcarrier.com/post/core-os-iptables/)*.
+
+* Jimmy Cuadra, Blog. ***Securing CoreOS with iptables*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://www.jimmycuadra.com/posts/securing-coreos-with-iptables/](https://www.jimmycuadra.com/posts/securing-coreos-with-iptables/)*.
+
+* Netroby, Blog. ***CoreOS sshd security configure guide*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://www.netroby.com/view/3814](https://www.netroby.com/view/3814)*.
+
+* KYLE, Blog. ***USING CLOUD CONFIG WITH COREOS*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://www.programminggoalie.com/cloud-config-coreos-digitalocean/](https://www.programminggoalie.com/cloud-config-coreos-digitalocean/)*.
+
+* Robert, Blog. ***CoreOS Iptables*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[http://palex.nl/securing-coreos/](http://palex.nl/securing-coreos/)*
+
+* Tomasre, Blog. ***Securing CoreOS with Iptables*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[http://tomasre.com/2016/03/07/securing-coreos-with-iptables/](http://tomasre.com/2016/03/07/securing-coreos-with-iptables/)*.
+
+* BLAZED’S TECH, Blog. ***CoreOS, Iptables and Vulcand*** <br/>
+  Acessado: *17 de Dezembro de 2017*. <br/>
+  Disponível: *[https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/](https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/)*.
+
+* Vladislav Supalov, Blog. ***Using Packer to Build Custom AWS AMIs in Different Regions*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://linuxconfig.org/how-to-set-change-a-hostname-on-coreos-linux](https://linuxconfig.org/how-to-set-change-a-hostname-on-coreos-linux)*
+  Disponível: *[https://vsupalov.com/packer-ami/](https://vsupalov.com/packer-ami/)*.
 
-* CoreOS - Official Site, CoreOS Documentation. ***CoreOS Container Linux cluster discovery*** <br/>
+* CoreOS Blog, By Barak Michener. ***What makes a cluster a cluster?*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/os/docs/latest/cluster-discovery.html](https://coreos.com/os/docs/latest/cluster-discovery.html)*
+  Disponível: *[https://coreos.com/blog/cluster-osi-model.html](https://coreos.com/blog/cluster-osi-model.html)*.
 
-* Etcd - Official Site, Etcd Documentation. ***Clustering Guide - Discovery*** <br/>
+* Virtual Elephant Blog, By Chris. ***Infrastructure-as-Code: Project Overview*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/etcd/docs/latest/op-guide/clustering.html#discovery](https://coreos.com/etcd/docs/latest/op-guide/clustering.html#discovery)*
+  Disponível: *[http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/](http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/)*.
 
-* CoreOS - Official Site, CoreOS Documentation. ***Customizing docker*** <br/>
+* vadosware.io - Blog, By Vados. ***INSTALLING PYTHON ON COREOS WITH ANSIBLE (TO ENABLE ANSIBLE)*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/os/docs/latest/customizing-docker.html](https://coreos.com/os/docs/latest/customizing-docker.html)*
+  Disponível: *[https://vadosware.io/post/installing-python-on-coreos-with-ansible/](https://vadosware.io/post/installing-python-on-coreos-with-ansible/)*.
 
-* @mohitarora - Medium Blog, by Mohit Arora. ***Manage Docker Containers using CoreOS - Part 1*** <br/>
+* Virtual Elephant Blog, By Chris. ***Infrastructure-as-Code: Project Overview*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://medium.com/@mohitarora/manage-docker-containers-using-coreos-part-1-c1b401bc0aab](https://medium.com/@mohitarora/manage-docker-containers-using-coreos-part-1-c1b401bc0aab)*
+  Disponível: *[http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/](http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/)*.
 
-* Yet Emerging Technologies - Blog, by Sébastien Braun. ***rkt - yet emerging container runtime*** <br/>
+* Google Compute Engine, Tutorial. ***Criação automatizada de imagens com Jenkins, Packer e Kubernetes*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[http://www.yet.org/2017/03/rkt/](http://www.yet.org/2017/03/rkt/)*
+  Disponível: *[https://cloud.google.com/solutions/automated-build-images-with-jenkins-kubernetes](https://cloud.google.com/solutions/automated-build-images-with-jenkins-kubernetes)*.
 
-* Etcd - Official Site, Etcd Documentation. ***Demo, series of examples shows the basic procedures for working with an etcd cluster*** <br/>
+* Julien Stroheker - GitHub, Rep: DCOS-Azure. ***Terraform Script to deploy a DC/OS 1.9 Cluster running on CoreOS*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/etcd/docs/latest/demo.html](https://coreos.com/etcd/docs/latest/demo.html)*
+  Disponível: *[https://github.com/julienstroheker/DCOS-Azure](https://github.com/julienstroheker/DCOS-Azure)*.
 
-* Etcd - Official Site, Etcd Documentation. ***Clustering Guide*** <br/>
+* Stanislas Quastana - GitHub, Rep: PackerAzureRM. ***Examples to create Azure VM Images with Packer*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/etcd/docs/latest/op-guide/clustering.html](https://coreos.com/etcd/docs/latest/op-guide/clustering.html)*
-
-* Etcd2 - Official Site, Etcd2 Documentation. ***Clustering Guide for Etcd2*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/etcd/docs/latest/v2/clustering.html](https://coreos.com/etcd/docs/latest/v2/clustering.html)*
-
-* Etcd - Official Site, Etcd Documentation. ***Etcd cluster runtime reconfiguration on CoreOS Container Linux*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/etcd/docs/latest/etcd-live-cluster-reconfiguration.html](https://coreos.com/etcd/docs/latest/etcd-live-cluster-reconfiguration.html)*
-
-* Flannel - Official Site, Flannel Documentation. ***Running flannel*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/flannel/docs/latest/running.html](https://coreos.com/flannel/docs/latest/running.html)*
-
-* Flannel - Official Site, Flannel Documentation. ***Configuring flannel for container networking*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/flannel/docs/latest/flannel-config.html](https://coreos.com/flannel/docs/latest/flannel-config.html)*
-
-* Flannel - Official Site, Flannel Documentation. ***Configuration - flannel reads its configuration from etcd*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/flannel/docs/latest/configuration.html](https://coreos.com/flannel/docs/latest/configuration.html)*
-
-* CoreOS - GitHub, Rep: flannel, Issue: #554. ***Flannel + etcdv3? #554*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2018 por ai...* <br/>
-  Disponível: *[https://github.com/coreos/flannel/issues/554](https://github.com/coreos/flannel/issues/554)*
-
-* CoreOS - Official Site, CoreOS Documentation. ***Network configuration with networkd*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://coreos.com/os/docs/latest/network-config-with-networkd.html](https://coreos.com/os/docs/latest/network-config-with-networkd.html)*
-
-* UpCloud - Official Site, Tutorials. ***How to Configure Floating IP on CoreOS*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
-  Disponível: *[https://www.upcloud.com/support/configure-floating-ip-coreos/](https://www.upcloud.com/support/configure-floating-ip-coreos/)*
+  Disponível: *[https://github.com/squasta/PackerAzureRM/](https://github.com/squasta/PackerAzureRM/)*.
 
 ### Licença
 
 [<img width="190" src="https://raw.githubusercontent.com/alisonbuss/my-licenses/master/files/logo-open-source-550x200px.png">](https://opensource.org/licenses)
-[<img width="166" src="https://raw.githubusercontent.com/alisonbuss/my-licenses/master/files/icon-license-mit-500px.png">](https://github.com/alisonbuss/cluster-coreos-basic-vagrant/blob/master/LICENSE)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://vsupalov.com/packer-ami/
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Unstable design !!!
-
-## Status: in development very crazy... rsrsrs ....
-
-# coreos-packer
-
-- basic technology.
-
-
-- service technology.
-
-http://www.zdnet.com/article/snappy-ubuntu-challenges-coreos-and-project-atomic-on-lightweight-cloud-servers/
-https://blog.codeship.com/container-os-comparison/
-https://dcos.io/
-
-
-Entendimento:
-https://coreos.com/blog/cluster-osi-model.html
-
-
-http://virtualelephant.com/2017/11/13/infrastructure-as-code-project-overview/
-http://virtualelephant.com/2017/11/14/infrastructure-as-code-bootstrap-coreos-with-ignition/
-http://virtualelephant.com/2017/11/16/infrastructure-as-code-understanding-coreos-ignition/
-https://vadosware.io/post/installing-python-on-coreos-with-ansible/
-http://www.hanymichaels.com/2017/11/02/kubernetes-in-the-enterprise-the-design-guide/
-
-
-
-
-http://bitcubby.com/configuring-vagrant-json-ruby/
-https://github.com/tkambler/perfect-vagrant 
-https://blog.scottlowe.org/2016/01/18/multi-machine-vagrant-json/ 
-https://thornelabs.net/2014/11/13/multi-machine-vagrantfile-with-shorter-cleaner-syntax-using-json-and-loops.html
-
-https://www.tecmint.com/commands-to-collect-system-and-hardware-information-in-linux/
-
-https://grafana.com/
-
-https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
-
-https://www.youtube.com/watch?v=A760lwRDg9U
-https://www.youtube.com/watch?v=C20Ia-OqZt0
-
-https://cloud.google.com/solutions/automated-build-images-with-jenkins-kubernetes
-
-https://cloud.google.com/solutions/jenkins-on-kubernetes-engine#deploying_kubernetes_engine_clusters
-
-https://5pi.de/2016/11/20/15-producation-grade-kubernetes-cluster/
-
-### Projeto de criação de imagens CoreOS para múltiplas plataformas (Amazon EC2, Google GCE, DigitalOcean, VirtualBox).
-
-Inspired by Satoshi Matsumoto [packer-templates](https://github.com/kaorimatz/packer-templates/)
-
-Inspired by wasbazi [coreos-packer](https://github.com/wasbazi/coreos-packer)
-
-Inspired by YungSang [coreos-packer](https://github.com/YungSang/coreos-packer)
-
-Inspired by kevit [coreos-packer](https://github.com/kevit/coreos-packer)
-
-Inspired by [packer-qemu-coreos-container-linux](https://github.com/dyson/packer-qemu-coreos-container-linux)
-
-Inspired by [kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)
-
-Official Documentation: [Packer Documentation](https://www.packer.io/docs/index.html)
-
-Módulos para packer.io, basea-se em um file.json com uma sixtase simples para a moduralização dos "Packer Template". (Modules for packer.io, is based on a file.json with a simple sixtase for the moduralization of "Packer Template".) 
-
-### Referências:
-
-* ChurrOps on DevOps, Blog. ***[Packer] Customizando e automatizando suas imagens – Parte 1***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://churrops.io/2017/10/13/packer-customizando-e-automatizando-suas-imagens-parte-1/](https://churrops.io/2017/10/13/packer-customizando-e-automatizando-suas-imagens-parte-1/)*.
-* Giovanni dos Reis Nunes, Blog. ***Introdução ao Packer***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://giovannireisnunes.wordpress.com/2016/05/27/introducao-ao-packer/](https://giovannireisnunes.wordpress.com/2016/05/27/introducao-ao-packer/)*.
-* Ricardo Martins, Blog. ***Conhecendo o Terraform, Packer e Ansible***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[http://www.ricardomartins.com.br/conhecendo-o-terraform-packer-e-ansible/](http://www.ricardomartins.com.br/conhecendo-o-terraform-packer-e-ansible/)*.
-* Andre Tadeu, Blog. ***Packer – um breve tutorial***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://andretdecarvalho.wordpress.com/2014/03/25/packer-um-breve-tutorial/](https://andretdecarvalho.wordpress.com/2014/03/25/packer-um-breve-tutorial/)*.
-* CoreOS, Container Linux. ***Using Cloud-Config***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://coreos.com/os/docs/latest/cloud-config.html](https://coreos.com/os/docs/latest/cloud-config.html)*.
-* CoreOS, Container Linux. ***Migrating from Cloud-Config to Container Linux Config***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://coreos.com/os/docs/latest/migrating-to-clcs.html](https://coreos.com/os/docs/latest/migrating-to-clcs.html)*.
-* DigitalOcean, Tutorials. ***How To Secure Your CoreOS Cluster with TLS/SSL and Firewall Rules***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://www.digitalocean.com/community/tutorials/how-to-secure-your-coreos-cluster-with-tls-ssl-and-firewall-rules](https://www.digitalocean.com/community/tutorials/how-to-secure-your-coreos-cluster-with-tls-ssl-and-firewall-rules)*.
-* CoreOS, Container Linux. ***Generate self-signed certificates***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://coreos.com/os/docs/latest/generate-self-signed-certificates.html](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html)*.
-* CoreOS, etcd. ***Enabling HTTPS in an existing etcd cluster***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://coreos.com/etcd/docs/latest/etcd-live-http-to-https-migration.html](https://coreos.com/etcd/docs/latest/etcd-live-http-to-https-migration.html)*.
-* CoreOS, etcd. ***Configure CoreOS Container Linux components to connect to etcd with TLS***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://coreos.com/etcd/docs/latest/tls-etcd-clients.html](https://coreos.com/etcd/docs/latest/tls-etcd-clients.html)*.
-* Swaathi Kakarla, Blog. ***Securing your CoreOS Container***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://www.twistlock.com/2017/10/16/securing-coreos-container/](https://www.twistlock.com/2017/10/16/securing-coreos-container/)*.
-* Matt Carrier, Blog. ***Setup CoreOS with iptables on DigitalOcean***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://mattcarrier.com/post/core-os-iptables/](https://mattcarrier.com/post/core-os-iptables/)*.
-* Jimmy Cuadra, Blog. ***Securing CoreOS with iptables***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://www.jimmycuadra.com/posts/securing-coreos-with-iptables/](https://www.jimmycuadra.com/posts/securing-coreos-with-iptables/)*.
-* Netroby, Blog. ***CoreOS sshd security configure guide***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://www.netroby.com/view/3814](https://www.netroby.com/view/3814)*.
-* KYLE, Blog. ***USING CLOUD CONFIG WITH COREOS***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://www.programminggoalie.com/cloud-config-coreos-digitalocean/](https://www.programminggoalie.com/cloud-config-coreos-digitalocean/)*.
-* Robert, Blog. ***CoreOS Iptables***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[http://palex.nl/securing-coreos/](http://palex.nl/securing-coreos/)*
-* Skrobul, Blog. ***Deploying CoreOS cluster with etcd secured by TLS/SSL***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[http://blog.skrobul.com/securing_etcd_with_tls/](http://blog.skrobul.com/securing_etcd_with_tls/)*.
-* gar, Blog. ***CoreOS Etcd and Fleet with Encryption and Authentication***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://medium.com/@gargar454/coreos-etcd-and-fleet-with-encryption-and-authentication-27ffefd0785c](https://medium.com/@gargar454/coreos-etcd-and-fleet-with-encryption-and-authentication-27ffefd0785c)*.
-* Tomasre, Blog. ***Securing CoreOS with Iptables***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[http://tomasre.com/2016/03/07/securing-coreos-with-iptables/](http://tomasre.com/2016/03/07/securing-coreos-with-iptables/)*.
-* BLAZED’S TECH, Blog. ***CoreOS, Iptables and Vulcand***
-  Acessado: *17 de Dezembro de 2017*.
-  Disponível: *[https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/](https://darkstar.se/2015/02/06/coreos-iptables-and-vulcand/)*.
-
-
-https://github.com/kelseyhightower/kubestack/blob/master/packer/kubestack.json
-
-https://github.com/ainoya/aws-coreos-clustering-kit/
-
-https://github.com/cloudurable/cassandra-image/wiki/Using-Packer-to-create-an-AMI-for-Amazon---EC2
-https://github.com/cloudurable/cassandra-image
-
-https://github.com/dyson/packer-qemu-coreos-container-linux
-
-https://github.com/stylelab-io/kubernetes-coreos-packer
-
-https://github.com/brikis98/terraform-up-and-running-code
-
-https://github.com/kaorimatz/packer-templates/
-
-https://github.com/wasbazi/coreos-packer
-
-https://github.com/kevit/coreos-packer
-
-https://github.com/flomotlik/packer-example
-
-http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
-
-https://www.infoq.com/br/search.action?queryString=API+Gateway&page=1&searchOrder=&sst=KYiYsc1qHfkIyyf8
-
-http://gutocarvalho.net/blog/2016/09/06/por-onde-iniciar-os-estudos-sobre-devops/
-https://www.alura.com.br/carreira-engenheiro-devops
-https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
-https://www.nginx.com/blog/microservices-api-gateways-part-1-why-an-api-gateway/
-https://www.nginx.com/blog/microservices-api-gateways-part-2-how-kong-can-help/
-
-USAR ESSE AKI
-https://konghq.com/kong-community-edition/
-https://pantsel.github.io/konga/
-https://pantsel.github.io/konga/
-https://gravitee.io/
-http://wicked.haufe.io/
-https://www.fusio-project.org/
-http://www.apiman.io/latest/index.html
-
-https://sensedia.com/blog/apis/owasp-2017-top-10-riscos-seguranca-apis/
-
-https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
-
-É AKI AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA........
-https://dev9.com/blog-posts/2016/6/introduction-to-kong-api-gateway
-https://konghq.com/blog/protecting-rate-limiting-api-kong/
-
-https://github.com/upmc-enterprises/kubernetes-secret-manager
-https://github.com/coreos/awesome-kubernetes-extensions
-
-https://www.youtube.com/watch?v=h4A8HytL5ts
-
-https://tyk.io/#section-0
-
-https://www.gluu.org/
-
-http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
-
-https://getkong.org/
-https://pantsel.github.io/konga/
-https://ajaysreedhar.github.io/kongdash/
-https://medium.com/@aodjaturongvachirasaksakul/kong-free-api-gateway-28edc64f7b6e
-
-https://github.com/coreos/awesome-kubernetes-extensions
-
-https://apiumbrella.io/
-
-http://www.codedependant.net/2016/06/29/coreos-a-year-in-review/
-
-
-https://github.com/julienstroheker/DCOS-Azure/blob/master/packer/packer/packer.json
-https://docs.microsoft.com/en-us/azure/virtual-machines/linux/build-image-with-packer
-https://github.com/squasta/PackerAzureRM/blob/master/Packer-VMWin2016StanAzureBasicManagedDisk.json
-https://github.com/squasta/PackerAzureRM/blob/master/Packer-VMWin2016-IIS-Azure-squasta.json
-https://github.com/squasta/PackerAzureRM
-
-https://github.com/hashicorp/packer/tree/master/examples/azure
+[<img width="166" src="https://raw.githubusercontent.com/alisonbuss/my-licenses/master/files/icon-license-mit-500px.png">](https://github.com/alisonbuss/coreos-packer/blob/master/LICENSE)
 
