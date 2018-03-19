@@ -64,20 +64,6 @@ Fornecer um projeto de "Infrastructure as Code (IaC)" usando **Packer Templates*
     - flannel v0.9.1
     - active-python: v2.7.13
 
-  - **Variáveis do Sistema Operacional "CoreOS"**
-    - "os_name": "coreos",
-    - "os_release": "stable",
-    - "os_version": "1632.3.0",
-    - "os_iso_url": "http://stable.release.core-os.net/amd64-usr/1632.3.0/coreos_production_iso_image.iso",
-    - "os_iso_checksum_type": "SHA512",
-    - "os_iso_checksum": "3afecae521c9a52892362ff436ff2dccc11a890a37d636d7963c9b42b58605c60d6919fd5893a0d69a4e38dc5889a5d2279173c374d07af1a57dec09ae18e85e",
-    - "os_img_aws_id": "ami-44a03c22",
-    - "os_img_google_id": "coreos-stable",
-    - "os_img_google_name": "coreos-stable-1632.3.0",
-    - "os_img_digitalocean_id": "coreos-stable",
-    - "os_user_data_name": "keys-to-underworld",
-    - "os_user_data_path": "/pre-provision/ignitions"
-
 Para o pré-provisionamento básico da imagem CoreOS, será através dos arquivos de **Shell Script**:
 
     ./pre-provision/shell-script/install-python.sh
