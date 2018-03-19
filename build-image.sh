@@ -169,46 +169,6 @@ function BuildImagePacker {
         vagrant box remove --force "${box_name}";
     }
 
-    # @descr: ...
-    # @example: 
-    #     $ bash build-image.sh --action="armageddon";
-    #
-    __armageddon() {
-        # 1ª) Step -> compile
-        bash build-image.sh 
-             --action="compile" \
-             --source-file="./pre-provision/container-linux-config/keys-to-underworld.yml" \
-             --compilation-path="./pre-provision/ignitions" \
-             --platforms="vagrant-virtualbox digitalocean ec2 gce";
-
-        # 2ª) Step -> inspect
-        bash build-image.sh 
-             --action="inspect" \
-             --template-file="./packer-templates/coreos-virtualbox-template.json";
-
-        # 3ª) Step -> validate
-        bash build-image.sh 
-             --action="validate" \
-             --template-file="./packer-templates/coreos-virtualbox-template.json" \
-             --variables="global.json /operational-system/coreos.json /platform/virtualbox.json custom.json" \
-             --variables-path="./packer-variables";
-
-        # 4ª) Step -> build
-        bash build-image.sh 
-             --action="build" \
-             --template-file="./packer-templates/coreos-virtualbox-template.json" \
-             --variables="global.json /operational-system/coreos.json /platform/virtualbox.json custom.json" \
-             --variables-path="./packer-variables" \
-             --packer-only="virtualbox-iso" \
-             --working-directory=".";
-
-        # 5ª) Step -> install-box
-        bash build-image.sh 
-             --action="install-box" \
-             --box-name="packer/coreos-vagrant-box" \
-             --box-path="./builds/image-coreos-vagrant.box";
-    }
-
     # @descr: Main function of the script "constructor"
     __initialize() {
         case ${ACTION} in
@@ -232,9 +192,6 @@ function BuildImagePacker {
             };;
             uninstall-box) { 
                 __uninstall_vagrant_box "$@"; 
-            };;
-            armageddon) { 
-                __armageddon; 
             };;
             *) {
                 echo "ERROR: The 'ACTION' type has not been passed or is incorrect.";
