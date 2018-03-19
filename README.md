@@ -2,7 +2,7 @@
 
 #### Translation for: **[English](https://github.com/alisonbuss/coreos-packer/blob/master/README_LANG_EN.md)**.
 
-#### Status do Projeto: *(Em Desenvolvimento)*.
+#### Status do Projeto: *(Finalizado)*.
 
 <h2 align="center">
     Projeto de criação de imagens CoreOS <br/> para múltiplas plataformas <br/>(Amazon EC2, Google GCE, DigitalOcean, VirtualBox)

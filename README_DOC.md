@@ -261,9 +261,19 @@
 ```
 
 
-## Execution script Packer CLI:
+## Execution script for the compilation, validation and construction of the Image Packer.
 
-#### Example:
+#### Example 1:
+
+```bash
+#!/bin/bash
+
+make plan compile validate build install-box
+
+exit 0;
+```
+
+#### Example 2:
 
 ```bash
 #!/bin/bash
