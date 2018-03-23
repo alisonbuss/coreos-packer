@@ -9,10 +9,11 @@
 </h2>
 
 ### Inspirado nos projetos:
- 
+
 * **[[coreos-packer](https://github.com/wasbazi/coreos-packer)]** - por Wasbazi.
 * **[[coreos-packer](https://github.com/YungSang/coreos-packer)]** - por Yung Sang.
 * **[[coreos-packer](https://github.com/kevit/coreos-packer)]** - por Sergey Karatkevich.
+* **[[kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)]** - por StyleLounge Lab.
 * **[[packer-templates](https://github.com/kaorimatz/packer-templates)]** por Satoshi Matsumoto.
 * **[[packer-qemu-coreos-container-linux](https://github.com/dyson/packer-qemu-coreos-container-linux)]** - por Dyson Simmons.
 * **[[kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)]** - por StyleLab-io.
