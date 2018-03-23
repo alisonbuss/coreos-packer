@@ -16,7 +16,6 @@
 * **[[kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)]** - por StyleLounge Lab.
 * **[[packer-templates](https://github.com/kaorimatz/packer-templates)]** por Satoshi Matsumoto.
 * **[[packer-qemu-coreos-container-linux](https://github.com/dyson/packer-qemu-coreos-container-linux)]** - por Dyson Simmons.
-* **[[kubernetes-coreos-packer](https://github.com/stylelab-io/kubernetes-coreos-packer)]** - por StyleLab-io.
 * **[[aws-coreos-clustering-kit](https://github.com/ainoya/aws-coreos-clustering-kit)]** - por Naoki Ainoya.
 * **[[packer-ubuntu](https://github.com/cbednarski/packer-ubuntu)]** - por Chris Bednarski.
 
