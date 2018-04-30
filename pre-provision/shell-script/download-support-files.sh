@@ -59,28 +59,12 @@ function StartProvisioning {
 
     # Providing permissions to (support folder).
     chmod -R 0755 /support-files;
-    
-    # Download and verify an ACI Etcd3
-    # Using the fetch subcommand you can download and verify an ACI without immediately
-    # running a pod. This can be useful to precache ACIs on a large number of hosts:
-    # https://coreos.com/releases/#1632.3.0
-    # https://quay.io/repository/coreos/etcd?tab=tags
-    # https://coreos.com/rkt/docs/latest/signing-and-verification-guide.html#download-and-verify-an-aci
-    printf '%b\n' "Starting to downloads images Etcd3 to (Rkt)...";
-    rkt fetch quay.io/coreos/etcd:v3.2.11 --insecure-options=image;
-    rkt fetch quay.io/coreos/etcd:v3.2.15 --insecure-options=image;
-    rkt fetch quay.io/coreos/etcd:v3.3.3  --insecure-options=image;
 
-    # Download and verify an ACI Flannel
-    # Using the fetch subcommand you can download and verify an ACI without immediately
-    # running a pod. This can be useful to precache ACIs on a large number of hosts:
-    # https://coreos.com/releases/#1632.3.0
-    # https://quay.io/repository/coreos/flannel?tab=tags
-    # https://coreos.com/rkt/docs/latest/signing-and-verification-guide.html#download-and-verify-an-aci
-    printf '%b\n' "Starting to downloads images Flannel to (Rkt)...";
-    rkt fetch quay.io/coreos/flannel:v0.9.0  --insecure-options=image;
-    rkt fetch quay.io/coreos/flannel:v0.9.1  --insecure-options=image;
-    rkt fetch quay.io/coreos/flannel:v0.10.0 --insecure-options=image;
+    printf '%b\n' "--INFO: List all the contents of the support folder, to install and assist in the future.";
+    ls -R $folderActivePython;
+    ls -R $folderKubernetes;
+    ls -R $folderCNIPlugins;
+    ls -R $folderDockerCompose;
 
 } 
 

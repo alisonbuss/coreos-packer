@@ -17,7 +17,7 @@ function StartProvisioning {
 
     # font: https://github.com/stylelab-io/kubernetes-coreos-packer/blob/master/scripts/cleanup.sh
     # remove the machine id. it will be regenerated on first boot.
-    printf '%b\n' "Remove the machine id, Clean Image...";
+    printf '%b\n' "Remove the machine id, path: '/etc/machine-id'.";
     rm -rf /etc/machine-id;
 
     # Other codes for finalization of the image....

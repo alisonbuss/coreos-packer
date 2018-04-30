@@ -32,10 +32,16 @@ function StartInstallation {
     # pip uninstall docker-py; pip uninstall docker; pip install docker
     # docker-compose version 1.19.0, build 9e633ef
     # SOLUTION:
+    printf '%b\n' "--run pip upgrade...";
     pip install --upgrade pip;
+    printf '%b\n' "--run pip uninstall docker-py...";
     pip uninstall -y docker-py;
+    printf '%b\n' "--run pip install docker...";
     pip install docker;
 
+    printf '%b\n' "--Execution path:";
+    which docker-compose;
+    printf '%b\n' "--Version:";
     docker-compose version;
 
 } 
