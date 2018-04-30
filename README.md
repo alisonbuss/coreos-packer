@@ -52,16 +52,16 @@ Fornecer um projeto de "Infrastructure as Code (IaC)" usando **Packer Templates*
 
 ### Imagem Packer: 
 
-  - **CoreOS Stable 1632.3.0**
-    - kernel: v4.14.19
-    - systemd: v235
-    - ignition: v0.20.1
-    - rkt: v1.29.0
-    - docker: v17.09.1
+  - **CoreOS Stable 1688.5.3**
+    - kernel: v4.16.3
+    - systemd: v238
+    - ignition: v0.24.0
+    - rkt: v1.30.0
+    - docker: v18.04.0
     - docker-compose: v1.19.0
     - etcd v2.3.8
-    - etcd v3.2.11
-    - flannel v0.9.1
+    - etcd v3.3.3
+    - flannel v0.10.0
     - active-python: v2.7.13
 
 Para o pré-provisionamento básico da imagem CoreOS, será através dos arquivos de **Shell Script**:

@@ -48,14 +48,11 @@
         "environment_vars" : [],
         "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
         "scripts": [
+            "{{user `global_working_directory`}}/pre-provision/shell-script/download-support-files.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-python.sh",
-            "{{user `global_working_directory`}}/pre-provision/shell-script/install-rkt.sh",
-            "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/install-docker-compose.sh",
-            "{{user `global_working_directory`}}/pre-provision/shell-script/install-etcd.sh",
-            "{{user `global_working_directory`}}/pre-provision/shell-script/install-flannel.sh",
             "{{user `global_working_directory`}}/pre-provision/shell-script/provide-basic-security.sh",
-            "{{user `global_working_directory`}}/pre-provision/shell-script/provide-clean-image.sh"
+            "{{user `global_working_directory`}}/pre-provision/shell-script/provide-image-finalization.sh"
         ]
     }],
 

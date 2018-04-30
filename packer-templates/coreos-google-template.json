@@ -1,5 +1,6 @@
 {
     "_comment": "Missing the implementation for this platform!!!",
+    "_font": "https://medium.com/the-andela-way/building-custom-machine-images-with-packer-a21c6d932bf6",
 
     "description": "CoreOS image for a Google platform.",
 

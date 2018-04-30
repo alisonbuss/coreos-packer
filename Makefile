@@ -14,7 +14,7 @@
 #   OR
 #       $ make clean  
 #	OR
-#		$ make plan compile build install-box PACKER_ONLY="virtualbox-iso" 
+#		$ make plan compile validate build install-box PACKER_ONLY="virtualbox-iso" 
 #   OR
 #       $ make uninstall-box  
 #-------------------------------------------------------------#

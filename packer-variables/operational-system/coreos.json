@@ -3,15 +3,15 @@
 
     "os_name": "coreos",
     "os_release": "stable",
-    "os_version": "1632.3.0",
+    "os_version": "1688.5.3",
 
-    "os_iso_url": "http://stable.release.core-os.net/amd64-usr/1632.3.0/coreos_production_iso_image.iso",
+    "os_iso_url": "http://stable.release.core-os.net/amd64-usr/1688.5.3/coreos_production_iso_image.iso",
     "os_iso_checksum_type": "SHA512",
-    "os_iso_checksum": "3afecae521c9a52892362ff436ff2dccc11a890a37d636d7963c9b42b58605c60d6919fd5893a0d69a4e38dc5889a5d2279173c374d07af1a57dec09ae18e85e",
+    "os_iso_checksum": "101ac6700bdb876fdc7b7588ac633f0654e4537a2ea69da80ead1dac9af7ad72838df7e7142c351966027dbedd0835137de6784767652dfe83e4f588f58ead79",
 
     "os_img_aws_id": "ami-44a03c22",
     "os_img_google_id": "coreos-stable",
-    "os_img_google_name": "coreos-stable-1632.3.0",
+    "os_img_google_name": "coreos-stable-1688.5.3",
     "os_img_digitalocean_id": "coreos-stable",
 
     "os_user_data_name": "keys-to-underworld",

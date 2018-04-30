@@ -10,8 +10,10 @@
 #    $@ | array: (*)
 function StartProvisioning {
 
-    printf '%b\n' "Starting to provide Basic Security...";
-    
+    printf '%b\n' "Starting to provide (Basic Security) configuration on the system...";
+
+    printf '%b\n' "--WARNING: Configuration not implemented!!!...";
+
 } 
 
 # @descr: Call of execution of the script's main function.
