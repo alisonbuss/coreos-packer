@@ -61,10 +61,7 @@ function StartProvisioning {
     chmod -R 0755 /support-files;
 
     printf '%b\n' "--INFO: List all the contents of the support folder, to install and assist in the future.";
-    ls -R $folderActivePython;
-    ls -R $folderKubernetes;
-    ls -R $folderCNIPlugins;
-    ls -R $folderDockerCompose;
+    ls -R /support-files;
 
 } 
 
