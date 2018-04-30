@@ -60,12 +60,13 @@ Fornecer um projeto de "Infrastructure as Code (IaC)" usando **Packer Templates*
     - docker: v18.04.0
     - docker-compose: v1.19.0
     - etcd v2.3.8
-    - etcd v3.3.3
+    - etcd v3.2.15
     - flannel v0.10.0
     - active-python: v2.7.13
 
 Para o pré-provisionamento básico da imagem CoreOS, será através dos arquivos de **Shell Script**:
 
+    ./pre-provision/shell-script/download-support-files.sh
     ./pre-provision/shell-script/install-python.sh
     ./pre-provision/shell-script/install-rkt.sh
     ./pre-provision/shell-script/install-docker.sh
@@ -73,7 +74,7 @@ Para o pré-provisionamento básico da imagem CoreOS, será através dos arquivo
     ./pre-provision/shell-script/install-etcd.sh
     ./pre-provision/shell-script/install-flannel.sh
     ./pre-provision/shell-script/provide-basic-security.sh
-    ./pre-provision/shell-script/provide-clean-image.sh
+    ./pre-provision/shell-script/provide-image-finalization.sh
 
 > **:warning: Nota:**
 > - *Para mais detalhes das variáveis e templetes Packer, você encontra na "[Documentação Técnica](https://github.com/alisonbuss/coreos-packer/blob/master/README_DOC.md)" do projeto.*
@@ -118,6 +119,7 @@ coreos-packer................................Pasta do projeto.
 │   │   ├── keys-to-underworld-for-vagrant-virtualbox.json
 │   │   └── keys-to-underworld.json
 │   ├── shell-script.........................Scripts de pré-provisionamento da imagem Packer.
+|   |   ├── download-support-files.sh
 │   │   ├── install-docker-compose.sh
 │   │   ├── install-docker.sh
 │   │   ├── install-etcd.sh
@@ -125,7 +127,7 @@ coreos-packer................................Pasta do projeto.
 │   │   ├── install-python.sh
 │   │   ├── install-rkt.sh
 │   │   ├── provide-basic-security.sh
-│   │   └── provide-clean-image.sh
+│   │   └── provide-image-finalization.sh
 │   ├── vagrant_insecure_private_key.........Chave privada do Vagrant.
 │   └── vagrant_insecure_public_key.pub......Chave publica do Vagrant.
 ├── build-image.sh...........................Shell Script responsavel pelo build do projeto "coreos-packer".
