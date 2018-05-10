@@ -57,6 +57,15 @@ function StartProvisioning {
     # Starting downloading of Docker Compose.
     wget -O "${folderDockerCompose}/docker-compose" "${urlDockerCompose}/docker-compose-Linux-x86_64";
 
+    # Define default values - PeerVPN.
+    local versionPeerVPN="0-044";
+    local folderPeerVPN="/support-files/peervpn-v${versionPeerVPN}";
+    local urlPeerVPN="https://peervpn.net/files";
+    # Create a support folder for the files and binaries.
+    mkdir -p "${folderPeerVPN}";
+    # Starting downloading of PeerVPN.
+    wget -O "${folderPeerVPN}/peervpn.tar.gz" "${urlPeerVPN}/peervpn-${versionPeerVPN}-linux-x86.tar.gz";
+
     # Providing permissions to (support folder).
     chmod -R 0755 /support-files;
 
