@@ -2,7 +2,7 @@
 
 #### Translation for: **[English](https://github.com/alisonbuss/coreos-packer/blob/master/README_LANG_EN.md)**.
 
-#### Status do Projeto: *(Está em processo de refatoração)*.
+#### Status do Projeto: *(Finalizado)*.
 
 <h2 align="center">
     Projeto de criação de imagens CoreOS <br/> para múltiplas plataformas <br/>(Amazon EC2, Google GCE, DigitalOcean, VirtualBox)
@@ -440,14 +440,6 @@ Resultado semelhante abaixo:
 * Packer - Official Site, Packer Documentation. ***Welcome to the Packer documentation!*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
   Disponível: *[https://www.packer.io/docs/index.html](https://www.packer.io/docs/index.html)*
-
-* Packer - Official Site, Packer Documentation. ***Template Communicators*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2018 por ai...* <br/>
-  Disponível: *[https://www.packer.io/docs/templates/communicator.html](https://www.packer.io/docs/templates/communicator.html)*
-
-* Packer - Official Site, Packer Documentation. ***VirtualBox Builder (from an ISO)*** <br/>
-  Acessado: *Sei lá da pesti, foi em 2018 por ai...* <br/>
-  Disponível: *[https://www.packer.io/docs/builders/virtualbox-iso.html](https://www.packer.io/docs/builders/virtualbox-iso.html)*
 
 * Professor José de Assis - YouTube, Playlist ***Curso - Primeiros passos com Servidor Linux*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>

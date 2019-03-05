@@ -1,169 +1,248 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Makefile for project construction.
+# @descr: Makefile for automation in building and deploying CoreOS images using Packer.
 # @fonts: https://vsupalov.com/packer-ami/
-#		  https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
-# 		  https://blog.pantuza.com/tutoriais/como-funciona-o-makefile
-#		  http://mindbending.org/pt/makefile-para-java
-#		  https://www.embarcados.com.br/introducao-ao-makefile/	
-#		  https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile	
+#         https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
+#         https://blog.pantuza.com/tutoriais/como-funciona-o-makefile
+#         http://mindbending.org/pt/makefile-para-java
+#         https://www.embarcados.com.br/introducao-ao-makefile/
+#         https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile
+#         https://github.com/coreos/container-linux-config-transpiler
+#         https://github.com/coreos/container-linux-config-transpiler/blob/master/doc/dynamic-data.md#supported-data-by-provider
+#         https://coreos.com/os/docs/latest/configuration.html
+#         https://www.packer.io/docs/templates/communicator.html
+#         https://www.packer.io/docs/builders/virtualbox-iso.html
+#
 # @example:
-#       $ make plan compile validate build 
+#
+#       $ make help
 #   OR
-#       $ make build-force  
-#   OR
-#       $ make clean  
-#	OR
-#		$ make plan compile validate build install-box PACKER_ONLY="virtualbox-iso" 
-#   OR
-#       $ make uninstall-box  
+#       $ make ENVIRONMENT="development" \ 
+#              PLATFORM="virtualbox" \ 
+#              CREDENTIAL="vagrant" \ 
+#              plan clear compile validate build \ 
+#              deploy-vagrant-box publish-vagrant-box \ 
+#              2>&1 | tee "${PWD}/builds/deploy-development.log";
+#
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
-WORKING_DIRECTORY         ?= .
-#WORKING_DIRECTORY        ?= `pwd`
+# --Possible values: [development, staging, production].
+ENVIRONMENT                 ?= development
+# --Possible values: [aws, digitalocean, google, virtualbox].
+PLATFORM                    ?= virtualbox
+# --Possible values: [aws, digitalocean, google, vagrant].
+CREDENTIAL                  ?= vagrant
+WORKING_DIRECTORY           ?= `pwd`
+BUILD_DIRECTORY             ?= $(WORKING_DIRECTORY)/builds
 
 # DEFAULT VARIABLES - Packer!!!
-PACKER_TEMPLATE           ?= coreos-virtualbox-template.json
-PACKER_VARIABLES		  ?= global.json /operational-system/coreos.json /platform/virtualbox.json custom.json
-PACKER_ONLY               ?= virtualbox-iso
-
-PACKER_TEMPLATES_PATH     ?= $(WORKING_DIRECTORY)/packer-templates
-PACKER_VARIABLES_PATH     ?= $(WORKING_DIRECTORY)/packer-variables
+PACKER_TEMPLATE_FILE        ?= $(PLATFORM)-template.json
+PACKER_TEMPLATES_PATH       ?= $(WORKING_DIRECTORY)/templates
+PACKER_VARIABLES_PATH       ?= $(WORKING_DIRECTORY)/variables
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE      ?= $(WORKING_DIRECTORY)/pre-provision/container-linux-config/keys-to-underworld.yml
-IGNITION_COMPILATION_PATH ?= $(WORKING_DIRECTORY)/pre-provision/ignitions
-IGNITION_PLATFORMS        ?= vagrant-virtualbox digitalocean ec2 gce
-         
-# DEFAULT VARIABLES - Vagrant
-VAGRANT_BOX_NAME          ?= packer/coreos-vagrant-box
-VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/image-coreos-vagrant.box
+IGNITION_SOURCE_FILE        ?= $(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/container-linux-config/deployment.yml
+IGNITION_COMPILATION_PATH   ?= $(BUILD_DIRECTORY)/coreos-ignitions
+IGNITION_PLATFORMS          ?= vagrant-virtualbox digitalocean ec2 gce
+IGNITION_TRANSPILER_URL     ?= https://github.com/coreos/container-linux-config-transpiler/releases/download
+IGNITION_TRANSPILER_VERSION ?= 0.9.0
 
-# DEFAULT VARIABLES - Compile, validate and build image files for Project Packer.
-BUILD_IMAGE_CMD           ?= $(WORKING_DIRECTORY)/build-image.sh
+# DEFAULT VARIABLES - Vagrant
+VAGRANT_BOX_NAME            ?= github/alisonbuss/coreos-packer
+VAGRANT_BOX_PATH            ?= $(BUILD_DIRECTORY)/image-coreos-vagrant.box
 
 
 plan: 
 	@echo "The default values to be used by this Makefile:";
 	@echo "";
-	@echo "    --> MAKECMDGOALS: make $(MAKECMDGOALS)";
-	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
+	@echo "    --> MAKECMDGOALS: '$$ make $(MAKECMDGOALS)'";
 	@echo "";
-	@echo "    --> PACKER_TEMPLATE: $(PACKER_TEMPLATE)";
-	@echo "    --> PACKER_VARIABLES: [$(PACKER_VARIABLES)]";
-	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
+	@echo "    --> ENVIRONMENT: $(ENVIRONMENT)";
+	@echo "    --> PLATFORM: $(PLATFORM)";
+	@echo "    --> CREDENTIAL: $(CREDENTIAL)";
+	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
+	@echo "    --> BUILD_DIRECTORY: $(BUILD_DIRECTORY)";
+	@echo "";
+	@echo "    --> PACKER_TEMPLATE_FILE: $(PACKER_TEMPLATE_FILE)";
 	@echo "    --> PACKER_TEMPLATES_PATH: $(PACKER_TEMPLATES_PATH)";
 	@echo "    --> PACKER_VARIABLES_PATH: $(PACKER_VARIABLES_PATH)";
 	@echo "";
 	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
 	@echo "    --> IGNITION_COMPILATION_PATH: $(IGNITION_COMPILATION_PATH)";
 	@echo "    --> IGNITION_PLATFORMS: $(IGNITION_PLATFORMS)";
+	@echo "    --> IGNITION_TRANSPILER_URL: $(IGNITION_TRANSPILER_URL)";
+	@echo "    --> IGNITION_TRANSPILER_VERSION: $(IGNITION_TRANSPILER_VERSION)";
 	@echo "";
 	@echo "    --> VAGRANT_BOX_NAME: $(VAGRANT_BOX_NAME)";
 	@echo "    --> VAGRANT_BOX_PATH: $(VAGRANT_BOX_PATH)";
 	@echo "";
-	@echo "    --> BUILD_IMAGE_CMD: $(BUILD_IMAGE_CMD)";
-	@echo "";
 
 
-compile: 
-	@echo "Starting the compilation of the (IGNITION COREOS)..."; 
-	@echo "--source file: $(IGNITION_SOURCE_FILE)"; 
-	@echo "--compilation path: $(IGNITION_COMPILATION_PATH)"; 
+install-transpiler: 
+	@echo "Starting the installation of Config Transpiler, the generator of ignition files for CoreOS..."; 
 
-	@bash $(BUILD_IMAGE_CMD) --action="compile" \
-						     --source-file="$(IGNITION_SOURCE_FILE)" \
-							 --compilation-path="$(IGNITION_COMPILATION_PATH)" \
-							 --platforms="$(IGNITION_PLATFORMS)";
+	# Creating directory for the binaries...
+	@mkdir -p "$(BUILD_DIRECTORY)";
 
-	@echo "Complete compilation!";  
+	# Downloading the binary...
+	@if ! [ $$(which "$(BUILD_DIRECTORY)/ct") ] ; then \
+		wget "$(IGNITION_TRANSPILER_URL)/v$(IGNITION_TRANSPILER_VERSION)/ct-v$(IGNITION_TRANSPILER_VERSION)-x86_64-unknown-linux-gnu" \
+	         -q --show-progress -O "$(BUILD_DIRECTORY)/ct"; \
+	else \
+		echo "Container Linux Config Transpiler is installed!"; \
+	fi
+
+	@echo "Complete installation!"; 
+
+
+compile: install-transpiler
+	@echo "Starting the compilation of the 'Container Linux Config' for IGNITION the of CoreOS...";
+	
+    # Creating directory for the creation of ignitions...
+	mkdir -p "$(IGNITION_COMPILATION_PATH)";
+
+	# Converting to (no-platform)
+	$(BUILD_DIRECTORY)/ct \
+	    --in-file "$(IGNITION_SOURCE_FILE)" \
+	    --out-file "$(IGNITION_COMPILATION_PATH)/deployment.json" \
+	    --pretty;
+	
+	# Platform to target. Accepted values: [
+	#    azure digitalocean ec2 gce packet openstack-metadata vagrant-virtualbox cloudstack-configdrive
+	# ]
+	for platform in $(IGNITION_PLATFORMS); do \
+		$(BUILD_DIRECTORY)/ct \
+		    --platform="$${platform}" \
+		    --in-file="$(IGNITION_SOURCE_FILE)" \
+		    --out-file="$(IGNITION_COMPILATION_PATH)/deployment-$${platform}.json" \
+		    --pretty; \
+	done
+
+	@echo "Complete compilation!";
 
 
 validate:
-	@echo "Starting the validation of the template Packer..."; 
-	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)"; 
+	@echo "Starting the validation of the template Packer...";
+	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
-						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)";
+	packer inspect "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	@bash $(BUILD_IMAGE_CMD) --action="validate" \
-						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
-							 --variables="$(PACKER_VARIABLES)" \
-							 --variables-path="$(PACKER_VARIABLES_PATH)";
+	packer validate -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/credential/$(CREDENTIAL).json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/operational-system/coreos.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/platform/$(PLATFORM).json" \
+	                -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/global.json" \
+	                -var="global_working_directory=$(WORKING_DIRECTORY)" \
+	                -var="global_build_directory=$(BUILD_DIRECTORY)" \
+	                "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
+
+	@echo "Complete validate!";
 
 
 build:
 	@echo "Starting the BUILD of the template Packer..."; 
-	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)";
+	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	@bash $(BUILD_IMAGE_CMD) --action="build" \
-						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
-							 --variables="$(PACKER_VARIABLES)" \
-							 --variables-path="$(PACKER_VARIABLES_PATH)" \
-							 --packer-only="$(PACKER_ONLY)" \
-							 --working-directory="$(WORKING_DIRECTORY)";
+	packer build -parallel="true" \
+                 -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
+                 -var-file="$(PACKER_VARIABLES_PATH)/credential/$(CREDENTIAL).json" \
+                 -var-file="$(PACKER_VARIABLES_PATH)/operational-system/coreos.json" \
+                 -var-file="$(PACKER_VARIABLES_PATH)/platform/$(PLATFORM).json" \
+                 -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/global.json" \
+                 -var="global_working_directory=$(WORKING_DIRECTORY)" \
+	             -var="global_build_directory=$(BUILD_DIRECTORY)" \
+                 "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
+
+	@echo "Complete build!";
 
 
-build-force: clean compile validate build
+build-force: plan clean compile validate build
 
 
 clean:
-	@echo "Initiating deletion of compilation files from the Project Packer...";
-	@echo "--affected directory: $(WORKING_DIRECTORY)/builds";
+	@echo "Starting the deletion of builds files from the Project...";
+	@echo "--affected directory: $(BUILD_DIRECTORY)";
 
-	@rm -rf $(WORKING_DIRECTORY)/builds; sleep 2s;
+	# List all box and status
+	vagrant box list;
+	vagrant global-status;
+
+	# Starting the uninstallation of the Vagrant Box
+	-vagrant box remove --force "$(VAGRANT_BOX_NAME)";
+
+	# List all box and status
+	vagrant box list;
+	vagrant global-status;
+
+    # Removing generated files for Build
+	@rm -rf $(BUILD_DIRECTORY); sleep 2s;
 	
 	@echo "cleaning completed!"; 
 
 
-
-# ----------------------------------------------------------------------
-# THE CODES BELOW ARE INTENDED TO RUN THE TOOLS (Vagrant and VirtualBox)
-# ----------------------------------------------------------------------
-
-install-box: 
+deploy-vagrant-box:
 	@echo "Starting the installation of the Vagrant Box generated by Packer..."; 
 	@echo "--box name: $(VAGRANT_BOX_NAME)"; 
 	@echo "--box path: $(VAGRANT_BOX_PATH)"; 
 
-	@vagrant box list;
+	# List all box and status
+	vagrant box list;
+	vagrant global-status;
 
-	@echo "--> Vagrant Box Installation..."; 
-	@bash $(BUILD_IMAGE_CMD) --action="install-box" \
-							 --box-name="$(VAGRANT_BOX_NAME)" \
-							 --box-path="$(VAGRANT_BOX_PATH)";
+	# Vagrant Box Installation
+	vagrant box add --force \
+                    --provider="virtualbox" \
+                    --name="$(VAGRANT_BOX_NAME)" "$(VAGRANT_BOX_PATH)";
 
-	@vagrant box list;
+	# List all box and status
+	vagrant box list;
+	vagrant global-status;
 
 	@echo "Complete Vagrant Box installation!";  
 
 
-publish-box: 
+publish-vagrant-box: 
 	@echo "Starting the publish of the Vagrant Box on Vagrant Cloud generated by Packer..."; 
 	@echo "--box name: $(VAGRANT_BOX_NAME)"; 
 	@echo "--box path: $(VAGRANT_BOX_PATH)"; 
 
-	@echo "--> Vagrant Box Publish..."; 
-	@bash $(BUILD_IMAGE_CMD) --action="publish-box" \
-							 --box-path="$(VAGRANT_BOX_PATH)";
+	@echo "--WARNING: Configuration not implemented!!!...";
 
 	@echo "Complete Vagrant Box publish!";  
 
 
-uninstall-box: 
-	@echo "Starting the uninstallation of the Vagrant Box generated by Packer..."; 
-	@echo "--box be uninstall: $(VAGRANT_BOX_NAME)"; 
-
-	@vagrant box list;
-	@vagrant global-status;
-
-	@echo "--> Vagrant Box Uninstallation..."; 
-	@bash $(BUILD_IMAGE_CMD) --action="uninstall-box" \
-							 --box-name="$(VAGRANT_BOX_NAME)";
-
-	@vagrant box list;
-	@vagrant global-status;
-
-	@echo "Uninstalling the completed Vagrant Box!";
-
+help:
+	@echo ' '
+	@echo 'Usage: make <TARGETS> ... [OPTIONS]'
+	@echo ' '
+	@echo 'TARGETS:'
+	@echo ' '
+	@echo '  Main:'
+	@echo '     install-transpiler     Starts the installation of Config Transpiler the of CoreOS.'
+	@echo '     compile                Starts the compilation of the (Container Linux Config) for IGNITION the of CoreOS'
+	@echo '                              --> DEPENDENCY: install-transpiler.'
+	@echo '     validate               Starts the validation of the template Packer.'
+	@echo '     build                  Starts the BUILD of the template Packer.'
+	@echo '     build-force            Starts one building forced, clean of the template Packer'
+	@echo '                              --> DEPENDENCY: plan, clean, compile, validate, build.'
+	@echo '     clean                  Starts the deletion of builds files from the Project.'
+	@echo '     deploy-vagrant-box     Starts the installation of the Vagrant Box generated by Packer.'
+	@echo '     publish-vagrant-box    Starts the publish of the Vagrant Box on Vagrant Cloud generated by Packer.'
+	@echo ' '
+	@echo '  View details:'
+	@echo '     plan    The default values to be used by this Makefile.'
+	@echo ' '
+	@echo '  Help:'
+	@echo '     help    Print this help message.'
+	@echo ' '
+	@echo 'OPTIONS:'
+	@echo ' '
+	@echo '   ENVIRONMENT          Specifies the type of environment variable for the Packer deployment,'
+	@echo '                        the default is [development], possible values: [development, staging, production].'
+	@echo '   PLATFORM             Specifies the type of platform variable for the Packer deployment,'
+	@echo '                        the default is [virtualbox], possible values: [aws, digitalocean, google, virtualbox].'
+	@echo '   CREDENTIAL           Specifies the credential access to the deployment platform,'
+	@echo '                        the default is [vagrant], possible values: [aws, digitalocean, google, vagrant].'
+	@echo '   WORKING_DIRECTORY    Specify the current working directory, the default is [`pwd`].'
+	@echo ' '

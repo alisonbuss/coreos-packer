@@ -1,0 +1,89 @@
+{
+    "description": "CoreOS image for a VirtualBox platform.",
+
+    "builders": [{
+        "type": "virtualbox-iso",
+            
+        "vm_name": "vm-{{timestamp}}-packer",
+        "iso_checksum": "{{user `os_iso_checksum`}}",
+        "iso_checksum_type": "{{user `os_iso_checksum_type`}}",
+        "iso_url": "{{user `os_iso_url`}}",
+        "iso_target_path": "{{user `global_build_directory`}}/{{user `os_name`}}-{{user `os_release`}}-{{user `os_version`}}.iso", 
+        "guest_os_type": "Linux26_64",
+        
+        "hard_drive_interface": "sata",
+        "disk_size": "{{user `virtualbox_disk_size`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `virtualbox_cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `virtualbox_memory`}}"]
+        ],
+    
+        "headless": "false",
+        "guest_additions_mode": "disable",
+        "output_directory": "{{user `global_build_directory`}}/packer-vm-cache",
+        
+        "http_directory": "{{user `global_working_directory`}}",
+        "boot_wait": "33s",
+        "boot_command": [
+            "sudo -i;<enter>",
+            "systemctl stop sshd.socket;<enter>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `os_user_data_path`}}/{{user `os_user_data_file`}};<enter>",
+            "cat {{user `os_user_data_file`}};<enter>",
+            "coreos-install -d /dev/sda -C {{ user `os_release` }} -i {{user `os_user_data_file`}};<enter>",
+            "echo 'What to the darkness reappears in this world!!!...';<enter>",
+            "sleep 3s;<enter>",
+            "reboot;<enter>"
+        ],  
+        
+        "communicator": "ssh",
+        "ssh_port": 22,
+        "ssh_username": "{{user `cred_vagrant_username`}}",
+        "ssh_private_key_file": "{{user `global_working_directory`}}{{user `cred_vagrant_private_key`}}",
+        "ssh_timeout": "33m",
+    
+        "shutdown_command": "sudo -S shutdown -P now"
+    }],
+
+    "provisioners": [{
+        "type": "shell",
+        "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+        "environment_vars" : [
+            "PACKER_PYTHON_VERSION='2.7.14'",
+            "PACKER_CNI_PLUGIN_VERSION='0.7.4'",
+            "PACKER_PEERVPN_VERSION='0-044'",
+            "PACKER_RKT_VERSION='1.30.0'",
+            "PACKER_DOCKER_VERSION='18.06.1'",
+            "PACKER_DOCKER_COMPOSE_VERSION='1.23.2'",
+            "PACKER_ETCD_VERSION='3.3.9'",
+            "PACKER_FLANNEL_VERSION='0.10.0'",
+            "PACKER_KUBERNETES_VERSION='1.13.0'",
+            
+            "PACKER_DEPLOYMENT_DIR='/deployment-files'",
+            "PACKER_LOG_FILES_DIR='/var/log'"
+        ],
+        "scripts": [
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
+
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-python.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-cni-plugin.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-peer-vpn.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-rkt.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-docker.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-docker-compose.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-etcd.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-flannel.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-kubernetes.sh",
+
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-security.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-finalize.sh"
+        ]
+    }],
+
+    "post-processors": [{
+        "type": "vagrant",
+        "compression_level": "6",
+        "output": "{{user `global_build_directory`}}/{{user `virtualbox_vagrant_box_file`}}"
+    }],
+
+    "min_packer_version": "1.1.3"
+}

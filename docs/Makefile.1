@@ -1,0 +1,180 @@
+
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Makefile for project construction.
+# @fonts: https://vsupalov.com/packer-ami/
+#		  https://pt.wikibooks.org/wiki/Programar_em_C/Makefiles
+# 		  https://blog.pantuza.com/tutoriais/como-funciona-o-makefile
+#		  http://mindbending.org/pt/makefile-para-java
+#		  https://www.embarcados.com.br/introducao-ao-makefile/	
+#		  https://github.com/dyson/packer-qemu-coreos-container-linux/blob/master/Makefile	
+# @example:
+#       
+#       $ make plan
+#       $ make validate
+#       $ make deploy
+#       $ make deploy-force
+#       $ make install-box
+#       $ make uninstall-box
+#       $ make publish-box
+#       $ make clean
+#
+#
+#       $ make plan compile validate build 
+#   OR
+#       $ make build-force  
+#   OR
+#       $ make clean  
+#	OR
+#		$ make plan compile validate build install-box PACKER_ONLY="virtualbox-iso" 
+#   OR
+#       $ make uninstall-box  
+#-------------------------------------------------------------#
+
+# DEFAULT VARIABLES - Structural
+WORKING_DIRECTORY         ?= .
+#WORKING_DIRECTORY        ?= `pwd`
+
+# DEFAULT VARIABLES - Packer!!!
+PACKER_TEMPLATE           ?= coreos-virtualbox-template.json
+PACKER_VARIABLES		  ?= global.json /operational-system/coreos.json /platform/virtualbox.json custom.json
+PACKER_ONLY               ?= virtualbox-iso
+
+PACKER_TEMPLATES_PATH     ?= $(WORKING_DIRECTORY)/packer-templates
+PACKER_VARIABLES_PATH     ?= $(WORKING_DIRECTORY)/packer-variables
+
+# DEFAULT VARIABLES - Ignition For CoreOS
+IGNITION_SOURCE_FILE      ?= $(WORKING_DIRECTORY)/pre-provision/container-linux-config/keys-to-underworld.yml
+IGNITION_COMPILATION_PATH ?= $(WORKING_DIRECTORY)/pre-provision/ignitions
+IGNITION_PLATFORMS        ?= vagrant-virtualbox digitalocean ec2 gce
+         
+# DEFAULT VARIABLES - Vagrant
+VAGRANT_BOX_NAME          ?= packer/coreos-vagrant-box
+VAGRANT_BOX_PATH          ?= $(WORKING_DIRECTORY)/builds/image-coreos-vagrant.box
+
+# DEFAULT VARIABLES - Compile, validate and build image files for Project Packer.
+BUILD_IMAGE_CMD           ?= $(WORKING_DIRECTORY)/build-image.sh
+
+
+plan: 
+	@echo "The default values to be used by this Makefile:";
+	@echo "";
+	@echo "    --> MAKECMDGOALS: make $(MAKECMDGOALS)";
+	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
+	@echo "";
+	@echo "    --> PACKER_TEMPLATE: $(PACKER_TEMPLATE)";
+	@echo "    --> PACKER_VARIABLES: [$(PACKER_VARIABLES)]";
+	@echo "    --> PACKER_ONLY: $(PACKER_ONLY)";
+	@echo "    --> PACKER_TEMPLATES_PATH: $(PACKER_TEMPLATES_PATH)";
+	@echo "    --> PACKER_VARIABLES_PATH: $(PACKER_VARIABLES_PATH)";
+	@echo "";
+	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
+	@echo "    --> IGNITION_COMPILATION_PATH: $(IGNITION_COMPILATION_PATH)";
+	@echo "    --> IGNITION_PLATFORMS: $(IGNITION_PLATFORMS)";
+	@echo "";
+	@echo "    --> VAGRANT_BOX_NAME: $(VAGRANT_BOX_NAME)";
+	@echo "    --> VAGRANT_BOX_PATH: $(VAGRANT_BOX_PATH)";
+	@echo "";
+	@echo "    --> BUILD_IMAGE_CMD: $(BUILD_IMAGE_CMD)";
+	@echo "";
+
+
+compile: 
+	@echo "Starting the compilation of the (IGNITION COREOS)..."; 
+	@echo "--source file: $(IGNITION_SOURCE_FILE)"; 
+	@echo "--compilation path: $(IGNITION_COMPILATION_PATH)"; 
+
+	@bash $(BUILD_IMAGE_CMD) --action="compile" \
+						     --source-file="$(IGNITION_SOURCE_FILE)" \
+							 --compilation-path="$(IGNITION_COMPILATION_PATH)" \
+							 --platforms="$(IGNITION_PLATFORMS)";
+
+	@echo "Complete compilation!";  
+
+
+validate:
+	@echo "Starting the validation of the template Packer..."; 
+	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)"; 
+
+	@bash $(BUILD_IMAGE_CMD) --action="inspect" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)";
+
+	@bash $(BUILD_IMAGE_CMD) --action="validate" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
+							 --variables="$(PACKER_VARIABLES)" \
+							 --variables-path="$(PACKER_VARIABLES_PATH)";
+
+
+build:
+	@echo "Starting the BUILD of the template Packer..."; 
+	@echo "--template file: $(WORKING_DIRECTORY)/packer-templates/$(PACKER_TEMPLATE)";
+
+	@bash $(BUILD_IMAGE_CMD) --action="build" \
+						     --template-file="$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE)" \
+							 --variables="$(PACKER_VARIABLES)" \
+							 --variables-path="$(PACKER_VARIABLES_PATH)" \
+							 --packer-only="$(PACKER_ONLY)" \
+							 --working-directory="$(WORKING_DIRECTORY)";
+
+
+build-force: clean compile validate build
+
+
+clean:
+	@echo "Initiating deletion of compilation files from the Project Packer...";
+	@echo "--affected directory: $(WORKING_DIRECTORY)/builds";
+
+	@rm -rf $(WORKING_DIRECTORY)/builds; sleep 2s;
+	
+	@echo "cleaning completed!"; 
+
+
+
+# ----------------------------------------------------------------------
+# THE CODES BELOW ARE INTENDED TO RUN THE TOOLS (Vagrant and VirtualBox)
+# ----------------------------------------------------------------------
+
+install-box: 
+	@echo "Starting the installation of the Vagrant Box generated by Packer..."; 
+	@echo "--box name: $(VAGRANT_BOX_NAME)"; 
+	@echo "--box path: $(VAGRANT_BOX_PATH)"; 
+
+	@vagrant box list;
+
+	@echo "--> Vagrant Box Installation..."; 
+	@bash $(BUILD_IMAGE_CMD) --action="install-box" \
+							 --box-name="$(VAGRANT_BOX_NAME)" \
+							 --box-path="$(VAGRANT_BOX_PATH)";
+
+	@vagrant box list;
+
+	@echo "Complete Vagrant Box installation!";  
+
+
+publish-box: 
+	@echo "Starting the publish of the Vagrant Box on Vagrant Cloud generated by Packer..."; 
+	@echo "--box name: $(VAGRANT_BOX_NAME)"; 
+	@echo "--box path: $(VAGRANT_BOX_PATH)"; 
+
+	@echo "--> Vagrant Box Publish..."; 
+	@bash $(BUILD_IMAGE_CMD) --action="publish-box" \
+							 --box-path="$(VAGRANT_BOX_PATH)";
+
+	@echo "Complete Vagrant Box publish!";  
+
+
+uninstall-box: 
+	@echo "Starting the uninstallation of the Vagrant Box generated by Packer..."; 
+	@echo "--box be uninstall: $(VAGRANT_BOX_NAME)"; 
+
+	@vagrant box list;
+	@vagrant global-status;
+
+	@echo "--> Vagrant Box Uninstallation..."; 
+	@bash $(BUILD_IMAGE_CMD) --action="uninstall-box" \
+							 --box-name="$(VAGRANT_BOX_NAME)";
+
+	@vagrant box list;
+	@vagrant global-status;
+
+	@echo "Uninstalling the completed Vagrant Box!";
+
