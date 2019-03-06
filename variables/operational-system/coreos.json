@@ -13,7 +13,7 @@
     "os_img_google_id": "coreos-stable",
     "os_img_google_name": "coreos-stable-1688.5.3",
     "os_img_digitalocean_id": "coreos-stable",
-
-    "os_user_data_file": "deployment-vagrant-virtualbox.json",
-    "os_user_data_path": "/provision/files/coreos-ignition"
+    
+    "os_user_data_path": "/provision/files/coreos-ignition",
+    "os_user_data_file": "deployment-vagrant-virtualbox.json"
 }

@@ -1,4 +1,17 @@
 {
     "global_working_directory": ".",
-    "global_build_directory": "./builds"
+    "global_build_directory": "./builds",
+
+    "global_image_deployment_directory": "/deployment-files",
+    "global_image_log_directory": "/var/log",
+
+    "global_python_version": "2.7.14",
+    "global_cni_plugin_version": "0.7.4",
+    "global_peervpn_version": "0-044",
+    "global_rkt_version": "1.30.0",
+    "global_docker_version": "18.06.1",
+    "global_docker_compose_version": "1.23.2",
+    "global_etcd_version": "3.3.9",
+    "global_flannel_version": "0.10.0",
+    "global_kubernetes_version": "1.13.0"
 }

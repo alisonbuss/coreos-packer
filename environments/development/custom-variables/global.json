@@ -2,6 +2,7 @@
     "virtualbox_cpus":"2",
     "virtualbox_memory":"2048",
     "virtualbox_disk_size":"33666",
-    "os_user_data_file": "deployment.json",
-    "os_user_data_path": "/builds/coreos-ignition"
+    
+    "os_user_data_path": "/builds/coreos-ignition",
+    "os_user_data_file": "deployment-vagrant-virtualbox.json"
 }

@@ -48,18 +48,18 @@
         "type": "shell",
         "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
         "environment_vars" : [
-            "PACKER_PYTHON_VERSION='2.7.14'",
-            "PACKER_CNI_PLUGIN_VERSION='0.7.4'",
-            "PACKER_PEERVPN_VERSION='0-044'",
-            "PACKER_RKT_VERSION='1.30.0'",
-            "PACKER_DOCKER_VERSION='18.06.1'",
-            "PACKER_DOCKER_COMPOSE_VERSION='1.23.2'",
-            "PACKER_ETCD_VERSION='3.3.9'",
-            "PACKER_FLANNEL_VERSION='0.10.0'",
-            "PACKER_KUBERNETES_VERSION='1.13.0'",
-            
-            "PACKER_DEPLOYMENT_DIR='/deployment-files'",
-            "PACKER_LOG_FILES_DIR='/var/log'"
+            "PACKER_PYTHON_VERSION='{{user `global_python_version`}}'",
+            "PACKER_CNI_PLUGIN_VERSION='{{user `global_cni_plugin_version`}}'",
+            "PACKER_PEERVPN_VERSION='{{user `global_peervpn_version`}}'",
+            "PACKER_RKT_VERSION='{{user `global_rkt_version`}}'",
+            "PACKER_DOCKER_VERSION='{{user `global_docker_version`}}'",
+            "PACKER_DOCKER_COMPOSE_VERSION='{{user `global_docker_compose_version`}}'",
+            "PACKER_ETCD_VERSION='{{user `global_etcd_version`}}'",
+            "PACKER_FLANNEL_VERSION='{{user `global_flannel_version`}}'",
+            "PACKER_KUBERNETES_VERSION='{{user `global_kubernetes_version`}}'",
+
+            "PACKER_DEPLOYMENT_DIR='{{user `global_image_deployment_directory`}}'",
+            "PACKER_LOG_FILES_DIR='{{user `global_image_log_directory`}}'"
         ],
         "scripts": [
             "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
