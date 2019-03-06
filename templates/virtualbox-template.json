@@ -66,7 +66,7 @@
 
             "{{user `global_working_directory`}}/provision/shell-scripts/config-python.sh",
             "{{user `global_working_directory`}}/provision/shell-scripts/config-cni-plugin.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-peer-vpn.sh",
+            "{{user `global_working_directory`}}/provision/shell-scripts/config-peervpn.sh",
             "{{user `global_working_directory`}}/provision/shell-scripts/config-rkt.sh",
             "{{user `global_working_directory`}}/provision/shell-scripts/config-docker.sh",
             "{{user `global_working_directory`}}/provision/shell-scripts/config-docker-compose.sh",

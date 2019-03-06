@@ -5,7 +5,7 @@
 #         libraries for writing plugins to configure network interfaces in 
 #         Linux containers, along with a number of supported plugins.
 #         The Kubelet can use CNI (the Container Network Interface) to 
-#         manage machine level networking requirements. 
+#         manage machine level networking requirements.
 # @param-global:
 #     PACKER_DEPLOYMENT_DIR='...'
 #     PACKER_LOG_FILES_DIR='...'
@@ -24,6 +24,7 @@ readonly VAR_LOG_FILES_DIR="${PACKER_LOG_FILES_DIR:-/var/log}";
 
 # @descr: Variable Local: Version of CNI Plugin. 
 readonly VAR_CNI_PLUGIN_VERSION="${PACKER_CNI_PLUGIN_VERSION:-0.7.4}";
+
 
 # @descr: Main function of the script, it runs automatically on the script call.
 function StartScript {

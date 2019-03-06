@@ -23,6 +23,7 @@ readonly VAR_LOG_FILES_DIR="${PACKER_LOG_FILES_DIR:-/var/log}";
 # @descr: Variable Local: Version of Python. 
 readonly VAR_PYTHON_VERSION="${PACKER_PYTHON_VERSION:-2.7.14}";
 
+
 # @descr: Main function of the script, it runs automatically on the script call.
 function StartScript {
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Configurations and optimization of the operating system(update, sysctl, log),
-#         environment variables, users, security(Firewall, IPTables).
+# @descr: Configurations and optimization of the operating
+#         system(update, sysctl, log) and environment variables.
 # @param-global:
 #     PACKER_DEPLOYMENT_DIR='...'
 #     PACKER_LOG_FILES_DIR='...'
@@ -12,8 +12,9 @@
 # @descr: Variable Local: Directory of deployment files. 
 readonly VAR_DEPLOYMENT_DIR="${PACKER_DEPLOYMENT_DIR:-/deployment-files}";
 
-# @descr: Variable Local: Directory of log files. 
+# @descr: Variable Local: Directory of log files.
 readonly VAR_LOG_FILES_DIR="${PACKER_LOG_FILES_DIR:-/var/log}";
+
 
 # @descr: Main function of the script, it runs automatically on the script call.
 function StartScript {

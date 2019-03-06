@@ -2,42 +2,63 @@
 
 #-----------------------|DOCUMENTATION|-----------------------#
 # @descr: Script of the installation(Docker Compose) for Docker on CoreOS.
-# @fonts: https://docs.docker.com/compose/install/#install-compose
-#         https://github.com/docker/compose/releases/
-#         https://gist.github.com/jonatanblue/e6c319aa95673eaf8acc475f92e961d5
-#         https://www.safaribooksonline.com/library/view/docker-cookbook/9781491919705/ch04.html
-#         https://www.safaribooksonline.com/library/view/docker-cookbook/9781491919705/ch04.html#usingdockerpy
+# @param-global:
+#     PACKER_DEPLOYMENT_DIR='...'
+#     PACKER_LOG_FILES_DIR='...'
+#     PACKER_DOCKER_COMPOSE_VERSION='...'
+# @fonts:
+#     https://docs.docker.com/compose/install/#install-compose
+#     https://github.com/docker/compose/releases/
+#     https://gist.github.com/jonatanblue/e6c319aa95673eaf8acc475f92e961d5
+#     https://www.safaribooksonline.com/library/view/docker-cookbook/9781491919705/ch04.html
+#     https://www.safaribooksonline.com/library/view/docker-cookbook/9781491919705/ch04.html#usingdockerpy
 #-------------------------------------------------------------#
 
+# @descr: Variable Local: Directory of deployment files. 
+readonly VAR_DEPLOYMENT_DIR="${PACKER_DEPLOYMENT_DIR:-/deployment-files}";
+
+# @descr: Variable Local: Directory of log files. 
+readonly VAR_LOG_FILES_DIR="${PACKER_LOG_FILES_DIR:-/var/log}";
+
+# @descr: Variable Local: Version of Docker Compose. 
+readonly VAR_DOCKER_COMPOSE_VERSION="${PACKER_DOCKER_COMPOSE_VERSION:-1.23.2}";
+
+
 # @descr: Main function of the script, it runs automatically on the script call.
-# @param:
-#     PACKER_DEPLOYMENT_DIR='...'
-#     PACKER_DOCKER_COMPOSE_VERSION='...'
 function StartScript {
 
-    # @descr: Variable: Directory of deployment files. 
-    local DEPLOYMENT_DIR="${PACKER_DEPLOYMENT_DIR:-/deployment-files}";
-    
-    # @descr: Variable: Version of Docker Compose. 
-    local DOCKER_COMPOSE_VERSION="${PACKER_DOCKER_COMPOSE_VERSION:-1.23.2}";
+    # @descr: Print of system debugging information.
+    __print_debug() {
+        printf '%b\n'   "### PACKER: Run: $(date)...";
+        printf '%b\n'   "### PACKER: Starting the Configurations of Docker Compose in Operating System...";
+        printf '%b\n'   "### PACKER: --SHELl:";
+        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "### PACKER: --VARS:";
+        printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
+        printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
+        printf '%b\n\n' "###           +-- VAR_DOCKER_COMPOSE_VERSION: ${VAR_DOCKER_COMPOSE_VERSION}";
+    }
 
     # @descr: Function to download Docker Compose. 
     __download_docker_compose() {
-        local path="${DEPLOYMENT_DIR}/docker-compose";
-        local url="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64";
-        printf '%b\n' "Starting the download of (Docker Compose)...";
-        wget -O "${path}/docker-compose-v${DOCKER_COMPOSE_VERSION}.tgz" "${url}";
+        printf '%b\n'   "### PACKER: --INFO: Start download (Docker Compose)!";
+        printf '%b\n\n' "*********************************************************";
+
+        local path="${VAR_DEPLOYMENT_DIR}/docker-compose";
+        local url="https://github.com/docker/compose/releases/download/${VAR_DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64";
+        wget -O "${path}/docker-compose-v${VAR_DOCKER_COMPOSE_VERSION}" "${url}";
     }
 
     # @descr: Docker Compose installation function.
     __install_docker_compose() {
-        printf '%b\n' "Starting the installation of (Docker Compose)...";
+        printf '%b\n'   "### PACKER: --INFO: Starting the installation of (Docker Compose)!";
+        printf '%b\n\n' "*********************************************************";
 
         # Creating installation directory: '/opt/bin/'
         mkdir -p "/opt/bin";
 
         # Starting install from docker-compose
-        cp "${DEPLOYMENT_DIR}/docker-compose/docker-compose-v${DOCKER_COMPOSE_VERSION} /opt/bin/docker-compose";
+        cp "${VAR_DEPLOYMENT_DIR}/docker-compose/docker-compose-v${VAR_DOCKER_COMPOSE_VERSION}" "/opt/bin/docker-compose";
 
         # set execution rights
         chmod +x /opt/bin/docker-compose;
@@ -60,8 +81,10 @@ function StartScript {
         which docker-compose;
         printf '%b\n' "--Version:";
         docker-compose version;
-
     }
+
+    # Starting print of information.
+    __print_debug;
 
     # Starting download of Docker Compose.
     __download_docker_compose;
@@ -72,7 +95,7 @@ function StartScript {
 }
 
 # @descr: Call of execution of the script's main function.
-StartScript "$@" 2>&1 | tee "/var/log/packer-config-docker-compose.log";
+StartScript "$@" 2>&1 | tee "${VAR_LOG_FILES_DIR}/packer-config-docker-compose.log";
 
 # @descr: Finishing the script!!! :P
 exit 0;
