@@ -31,7 +31,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of Rkt in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-rkt.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -45,7 +45,9 @@ function StartScript {
 
         local path="${VAR_DEPLOYMENT_DIR}/rkt";
         local url="https://github.com/rkt/rkt/releases/download/v${VAR_RKT_VERSION}/rkt-v${VAR_RKT_VERSION}.tar.gz";
-        wget -O "${path}/rkt-v${VAR_RKT_VERSION}.tar.gz" "${url}";
+        # Create directories and download binaries...
+        mkdir -p "${path}";
+        wget -O "${path}/rkt-v${VAR_RKT_VERSION}.tar.gz" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
     # @descr: Rkt installation function.

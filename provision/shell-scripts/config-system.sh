@@ -24,7 +24,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations and optimization of the Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-system.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n\n' "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";

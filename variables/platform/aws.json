@@ -1,5 +1,9 @@
 {
-    "_comment": "Missing the definition of the variables of this platform!!!"
+    "_comment": "Missing the definition of the variables of this platform!!!",
 
+    "aws_img_id": "ami-44a03c22",
 
+    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
+    "aws_user_data_path": "/files/coreos-ignitions",
+    "aws_user_data_file": "deployment-ec2.json"
 }

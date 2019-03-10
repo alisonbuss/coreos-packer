@@ -32,7 +32,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of PeerVPN in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-peervpn.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -46,7 +46,9 @@ function StartScript {
 
         local path="${VAR_DEPLOYMENT_DIR}/peervpn";
         local url="https://peervpn.net/files/peervpn-${VAR_PEERVPN_VERSION}-linux-x86.tar.gz";
-        wget -O "${path}/peervpn-v${VAR_PEERVPN_VERSION}.tar.gz" "${url}";
+        # Create directories and download binaries...
+        mkdir -p "${path}";
+        wget -O "${path}/peervpn-v${VAR_PEERVPN_VERSION}.tar.gz" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
     # Starting print of information.

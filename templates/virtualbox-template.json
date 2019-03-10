@@ -5,10 +5,10 @@
         "type": "virtualbox-iso",
             
         "vm_name": "vm-{{timestamp}}-packer",
-        "iso_checksum": "{{user `os_iso_checksum`}}",
-        "iso_checksum_type": "{{user `os_iso_checksum_type`}}",
-        "iso_url": "{{user `os_iso_url`}}",
-        "iso_target_path": "{{user `global_build_directory`}}/{{user `os_name`}}-{{user `os_release`}}-{{user `os_version`}}.iso", 
+        "iso_checksum": "{{user `virtualbox_img_iso_checksum`}}",
+        "iso_checksum_type": "{{user `virtualbox_img_iso_checksum_type`}}",
+        "iso_url": "{{user `virtualbox_img_iso_url`}}",
+        "iso_target_path": "{{user `global_build_directory`}}/{{user `virtualbox_img_name`}}-{{user `virtualbox_img_release`}}-{{user `virtualbox_img_version`}}.iso", 
         "guest_os_type": "Linux26_64",
         
         "hard_drive_interface": "sata",
@@ -27,9 +27,9 @@
         "boot_command": [
             "sudo -i;<enter>",
             "systemctl stop sshd.socket;<enter>",
-            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `os_user_data_path`}}/{{user `os_user_data_file`}};<enter>",
-            "cat {{user `os_user_data_file`}};<enter>",
-            "coreos-install -d /dev/sda -C {{ user `os_release` }} -i {{user `os_user_data_file`}};<enter>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}{{user `virtualbox_user_data_path`}}/{{user `virtualbox_user_data_file`}};<enter>",
+            "cat {{user `virtualbox_user_data_file`}};<enter>",
+            "coreos-install -d /dev/sda -C {{ user `virtualbox_img_release` }} -i {{user `virtualbox_user_data_file`}};<enter>",
             "echo 'What to the darkness reappears in this world!!!...';<enter>",
             "sleep 3s;<enter>",
             "reboot;<enter>"
@@ -48,18 +48,18 @@
         "type": "shell",
         "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
         "environment_vars" : [
-            "PACKER_PYTHON_VERSION='{{user `global_python_version`}}'",
-            "PACKER_CNI_PLUGIN_VERSION='{{user `global_cni_plugin_version`}}'",
-            "PACKER_PEERVPN_VERSION='{{user `global_peervpn_version`}}'",
-            "PACKER_RKT_VERSION='{{user `global_rkt_version`}}'",
-            "PACKER_DOCKER_VERSION='{{user `global_docker_version`}}'",
-            "PACKER_DOCKER_COMPOSE_VERSION='{{user `global_docker_compose_version`}}'",
-            "PACKER_ETCD_VERSION='{{user `global_etcd_version`}}'",
-            "PACKER_FLANNEL_VERSION='{{user `global_flannel_version`}}'",
-            "PACKER_KUBERNETES_VERSION='{{user `global_kubernetes_version`}}'",
+            "PACKER_PYTHON_VERSION={{user `global_python_version`}}",
+            "PACKER_CNI_PLUGIN_VERSION={{user `global_cni_plugin_version`}}",
+            "PACKER_PEERVPN_VERSION={{user `global_peervpn_version`}}",
+            "PACKER_RKT_VERSION={{user `global_rkt_version`}}",
+            "PACKER_DOCKER_VERSION={{user `global_docker_version`}}",
+            "PACKER_DOCKER_COMPOSE_VERSION={{user `global_docker_compose_version`}}",
+            "PACKER_ETCD_VERSION={{user `global_etcd_version`}}",
+            "PACKER_FLANNEL_VERSION={{user `global_flannel_version`}}",
+            "PACKER_KUBERNETES_VERSION={{user `global_kubernetes_version`}}",
 
-            "PACKER_DEPLOYMENT_DIR='{{user `global_image_deployment_directory`}}'",
-            "PACKER_LOG_FILES_DIR='{{user `global_image_log_directory`}}'"
+            "PACKER_DEPLOYMENT_DIR={{user `global_image_deployment_directory`}}",
+            "PACKER_LOG_FILES_DIR={{user `global_image_log_directory`}}"
         ],
         "scripts": [
             "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",

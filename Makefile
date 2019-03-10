@@ -21,7 +21,6 @@
 #   OR
 #       $ make ENVIRONMENT="development" \ 
 #              PLATFORM="virtualbox" \ 
-#              CREDENTIAL="vagrant" \ 
 #              plan clear compile validate build \ 
 #              deploy-vagrant-box publish-vagrant-box \ 
 #              2>&1 | tee "${PWD}/builds/deploy-development.log";
@@ -31,12 +30,12 @@
 # DEFAULT VARIABLES - Structural
 # --Possible values: [development, staging, production].
 ENVIRONMENT                 ?= development
-# --Possible values: [aws, digitalocean, google, virtualbox].
-PLATFORM                    ?= virtualbox
-# --Possible values: [aws, digitalocean, google, vagrant].
-CREDENTIAL                  ?= vagrant
+
+# --Possible values: [aws, google, digitalocean, virtualbox, all].
+PLATFORM                    ?= all
+
 WORKING_DIRECTORY           ?= `pwd`
-BUILD_DIRECTORY             ?= $(WORKING_DIRECTORY)/builds
+BUILD_DIRECTORY             ?= $(WORKING_DIRECTORY)/builds/$(ENVIRONMENT)
 
 # DEFAULT VARIABLES - Packer!!!
 PACKER_TEMPLATE_FILE        ?= $(PLATFORM)-template.json
@@ -44,7 +43,7 @@ PACKER_TEMPLATES_PATH       ?= $(WORKING_DIRECTORY)/templates
 PACKER_VARIABLES_PATH       ?= $(WORKING_DIRECTORY)/variables
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE        ?= $(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/container-linux-config/deployment.yml
+IGNITION_SOURCE_FILE        ?= $(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/container-linux-config/deployment-source.yml
 IGNITION_COMPILATION_PATH   ?= $(BUILD_DIRECTORY)/coreos-ignitions
 IGNITION_PLATFORMS          ?= vagrant-virtualbox digitalocean ec2 gce
 IGNITION_TRANSPILER_URL     ?= https://github.com/coreos/container-linux-config-transpiler/releases/download
@@ -62,7 +61,7 @@ plan:
 	@echo "";
 	@echo "    --> ENVIRONMENT: $(ENVIRONMENT)";
 	@echo "    --> PLATFORM: $(PLATFORM)";
-	@echo "    --> CREDENTIAL: $(CREDENTIAL)";
+
 	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
 	@echo "    --> BUILD_DIRECTORY: $(BUILD_DIRECTORY)";
 	@echo "";
@@ -85,12 +84,12 @@ install-transpiler:
 	@echo "Starting the installation of Config Transpiler, the generator of ignition files for CoreOS..."; 
 
 	# Creating directory for the binaries...
-	@mkdir -p "$(BUILD_DIRECTORY)";
+	@mkdir -p "$(WORKING_DIRECTORY)/builds";
 
 	# Downloading the binary...
-	@if ! [ $$(which "$(BUILD_DIRECTORY)/ct") ] ; then \
+	@if ! [ $$(which "$(WORKING_DIRECTORY)/builds/ct") ] ; then \
         wget "$(IGNITION_TRANSPILER_URL)/v$(IGNITION_TRANSPILER_VERSION)/ct-v$(IGNITION_TRANSPILER_VERSION)-x86_64-unknown-linux-gnu" \
-             -q --show-progress -O "$(BUILD_DIRECTORY)/ct"; \
+             -q --show-progress -O "$(WORKING_DIRECTORY)/builds/ct"; \
 	else \
         echo "Container Linux Config Transpiler is installed!"; \
 	fi
@@ -105,7 +104,7 @@ compile: install-transpiler
 	mkdir -p "$(IGNITION_COMPILATION_PATH)";
 
 	# Converting to (no-platform)
-	$(BUILD_DIRECTORY)/ct \
+	$(WORKING_DIRECTORY)/builds/ct \
 	    --in-file "$(IGNITION_SOURCE_FILE)" \
 	    --out-file "$(IGNITION_COMPILATION_PATH)/deployment.json" \
 	    --pretty;
@@ -114,7 +113,7 @@ compile: install-transpiler
 	#    azure digitalocean ec2 gce packet openstack-metadata vagrant-virtualbox cloudstack-configdrive
 	# ]
 	for platform in $(IGNITION_PLATFORMS); do \
-		$(BUILD_DIRECTORY)/ct \
+		$(WORKING_DIRECTORY)/builds/ct \
 		    --platform="$${platform}" \
 		    --in-file="$(IGNITION_SOURCE_FILE)" \
 		    --out-file="$(IGNITION_COMPILATION_PATH)/deployment-$${platform}.json" \
@@ -131,10 +130,15 @@ validate:
 	packer inspect "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
 	packer validate -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/credential/$(CREDENTIAL).json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/operational-system/coreos.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/platform/$(PLATFORM).json" \
-	                -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/global.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/credential/aws.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/credential/google.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/credential/vagrant.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/credential/digitalocean.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
+	                -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
+	                -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
 	                -var="global_working_directory=$(WORKING_DIRECTORY)" \
 	                -var="global_build_directory=$(BUILD_DIRECTORY)" \
 	                "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
@@ -148,12 +152,17 @@ build:
 
 	packer build -parallel="true" \
                  -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
-                 -var-file="$(PACKER_VARIABLES_PATH)/credential/$(CREDENTIAL).json" \
-                 -var-file="$(PACKER_VARIABLES_PATH)/operational-system/coreos.json" \
-                 -var-file="$(PACKER_VARIABLES_PATH)/platform/$(PLATFORM).json" \
-                 -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/global.json" \
-                 -var="global_working_directory=$(WORKING_DIRECTORY)" \
-                 -var="global_build_directory=$(BUILD_DIRECTORY)" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/credential/aws.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/credential/google.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/credential/vagrant.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/credential/digitalocean.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
+	             -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
+	             -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
+	             -var="global_working_directory=$(WORKING_DIRECTORY)" \
+	             -var="global_build_directory=$(BUILD_DIRECTORY)" \
                  "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
 	@echo "Complete build!";
@@ -243,8 +252,6 @@ help:
 	@echo '   ENVIRONMENT          Specifies the type of environment variable for the Packer deployment,'
 	@echo '                        the default is [development], possible values: [development, staging, production].'
 	@echo '   PLATFORM             Specifies the type of platform variable for the Packer deployment,'
-	@echo '                        the default is [virtualbox], possible values: [aws, digitalocean, google, virtualbox].'
-	@echo '   CREDENTIAL           Specifies the credential access to the deployment platform,'
-	@echo '                        the default is [vagrant], possible values: [aws, digitalocean, google, vagrant].'
+	@echo '                        the default is [virtualbox], possible values: [aws, google, digitalocean, virtualbox, all].'
 	@echo '   WORKING_DIRECTORY    Specify the current working directory, the default is [`pwd`].'
 	@echo ' '

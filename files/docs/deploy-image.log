@@ -1,0 +1,619 @@
+make: Entering directory '/mnt/sda2/git-repositories/public/coreos-packer'
+The default values to be used by this Makefile:
+
+    --> MAKECMDGOALS: '$ make plan compile validate build'
+
+    --> ENVIRONMENT: development
+    --> PLATFORM: virtualbox
+    --> WORKING_DIRECTORY: /mnt/sda2/git-repositories/public/coreos-packer
+    --> BUILD_DIRECTORY: /mnt/sda2/git-repositories/public/coreos-packer/builds/development
+
+    --> PACKER_TEMPLATE_FILE: virtualbox-template.json
+    --> PACKER_TEMPLATES_PATH: /mnt/sda2/git-repositories/public/coreos-packer/templates
+    --> PACKER_VARIABLES_PATH: /mnt/sda2/git-repositories/public/coreos-packer/variables
+
+    --> IGNITION_SOURCE_FILE: /mnt/sda2/git-repositories/public/coreos-packer/environments/development/container-linux-config/deployment-source.yml
+    --> IGNITION_COMPILATION_PATH: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/coreos-ignitions
+    --> IGNITION_PLATFORMS: vagrant-virtualbox digitalocean ec2 gce
+    --> IGNITION_TRANSPILER_URL: https://github.com/coreos/container-linux-config-transpiler/releases/download
+    --> IGNITION_TRANSPILER_VERSION: 0.9.0
+
+    --> VAGRANT_BOX_NAME: local/image/coreos-vagrant-v1
+    --> VAGRANT_BOX_FILE: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/image-coreos-vagrant.box
+
+Starting the installation of Config Transpiler, the generator of ignition files for CoreOS...
+# Creating directory for the binaries...
+# Downloading the binary...
+Container Linux Config Transpiler is installed!
+Complete installation!
+Starting the compilation of the 'Container Linux Config' for IGNITION the of CoreOS...
+# Creating directory for the creation of ignitions...
+mkdir -p "`pwd`/builds/development/coreos-ignitions";
+# Converting to (no-platform)
+`pwd`/builds/ct \
+    --in-file "`pwd`/environments/development/container-linux-config/deployment-source.yml" \
+    --out-file "`pwd`/builds/development/coreos-ignitions/deployment.json" \
+    --pretty;
+# Platform to target. Accepted values: [
+#    azure digitalocean ec2 gce packet openstack-metadata vagrant-virtualbox cloudstack-configdrive
+# ]
+for platform in vagrant-virtualbox digitalocean ec2 gce; do \
+	`pwd`/builds/ct \
+	    --platform="${platform}" \
+	    --in-file="`pwd`/environments/development/container-linux-config/deployment-source.yml" \
+	    --out-file="`pwd`/builds/development/coreos-ignitions/deployment-${platform}.json" \
+	    --pretty; \
+done
+Complete compilation!
+Starting the validation of the template Packer...
+--template file: /mnt/sda2/git-repositories/public/coreos-packer/templates/virtualbox-template.json
+packer inspect "`pwd`/templates/virtualbox-template.json";
+Description:
+
+CoreOS image for a VirtualBox platform.
+
+Variables:
+
+  <No variables>
+
+Builders:
+
+  virtualbox-iso
+
+Provisioners:
+
+  shell
+
+Note: If your build names contain user variables or template
+functions such as 'timestamp', these are processed at build time,
+and therefore only show in their raw form here.
+packer validate -var-file="`pwd`/variables/global.json" \
+                -var-file="`pwd`/variables/credential/aws.json" \
+                -var-file="`pwd`/variables/credential/google.json" \
+                -var-file="`pwd`/variables/credential/vagrant.json" \
+                -var-file="`pwd`/variables/credential/digitalocean.json" \
+                -var-file="`pwd`/variables/platform/aws.json" \
+                -var-file="`pwd`/variables/platform/google.json" \
+                -var-file="`pwd`/variables/platform/virtualbox.json" \
+                -var-file="`pwd`/variables/platform/digitalocean.json" \
+                -var-file="`pwd`/environments/development/custom-variables/custom.json" \
+                -var="global_working_directory=`pwd`" \
+                -var="global_build_directory=`pwd`/builds/development" \
+                "`pwd`/templates/virtualbox-template.json";
+Template validated successfully.
+Complete validate!
+Starting the BUILD of the template Packer...
+--template file: /mnt/sda2/git-repositories/public/coreos-packer/templates/virtualbox-template.json
+packer build -parallel="true" \
+                 -var-file="`pwd`/variables/global.json" \
+             -var-file="`pwd`/variables/credential/aws.json" \
+             -var-file="`pwd`/variables/credential/google.json" \
+             -var-file="`pwd`/variables/credential/vagrant.json" \
+             -var-file="`pwd`/variables/credential/digitalocean.json" \
+             -var-file="`pwd`/variables/platform/aws.json" \
+             -var-file="`pwd`/variables/platform/google.json" \
+             -var-file="`pwd`/variables/platform/virtualbox.json" \
+             -var-file="`pwd`/variables/platform/digitalocean.json" \
+             -var-file="`pwd`/environments/development/custom-variables/custom.json" \
+             -var="global_working_directory=`pwd`" \
+             -var="global_build_directory=`pwd`/builds/development" \
+                 "`pwd`/templates/virtualbox-template.json";
+[1;32mvirtualbox-iso output will be in this color.[0m
+
+[1;32m==> virtualbox-iso: Downloading or copying ISO[0m
+[0;32m    virtualbox-iso: Found already downloaded, initial checksum matched, no download needed: http://stable.release.core-os.net/amd64-usr/1688.5.3/coreos_production_iso_image.iso[0m
+[1;32m==> virtualbox-iso: Starting HTTP server on port 8561[0m
+[1;32m==> virtualbox-iso: Creating virtual machine...[0m
+[1;32m==> virtualbox-iso: Creating hard drive...[0m
+[1;32m==> virtualbox-iso: Creating forwarded port mapping for communicator (SSH, WinRM, etc) (host port 2493)[0m
+[1;32m==> virtualbox-iso: Executing custom VBoxManage commands...[0m
+[0;32m    virtualbox-iso: Executing: modifyvm vm-1552207162-packer --cpus 2[0m
+[0;32m    virtualbox-iso: Executing: modifyvm vm-1552207162-packer --memory 2048[0m
+[1;32m==> virtualbox-iso: Starting the virtual machine...[0m
+[1;32m==> virtualbox-iso: Waiting 33s for boot...[0m
+[1;32m==> virtualbox-iso: Typing the boot command...[0m
+[1;32m==> virtualbox-iso: Waiting for SSH to become available...[0m
+[1;32m==> virtualbox-iso: Connected to SSH![0m
+[1;32m==> virtualbox-iso: Uploading VirtualBox version info (5.2.22)[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-system.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:45:22 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations and optimization of the Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-system.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-python.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:45:22 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Python in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-python.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_PYTHON_VERSION: 2.7.14[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Active Python)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: The download of Active Python is the fixed version(2.7.14), it is difficult to standardize the URL of this crap.[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:49:54 URL:https://downloads.activestate.com/ActivePython/releases/2.7.14.2717/ActivePython-2.7.14.2717-linux-x86_64-glibc-2.12-404899.tar.gz [399844152/399844152] -> "/deployment-files/active-python/active-python-v2.7.14.tar.gz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (ActivePython)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Unpacking package: active-python-v2.7.14.tar.gz...[0m
+[0;32m    virtualbox-iso: Installing ActivePython to '/opt/python'...[0m
+[0;32m    virtualbox-iso: Relocating dir-dependent files...[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ActivePython has been successfully installed to:[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso:     /opt/python[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: You can add the following to your .bashrc (or equivalent)[0m
+[0;32m    virtualbox-iso: to put ActivePython on your PATH:[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso:     export PATH=/opt/python/bin:$PATH[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: The documentation is available here:[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso:     /opt/python/doc/python2.7/index.html[0m
+[0;32m    virtualbox-iso:     web: http://docs.activestate.com/activepython/2.7[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Please send us any feedback you might have or log bugs here:[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso:     activepython-feedback@ActiveState.com[0m
+[0;32m    virtualbox-iso:     http://bugs.activestate.com/ActivePython/[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Thank you for using ActivePython.[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Python 2.7.14[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-cni-plugin.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:51:03 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of CNI Plugin in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-cni-plugin.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_CNI_PLUGIN_VERSION: 0.7.4[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (CNI Plugin)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:51:18 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/84575398/db955880-e365-11e8-9389-afa6de2fb463?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190310T085105Z&X-Amz-Expires=300&X-Amz-Signature=1fe8b72cdb706e2911467f99ddcb4da068c5b2d119d10fd42bdb19b3c3171299&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Dcni-plugins-amd64-v0.7.4.tgz&response-content-type=application%2Foctet-stream [17108774/17108774] -> "/deployment-files/cni-plugins/cni-plugins-v0.7.4.tgz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-peervpn.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:51:18 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of PeerVPN in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-peervpn.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_PEERVPN_VERSION: 0-044[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (PeerVPN)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:51:24 URL:https://peervpn.net/files/peervpn-0-044-linux-x86.tar.gz [701822/701822] -> "/deployment-files/peervpn/peervpn-v0-044.tar.gz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-rkt.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:51:24 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Rkt in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-rkt.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_RKT_VERSION: 1.30.0[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Rkt)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:52:54 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/26509369/281744f4-415c-11e8-92f1-53e7394960b8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190310T085125Z&X-Amz-Expires=300&X-Amz-Signature=e8cd2bfcebf64e8e10caf1983e62f7572ed2009dd222896579ad25d264df38dd&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Drkt-v1.30.0.tar.gz&response-content-type=application%2Foctet-stream [106761266/106761266] -> "/deployment-files/rkt/rkt-v1.30.0.tar.gz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (Rkt)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: CoreOS already has (Rkt) installed on your system.[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: --Execution path:[0m
+[0;32m    virtualbox-iso: /bin/rkt[0m
+[0;32m    virtualbox-iso: --Version:[0m
+[0;32m    virtualbox-iso: rkt Version: 1.30.0[0m
+[0;32m    virtualbox-iso: appc Version: 0.8.11[0m
+[0;32m    virtualbox-iso: Go Version: go1.9.7[0m
+[0;32m    virtualbox-iso: Go OS/Arch: linux/amd64[0m
+[0;32m    virtualbox-iso: Features: -TPM +SDJOURNAL[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-docker.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:52:55 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Docker in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-docker.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DOCKER_VERSION: 18.06.1[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Docker)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:53:10 URL:https://download.docker.com/linux/static/stable/x86_64/docker-18.06.1-ce.tgz [43831680/43831680] -> "/deployment-files/docker/docker-v18.06.1-ce.tgz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (Docker)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: CoreOS already has (Docker) installed on your system.[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: --Execution path:[0m
+[0;32m    virtualbox-iso: /bin/docker[0m
+[0;32m    virtualbox-iso: --Version:[0m
+[0;32m    virtualbox-iso: Client:[0m
+[0;32m    virtualbox-iso:  Version:           18.06.1-ce[0m
+[0;32m    virtualbox-iso:  API version:       1.38[0m
+[0;32m    virtualbox-iso:  Go version:        go1.10.8[0m
+[0;32m    virtualbox-iso:  Git commit:        e68fc7a[0m
+[0;32m    virtualbox-iso:  Built:             Tue Aug 21 17:16:31 2018[0m
+[0;32m    virtualbox-iso:  OS/Arch:           linux/amd64[0m
+[0;32m    virtualbox-iso:  Experimental:      false[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Server:[0m
+[0;32m    virtualbox-iso:  Engine:[0m
+[0;32m    virtualbox-iso:   Version:          18.06.1-ce[0m
+[0;32m    virtualbox-iso:   API version:      1.38 (minimum version 1.12)[0m
+[0;32m    virtualbox-iso:   Go version:       go1.10.8[0m
+[0;32m    virtualbox-iso:   Git commit:       e68fc7a[0m
+[0;32m    virtualbox-iso:   Built:            Tue Aug 21 17:16:31 2018[0m
+[0;32m    virtualbox-iso:   OS/Arch:          linux/amd64[0m
+[0;32m    virtualbox-iso:   Experimental:     false[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-docker-compose.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:53:11 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Docker Compose in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-docker-compose.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DOCKER_COMPOSE_VERSION: 1.23.2[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Docker Compose)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:53:29 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/15045751/67742200-f31f-11e8-947e-bd56efcd8886?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190310T085312Z&X-Amz-Expires=300&X-Amz-Signature=9640f688f7b29356db7df59d47a037a7ee6440faeb5bd09d9788471b126abce2&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Ddocker-compose-Linux-x86_64&response-content-type=application%2Foctet-stream [11748168/11748168] -> "/deployment-files/docker-compose/docker-compose-v1.23.2" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (Docker Compose)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: --run pip upgrade...[0m
+[0;32m    virtualbox-iso: The directory '/home/packer/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    virtualbox-iso: The directory '/home/packer/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    virtualbox-iso: Collecting pip[0m
+[0;32m    virtualbox-iso:   Downloading https://files.pythonhosted.org/packages/d8/f3/413bab4ff08e1fc4828dfc59996d721917df8e8583ea85385d51125dceff/pip-19.0.3-py2.py3-none-any.whl (1.4MB)[0m
+[0;32m    virtualbox-iso: Installing collected packages: pip[0m
+[0;32m    virtualbox-iso:   Found existing installation: pip 9.0.1[0m
+[0;32m    virtualbox-iso:     Uninstalling pip-9.0.1:[0m
+[0;32m    virtualbox-iso:       Successfully uninstalled pip-9.0.1[0m
+[0;32m    virtualbox-iso: Successfully installed pip-19.0.3[0m
+[0;32m    virtualbox-iso: --run pip uninstall docker-py...[0m
+[0;32m    virtualbox-iso: DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.[0m
+[0;32m    virtualbox-iso: The directory '/home/packer/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    virtualbox-iso: Uninstalling docker-py-1.10.6:[0m
+[0;32m    virtualbox-iso:   Successfully uninstalled docker-py-1.10.6[0m
+[0;32m    virtualbox-iso: --run pip install docker...[0m
+[0;32m    virtualbox-iso: DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.[0m
+[0;32m    virtualbox-iso: The directory '/home/packer/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    virtualbox-iso: The directory '/home/packer/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    virtualbox-iso: Collecting docker[0m
+[0;32m    virtualbox-iso:   Downloading https://files.pythonhosted.org/packages/7e/3c/b610f22b170b0f8fe4d8f78974878e116562389f666f99e6549567eb9d87/docker-3.7.0-py2.py3-none-any.whl (133kB)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: backports.ssl-match-hostname>=3.5; python_version < "3.5" in /opt/python/lib/python2.7/site-packages (from docker) (3.5.0.1)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: ipaddress>=1.0.16; python_version < "3.3" in /opt/python/lib/python2.7/site-packages (from docker) (1.0.18)[0m
+[0;32m    virtualbox-iso: Collecting docker-pycreds>=0.4.0 (from docker)[0m
+[0;32m    virtualbox-iso:   Downloading https://files.pythonhosted.org/packages/f5/e8/f6bd1eee09314e7e6dee49cbe2c5e22314ccdb38db16c9fc72d2fa80d054/docker_pycreds-0.4.0-py2.py3-none-any.whl[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: requests!=2.18.0,>=2.14.2 in /opt/python/lib/python2.7/site-packages (from docker) (2.18.4)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: six>=1.4.0 in /opt/python/lib/python2.7/site-packages (from docker) (1.11.0)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: websocket-client>=0.32.0 in /opt/python/lib/python2.7/site-packages (from docker) (0.44.0)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: idna<2.7,>=2.5 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (2.6)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: urllib3<1.23,>=1.21.1 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (1.22)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: certifi>=2017.4.17 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (2017.11.5)[0m
+[0;32m    virtualbox-iso: Requirement already satisfied: chardet<3.1.0,>=3.0.2 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (3.0.4)[0m
+[0;32m    virtualbox-iso: Installing collected packages: docker-pycreds, docker[0m
+[0;32m    virtualbox-iso:   Found existing installation: docker-pycreds 0.2.1[0m
+[0;32m    virtualbox-iso:     Uninstalling docker-pycreds-0.2.1:[0m
+[0;32m    virtualbox-iso:       Successfully uninstalled docker-pycreds-0.2.1[0m
+[0;32m    virtualbox-iso: Successfully installed docker-3.7.0 docker-pycreds-0.4.0[0m
+[0;32m    virtualbox-iso: --Execution path:[0m
+[0;32m    virtualbox-iso: /opt/bin/docker-compose[0m
+[0;32m    virtualbox-iso: --Version:[0m
+[0;32m    virtualbox-iso: docker-compose version 1.23.2, build 1110ad01[0m
+[0;32m    virtualbox-iso: docker-py version: 3.6.0[0m
+[0;32m    virtualbox-iso: CPython version: 3.6.7[0m
+[0;32m    virtualbox-iso: OpenSSL version: OpenSSL 1.1.0f  25 May 2017[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-etcd.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:53:41 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Etcd in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-etcd.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_ETCD_VERSION: 3.3.9[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Etcd)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:54:34 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/11225014/7c787e4c-8f2b-11e8-8a29-4db755239b18?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190310T085342Z&X-Amz-Expires=300&X-Amz-Signature=016262f5b1bfac242575b17339ef0b30ab2f1f11bcf201e7b33d0e93202141d2&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Detcd-v3.3.9-linux-amd64.tar.gz&response-content-type=application%2Foctet-stream [11254519/11254519] -> "/deployment-files/etcd/etcd-v3.3.9.tar.gz" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (Etcd)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: However, it will be installed in the future as a Container(Rkt).[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting downloading of the image(etcd:v3.3.9) to be used in the (Rkt).[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Downloading ACI:  0 B/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  16.4 KB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  503 KB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.58 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  2.84 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.39 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  5.87 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.29 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.74 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  10.1 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.5 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.5 MB/14.6 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.6 MB/14.6 MB[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: sha512-cc7d9ec040ab154f43de8cd2306df7ee[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-flannel.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:54:52 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Flannel in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-flannel.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_FLANNEL_VERSION: 0.10.0[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Flannel)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:55:22 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/21704134/493a9cd8-002c-11e8-9b1c-2e948a34e5bc?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190310T085453Z&X-Amz-Expires=300&X-Amz-Signature=b194c0296ae9eba2b5393d5c8471e3a433941689ad97f9b8564d996041b64846&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Dflanneld-amd64&response-content-type=application%2Foctet-stream [36327752/36327752] -> "/deployment-files/flannel/flanneld-v0.10.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the installation of (Flannel)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: However, it will be installed in the future as a Container(Rkt).[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting downloading of the image(Flannel:v0.10.0) to be used in the (Rkt).[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: Downloading ACI:  0 B/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  16.4 KB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  451 KB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  799 KB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.01 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.23 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.46 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.69 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  1.93 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  2.17 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  2.38 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  2.63 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  2.87 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  3.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  3.34 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  3.55 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  3.76 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  3.98 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.21 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.37 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.54 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.77 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  4.96 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  5.19 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  5.43 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  5.64 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  5.87 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.04 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.21 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.39 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.56 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.72 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  6.89 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.08 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.26 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.43 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.61 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.78 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  7.97 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.15 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.28 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.35 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.44 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.51 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.6 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.69 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.77 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.86 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  8.95 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.07 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.21 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.36 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.54 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.69 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  9.9 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  10.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  10.3 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  10.5 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  10.8 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.4 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.5 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.6 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.7 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.8 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  11.9 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.2 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.3 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.4 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.6 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.7 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  12.9 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.3 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.4 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.6 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.7 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  13.9 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.3 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.5 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.6 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  14.8 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  15 MB/15.1 MB[0m
+[0;32m    virtualbox-iso: Downloading ACI:  15.1 MB/15.1 MB[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: sha512-ae54f761b972b504ce6068341425c639[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-kubernetes.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 08:56:55 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting the Configurations of Kubernetes in Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-kubernetes.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_KUBERNETES_VERSION: 1.13.0[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Start download (Kubernetes)![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: kubectl...[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:57:14 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl [39214560/39214560] -> "/deployment-files/kubernetes/kubectl-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: kubelet...[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:58:01 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubelet [112953368/112953368] -> "/deployment-files/kubernetes/kubelet-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: kube-proxy...[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:58:26 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-proxy [34804064/34804064] -> "/deployment-files/kubernetes/kube-proxy-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: kube-scheduler...[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:58:47 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-scheduler [37263616/37263616] -> "/deployment-files/kubernetes/kube-scheduler-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: kube-apiserver...[0m
+[0;32m    virtualbox-iso: 2019-03-10 08:59:58 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-apiserver [138570976/138570976] -> "/deployment-files/kubernetes/kube-apiserver-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[0;32m    virtualbox-iso: kube-controller-manager...[0m
+[0;32m    virtualbox-iso: 2019-03-10 09:00:51 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-controller-manager [103856032/103856032] -> "/deployment-files/kubernetes/kube-controller-manager-v1.13.0" [1][0m
+[0;32m    virtualbox-iso: Download completed![0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-security.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 09:00:51 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting to provide (Basic Security) configuration on the Operating System...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-security.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[1;32m==> virtualbox-iso: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-finalize.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: Run: Sun Mar 10 09:00:53 UTC 2019...[0m
+[0;32m    virtualbox-iso: ### PACKER: Starting configurations and adjustments final of the Image...[0m
+[0;32m    virtualbox-iso: ### PACKER: --SHELl:[0m
+[0;32m    virtualbox-iso: ###           |-- config-finalize.sh[0m
+[0;32m    virtualbox-iso: ### PACKER: --VARS:[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    virtualbox-iso: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: Starting the Configuration final of the Image![0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --WARNING: Remove the machine id, path: '/etc/machine-id'.[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: ### PACKER: --INFO: List all the contents of the (deployment files).[0m
+[0;32m    virtualbox-iso: *********************************************************[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files:[0m
+[0;32m    virtualbox-iso: active-python[0m
+[0;32m    virtualbox-iso: cni-plugins[0m
+[0;32m    virtualbox-iso: docker[0m
+[0;32m    virtualbox-iso: docker-compose[0m
+[0;32m    virtualbox-iso: etcd[0m
+[0;32m    virtualbox-iso: flannel[0m
+[0;32m    virtualbox-iso: kubernetes[0m
+[0;32m    virtualbox-iso: peervpn[0m
+[0;32m    virtualbox-iso: rkt[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/active-python:[0m
+[0;32m    virtualbox-iso: active-python-v2.7.14.tar.gz[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/cni-plugins:[0m
+[0;32m    virtualbox-iso: cni-plugins-v0.7.4.tgz[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/docker:[0m
+[0;32m    virtualbox-iso: docker-v18.06.1-ce.tgz[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/docker-compose:[0m
+[0;32m    virtualbox-iso: docker-compose-v1.23.2[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/etcd:[0m
+[0;32m    virtualbox-iso: etcd-v3.3.9.tar.gz[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/flannel:[0m
+[0;32m    virtualbox-iso: flanneld-v0.10.0[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/kubernetes:[0m
+[0;32m    virtualbox-iso: kube-apiserver-v1.13.0[0m
+[0;32m    virtualbox-iso: kube-controller-manager-v1.13.0[0m
+[0;32m    virtualbox-iso: kube-proxy-v1.13.0[0m
+[0;32m    virtualbox-iso: kube-scheduler-v1.13.0[0m
+[0;32m    virtualbox-iso: kubectl-v1.13.0[0m
+[0;32m    virtualbox-iso: kubelet-v1.13.0[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/peervpn:[0m
+[0;32m    virtualbox-iso: peervpn-v0-044.tar.gz[0m
+[0;32m    virtualbox-iso:[0m
+[0;32m    virtualbox-iso: /deployment-files/rkt:[0m
+[0;32m    virtualbox-iso: rkt-v1.30.0.tar.gz[0m
+[1;32m==> virtualbox-iso: Gracefully halting virtual machine...[0m
+[1;32m==> virtualbox-iso: Preparing to export machine...[0m
+[0;32m    virtualbox-iso: Deleting forwarded port mapping for the communicator (SSH, WinRM, etc) (host port 2493)[0m
+[1;32m==> virtualbox-iso: Exporting virtual machine...[0m
+[0;32m    virtualbox-iso: Executing: export vm-1552207162-packer --output /mnt/sda2/git-repositories/public/coreos-packer/builds/development/packer-vm-cache/vm-1552207162-packer.ovf[0m
+[1;32m==> virtualbox-iso: Deregistering and deleting VM...[0m
+[1;32m==> virtualbox-iso: Running post-processor: vagrant[0m
+[1;32m==> virtualbox-iso (vagrant): Creating Vagrant box for 'virtualbox' provider[0m
+[0;32m    virtualbox-iso (vagrant): Copying from artifact: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/packer-vm-cache/vm-1552207162-packer-disk001.vmdk[0m
+[0;32m    virtualbox-iso (vagrant): Copying from artifact: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/packer-vm-cache/vm-1552207162-packer.ovf[0m
+[0;32m    virtualbox-iso (vagrant): Renaming the OVF to box.ovf...[0m
+[0;32m    virtualbox-iso (vagrant): Compressing: Vagrantfile[0m
+[0;32m    virtualbox-iso (vagrant): Compressing: box.ovf[0m
+[0;32m    virtualbox-iso (vagrant): Compressing: metadata.json[0m
+[0;32m    virtualbox-iso (vagrant): Compressing: vm-1552207162-packer-disk001.vmdk[0m
+[1;32mBuild 'virtualbox-iso' finished.[0m
+
+==> Builds finished. The artifacts of successful builds are:
+--> virtualbox-iso: 'virtualbox' provider box: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/image-coreos-vagrant.box
+Complete build!
+make: Leaving directory '/mnt/sda2/git-repositories/public/coreos-packer'

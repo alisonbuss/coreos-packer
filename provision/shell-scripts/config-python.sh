@@ -32,7 +32,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of Python in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-python.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -50,7 +50,9 @@ function StartScript {
 
         local path="${VAR_DEPLOYMENT_DIR}/active-python";
         local url="https://downloads.activestate.com/ActivePython/releases/2.7.14.2717/ActivePython-2.7.14.2717-linux-x86_64-glibc-2.12-404899.tar.gz";
-        wget -O "${path}/active-python-v2.7.14.tar.gz" "${url}";
+        # Create directories and download binaries...
+        mkdir -p "${path}";
+        wget -O "${path}/active-python-v2.7.14.tar.gz" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
     # @descr: Active Python installation function.
@@ -63,6 +65,7 @@ function StartScript {
         mkdir -p "/opt/python";
         
         # Extracting support files: 'active-python.tar.gz'.
+        echo "Unpacking package: active-python-v2.7.14.tar.gz..."
         tar -zxf "${VAR_DEPLOYMENT_DIR}/active-python/active-python-v2.7.14.tar.gz" -C /opt;
 
         # Starting installation for '/opt/python/'...

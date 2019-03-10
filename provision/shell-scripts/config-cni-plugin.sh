@@ -34,7 +34,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of CNI Plugin in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-cni-plugin.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -48,7 +48,9 @@ function StartScript {
 
         local path="${VAR_DEPLOYMENT_DIR}/cni-plugins";
         local url="https://github.com/containernetworking/plugins/releases/download/v${VAR_CNI_PLUGIN_VERSION}/cni-plugins-amd64-v${VAR_CNI_PLUGIN_VERSION}.tgz";
-        wget -O "${path}/cni-plugins-v${VAR_CNI_PLUGIN_VERSION}.tgz" "${url}";
+        # Create directories and download binaries...
+        mkdir -p "${path}";
+        wget -O "${path}/cni-plugins-v${VAR_CNI_PLUGIN_VERSION}.tgz" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
     # Starting print of information.

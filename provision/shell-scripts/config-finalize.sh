@@ -29,7 +29,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting configurations and adjustments final of the Image...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-finalize.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n\n' "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -54,7 +54,7 @@ function StartScript {
 
         printf '%b\n'   "### PACKER: --INFO: List all the contents of the (deployment files).";
         printf '%b\n\n' "*********************************************************";
-        ls -R "${VAR_DEPLOYMENT_DIR}";
+        sleep 3s && ls -R "${VAR_DEPLOYMENT_DIR}";
     
     }
 

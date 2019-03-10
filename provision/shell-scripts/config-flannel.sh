@@ -30,7 +30,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of Flannel in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-flannel.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -44,7 +44,9 @@ function StartScript {
 
         local path="${VAR_DEPLOYMENT_DIR}/flannel";
         local url="https://github.com/coreos/flannel/releases/download/v${VAR_FLANNEL_VERSION}/flanneld-amd64";
-        wget -O "${path}/flanneld-v${VAR_FLANNEL_VERSION}" "${url}";
+        # Create directories and download binaries...
+        mkdir -p "${path}";
+        wget -O "${path}/flanneld-v${VAR_FLANNEL_VERSION}" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
     # @descr: Flannel installation function.

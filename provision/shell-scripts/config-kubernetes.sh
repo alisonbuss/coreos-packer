@@ -32,7 +32,8 @@ function download() {
     # Create directory for the binaries of the Downloads.
     mkdir -p "${path}";
     # Starting downloading.
-    wget -O "${path}/${file}" "${url}";
+    #wget -q --show-progress -O "${path}/${file}" "${url}";
+    wget -O "${path}/${file}" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
 }
 
 # @descr: Main function of the script, it runs automatically on the script call.
@@ -43,7 +44,7 @@ function StartScript {
         printf '%b\n'   "### PACKER: Run: $(date)...";
         printf '%b\n'   "### PACKER: Starting the Configurations of Kubernetes in Operating System...";
         printf '%b\n'   "### PACKER: --SHELl:";
-        printf '%b\n'   "###           |-- ${0}";
+        printf '%b\n'   "###           |-- config-kubernetes.sh";
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n'   "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
@@ -55,16 +56,16 @@ function StartScript {
         printf '%b\n'   "### PACKER: --INFO: Start download (Kubernetes)!";
         printf '%b\n\n' "*********************************************************";
 
-        local path="${VAR_DEPLOYMENT_DIR}/kubernetes/bin-release-v${VAR_KUBERNETES_VERSION}";
+        local path="${VAR_DEPLOYMENT_DIR}/kubernetes";
         local url="https://storage.googleapis.com/kubernetes-release/release/v${VAR_KUBERNETES_VERSION}/bin/linux/amd64";
 
         # Starting downloading of Kubernetes.
-        download "kubectl"                 "${path}" "${url}/kubectl";
-        download "kubelet"                 "${path}" "${url}/kubelet";
-        download "kube-proxy"              "${path}" "${url}/kube-proxy";
-        download "kube-scheduler"          "${path}" "${url}/kube-scheduler";
-        download "kube-apiserver"          "${path}" "${url}/kube-apiserver";
-        download "kube-controller-manager" "${path}" "${url}/kube-controller-manager";
+        echo "kubectl..." && download "kubectl-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kubectl";
+        echo "kubelet..." && download "kubelet-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kubelet";
+        echo "kube-proxy..." && download "kube-proxy-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kube-proxy";
+        echo "kube-scheduler..." && download "kube-scheduler-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kube-scheduler";
+        echo "kube-apiserver..." && download "kube-apiserver-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kube-apiserver";
+        echo "kube-controller-manager..." && download "kube-controller-manager-v${VAR_KUBERNETES_VERSION}" "${path}" "${url}/kube-controller-manager";
     }
 
     # Starting print of information.

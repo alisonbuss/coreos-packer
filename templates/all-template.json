@@ -1,12 +1,22 @@
 {
-    "_comment": "Missing the implementation for this platform!!!",
+    "_comment": "Missing the implementation of all platforms!!!",
 
-    "description": "CoreOS image for a AWS platform.",
+    "description": "CoreOS image for all platform.",
 
-    "builders": [{
-        "type": "amazon-ebs"
-
-    }],
+    "builders": [
+        {
+            "type": "amazon-ebs"
+        },
+        {
+            "type": "googlecompute"
+        },
+        {
+            "type": "digitalocean"
+        },
+        {
+            "type": "virtualbox-iso"
+        }
+    ],
 
     "provisioners": [{
         "type": "shell",

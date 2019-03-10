@@ -1,5 +1,9 @@
 {
-    "_comment": "Missing the definition of the variables of this platform!!!"
+    "_comment": "Missing the definition of the variables of this platform!!!",
 
-
+    "digitalocean_img_id": "coreos-stable",
+    
+    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
+    "digitalocean_user_data_path": "/files/coreos-ignitions",
+    "digitalocean_user_data_file": "deployment-digitalocean.json"
 }

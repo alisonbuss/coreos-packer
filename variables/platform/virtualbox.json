@@ -1,4 +1,16 @@
 {
+    "virtualbox_img_name": "coreos",
+    "virtualbox_img_release": "stable",
+    "virtualbox_img_version": "1688.5.3",
+
+    "virtualbox_img_iso_url": "http://stable.release.core-os.net/amd64-usr/1688.5.3/coreos_production_iso_image.iso",
+    "virtualbox_img_iso_checksum_type": "SHA512",
+    "virtualbox_img_iso_checksum": "101ac6700bdb876fdc7b7588ac633f0654e4537a2ea69da80ead1dac9af7ad72838df7e7142c351966027dbedd0835137de6784767652dfe83e4f588f58ead79",
+
+    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
+    "virtualbox_user_data_path": "/files/coreos-ignitions",
+    "virtualbox_user_data_file": "deployment-vagrant-virtualbox.json",
+
     "virtualbox_cpus": "1",
     "virtualbox_memory": "512",
     "virtualbox_disk_size": "20000",
