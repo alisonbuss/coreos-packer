@@ -3,6 +3,6 @@
     "virtualbox_memory":"2048",
     "virtualbox_disk_size":"33666",
     
-    "virtualbox_user_data_path": "/builds/development/coreos-ignitions",
-    "virtualbox_user_data_file": "deployment-vagrant-virtualbox.json"
+    "virtualbox_user_data_path": "builds/development/container-linux-config-compiled",
+    "virtualbox_user_data_file": "ignition-vagrant-virtualbox.json"
 }

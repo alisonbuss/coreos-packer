@@ -437,6 +437,13 @@ Resultado semelhante abaixo:
 
 ### Referências:
 
+
+    "_comment": "Missing the implementation for this platform!!!",
+    "_font01": "https://medium.com/the-andela-way/building-custom-machine-images-with-packer-a21c6d932bf6",
+    "_font02": "https://cloud.google.com/video-intelligence/docs/common/auth",
+    "_font02": "https://cloud.google.com/compute/docs/machine-types?hl=pt-br",
+
+
 * Packer - Official Site, Packer Documentation. ***Welcome to the Packer documentation!*** <br/>
   Acessado: *Sei lá da pesti, foi em 2017 por ai...* <br/>
   Disponível: *[https://www.packer.io/docs/index.html](https://www.packer.io/docs/index.html)*

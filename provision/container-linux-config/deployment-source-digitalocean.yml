@@ -1,0 +1,117 @@
+
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Ignition for creating SSH access keys and user access 
+#         settings, updating the operating system.
+# @fonts: https://coreos.com/os/docs/latest/clc-examples.html
+#         https://coreos.com/os/docs/latest/provisioning.html
+#         https://coreos.com/os/docs/latest/migrating-to-clcs.html
+#         https://coreos.com/os/docs/latest/adding-users.html
+#         https://coreos.com/os/docs/latest/update-strategies.html
+#         https://coreos.com/os/docs/latest/customizing-sshd.html
+#         https://coreos.com/os/docs/latest/using-environment-variables-in-systemd-units.html#system-wide-environment-variables
+#         https://coreos.com/os/docs/latest/other-settings.html#adding-custom-messages-to-motd
+#         https://ruletheweb.co.uk/figlet/
+#-------------------------------------------------------------#
+
+passwd:
+  users:
+    - name: "core"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+
+    - name: "packer"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+        
+    - name: "vagrant"
+      # Output Data:(Last Algorithm: crypt3-md5)-(pass: vagrant).
+      password_hash: "$1$iK1XY6BH$s504GuI.QIZYBqMRDMwFr1"
+      # Vagrant insecure public key.
+      ssh_authorized_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      home_dir: "/home/vagrant"
+      no_create_home: false
+      groups:
+        - "sudo"
+        - "docker"
+      shell: "/bin/bash"
+
+# WARNING: When you change the RELEASE of CoreOS, you should also change thes
+# files "./variables/operational-system/coreos.json" for {..."os_release":"stable"...}
+update:
+  group: "stable"
+
+locksmith:
+  reboot_strategy: "etcd-lock"
+  window_start: "Sun 0:33"
+  window_length: "3h"
+
+storage:
+  files:
+    - path: "/etc/ssh/sshd_config"
+      filesystem: "root"
+      mode: 0600
+      contents:
+        inline: |
+          # Apply to users: (core, packer, vagrant).
+          AllowUsers core packer vagrant
+          AuthenticationMethods publickey
+          UseDNS no
+          PermitRootLogin no
+          PasswordAuthentication no
+          ChallengeResponseAuthentication no
+          Subsystem sftp internal-sftp
+
+    - path: "/etc/sudoers.d/packer"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "packer ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/sudoers.d/vagrant"
+      filesystem: "root"
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+      contents:
+        inline: "vagrant ALL=(ALL) NOPASSWD: ALL"
+
+    - path: "/etc/profile.d/motd.sh"
+      filesystem: "root"
+      mode: 0644
+      contents:
+        inline: |
+          #!/bin/bash
+          #FONT: http://www.systeen.com/2016/05/07/bash-script-monitor-cpu-memory-disk-usage-linux/
+          CPU=$(top -bn1 | grep load | awk '{printf "%.2f%%\t\t\n", $(NF-2)}');
+          MEMORY=$(free -m | awk 'NR==2{printf "%.2f%%\t\t", $3*100/$2 }');
+          DISK=$(df -h | awk '$NF=="/"{printf "%s\t\t", $5}');
+          echo -e -n "\e[32m\e[1m";
+          cat <<'EOF'
+          ---Origin Project: 'https://github.com/alisonbuss/coreos-packer/'
+               _   _      _ _        __        __         _     _   _      
+              | | |D| ___|E|V| ___   \O\      /P/__  _ __|S| __| | | |     
+              | |_| |/ _ \ | |/ _ \   \ \ /\ / / _ \| '__| |/ _` | | |     
+              |  _  |  __/ | | (_) |   \ V  V / (_) | |  | | (_| | |_|     
+              |_| |_|\___|_|_|\___/     \_/\_/ \___/|_|  |_|\__,_| (_)     
+                                                                           
+          ................................Image generated by Packer.io.....
+          EOF
+          echo -e "";
+          echo "Report the use of system resources:";
+          echo -e -n "\033[1;36m";
+          echo "--CPU: ${CPU} --MEMORY: ${MEMORY} --DISK: ${DISK}";
+          echo -e -n "\e[32m\e[1m";
+          echo -e "Disk Usages: \033[1;36m";
+          df -h | grep 'Filesystem\|/dev/sda*';
+          echo -e "\033[00m";
+          echo -e -n "This image contains installed: \e[93m\e[1m"; /opt/bin/python --version;
+          echo -e "\033[00m";

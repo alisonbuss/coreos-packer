@@ -1,10 +1,11 @@
 {
-    "_comment": "Missing the definition of the variables of this platform!!!",
+    "google_project_id": "my-project-test-1548071812152",
+    "google_source_image": "coreos-stable-2023-5-0-v20190312",
+    "google_source_image_family": "coreos-stable",
+    "google_zone": "us-central1-a",
+    "google_region": "us-central1",
+    "google_machine_type": "n1-standard-1",
 
-    "google_img_id": "coreos-stable",
-    "google_img_name": "coreos-stable-1688.5.3",
-    
-    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
-    "google_user_data_path": "/files/coreos-ignitions",
-    "google_user_data_file": "deployment-gce.json"
+    "google_image_name": "packer-coreos-stable",
+    "google_image_description": "Custom image of CoreOS for an infrastructure of Kubernetes"
 }

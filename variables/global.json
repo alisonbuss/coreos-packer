@@ -1,5 +1,5 @@
 {
-    "global_working_directory": ".",
+    "global_working_directory": "./",
     "global_build_directory": "./builds",
 
     "global_image_deployment_directory": "/deployment-files",

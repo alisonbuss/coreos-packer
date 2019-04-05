@@ -11,7 +11,8 @@
 #     https://dzone.com/articles/upgrading-kubernetes-on-bare-metal-coreos-cluster-1
 #     https://coreos.com/rkt/docs/latest/signing-and-verification-guide.html#download-and-verify-an-aci
 #     https://github.com/coreos/flannel/issues/554
-#     https://coreos.com/flannel/docs/latest/flannel-config.html  
+#     https://coreos.com/flannel/docs/latest/flannel-config.html
+#     https://www.ostechnix.com/find-size-directory-linux/
 #-------------------------------------------------------------#
 
 # @descr: Variable Local: Directory of deployment files. 
@@ -54,8 +55,9 @@ function StartScript {
 
         printf '%b\n'   "### PACKER: --INFO: List all the contents of the (deployment files).";
         printf '%b\n\n' "*********************************************************";
-        sleep 3s && ls -R "${VAR_DEPLOYMENT_DIR}";
-    
+        du -ah "${VAR_DEPLOYMENT_DIR}/";
+        du -ch "${VAR_DEPLOYMENT_DIR}/" | grep total;
+        echo "In 33 seconds the system will finish..." && sleep 33s;
     }
 
     # Starting print of information.

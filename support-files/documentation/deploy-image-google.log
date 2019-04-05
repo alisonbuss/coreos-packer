@@ -1,0 +1,475 @@
+make: Entering directory '/mnt/sda2/git-repositories/public/coreos-packer'
+The default values to be used by this Makefile:
+
+    --> MAKECMDGOALS: '$ make plan validate build'
+
+    --> ENVIRONMENT: development
+    --> PLATFORM: google
+    --> WORKING_DIRECTORY: /mnt/sda2/git-repositories/public/coreos-packer
+    --> BUILD_DIRECTORY: /mnt/sda2/git-repositories/public/coreos-packer/builds/development
+
+    --> PACKER_TEMPLATE_FILE: google-template.json
+    --> PACKER_TEMPLATES_PATH: /mnt/sda2/git-repositories/public/coreos-packer/templates
+    --> PACKER_VARIABLES_PATH: /mnt/sda2/git-repositories/public/coreos-packer/variables
+
+    --> IGNITION_SOURCE_FILE: /mnt/sda2/git-repositories/public/coreos-packer/environments/development/container-linux-config/deployment-source.yml
+    --> IGNITION_COMPILATION_PATH: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/coreos-ignitions
+    --> IGNITION_PLATFORMS: vagrant-virtualbox digitalocean ec2 gce
+    --> IGNITION_TRANSPILER_URL: https://github.com/coreos/container-linux-config-transpiler/releases/download
+    --> IGNITION_TRANSPILER_VERSION: 0.9.0
+
+    --> VAGRANT_BOX_NAME: local/image/coreos-vagrant-v1
+    --> VAGRANT_BOX_FILE: /mnt/sda2/git-repositories/public/coreos-packer/builds/development/image-coreos-vagrant.box
+
+Starting the validation of the template Packer...
+--template file: /mnt/sda2/git-repositories/public/coreos-packer/templates/google-template.json
+packer inspect "`pwd`/templates/google-template.json";
+Description:
+
+CoreOS image for a Google platform.
+
+Variables:
+
+  <No variables>
+
+Builders:
+
+  googlecompute
+
+Provisioners:
+
+  shell
+  file
+  shell
+
+Note: If your build names contain user variables or template
+functions such as 'timestamp', these are processed at build time,
+and therefore only show in their raw form here.
+packer validate -var-file="`pwd`/variables/global.json" \
+                -var-file="`pwd`/variables/credential/aws.json" \
+                -var-file="`pwd`/variables/credential/google.json" \
+                -var-file="`pwd`/variables/credential/vagrant.json" \
+                -var-file="`pwd`/variables/credential/digitalocean.json" \
+                -var-file="`pwd`/variables/platform/aws.json" \
+                -var-file="`pwd`/variables/platform/google.json" \
+                -var-file="`pwd`/variables/platform/virtualbox.json" \
+                -var-file="`pwd`/variables/platform/digitalocean.json" \
+                -var-file="`pwd`/environments/development/custom-variables/custom.json" \
+                -var="global_working_directory=`pwd`" \
+                -var="global_build_directory=`pwd`/builds/development" \
+                "`pwd`/templates/google-template.json";
+Template validated successfully.
+Complete validate!
+Starting the BUILD of the template Packer...
+--template file: /mnt/sda2/git-repositories/public/coreos-packer/templates/google-template.json
+packer build -parallel="true" \
+                 -var-file="`pwd`/variables/global.json" \
+             -var-file="`pwd`/variables/credential/aws.json" \
+             -var-file="`pwd`/variables/credential/google.json" \
+             -var-file="`pwd`/variables/credential/vagrant.json" \
+             -var-file="`pwd`/variables/credential/digitalocean.json" \
+             -var-file="`pwd`/variables/platform/aws.json" \
+             -var-file="`pwd`/variables/platform/google.json" \
+             -var-file="`pwd`/variables/platform/virtualbox.json" \
+             -var-file="`pwd`/variables/platform/digitalocean.json" \
+             -var-file="`pwd`/environments/development/custom-variables/custom.json" \
+             -var="global_working_directory=`pwd`" \
+             -var="global_build_directory=`pwd`/builds/development" \
+                 "`pwd`/templates/google-template.json";
+[1;32mgooglecompute output will be in this color.[0m
+
+[1;32m==> googlecompute: Checking image does not exist...[0m
+[1;32m==> googlecompute: Creating temporary SSH key for instance...[0m
+[1;32m==> googlecompute: Using image: coreos-stable-2023-5-0-v20190312[0m
+[1;32m==> googlecompute: Creating instance...[0m
+[0;32m    googlecompute: Loading zone: us-central1-a[0m
+[0;32m    googlecompute: Loading machine type: n1-standard-1[0m
+[0;32m    googlecompute: Requesting instance creation...[0m
+[0;32m    googlecompute: Waiting for creation operation to complete...[0m
+[0;32m    googlecompute: Instance has been created![0m
+[1;32m==> googlecompute: Waiting for the instance to become running...[0m
+[0;32m    googlecompute: IP: 35.222.157.251[0m
+[1;32m==> googlecompute: Waiting for SSH to become available...[0m
+[1;32m==> googlecompute: Connected to SSH![0m
+[1;32m==> googlecompute: Provisioning with shell script: /tmp/packer-shell907727705[0m
+[1;32m==> googlecompute: Uploading /mnt/sda2/git-repositories/public/coreos-packer/provision/ssl-certificates/deploy_public_key.pub => /deployment-files/ssl-certificates/deploy_public_key.pub[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-system.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:42:07 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations and optimization of the Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-system.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    googlecompute: *********************************************************[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-security.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:42:10 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting to provide (Basic Security) configuration on the Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-security.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: Configuration not implemented![0m
+[0;32m    googlecompute: *********************************************************[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-access-user.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:42:13 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the configuration of an admin user for deploying...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-access-user.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the creation of the deployment user![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute: Listing system users:[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-python.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:42:17 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Python in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-python.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_PYTHON_VERSION: 2.7.14[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Active Python)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: The download of Active Python is the fixed version(2.7.14), it is difficult to standardize the URL of this crap.[0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:42:44 URL:https://downloads.activestate.com/ActivePython/releases/2.7.14.2717/ActivePython-2.7.14.2717-linux-x86_64-glibc-2.12-404899.tar.gz [399844152/399844152] -> "/deployment-files/active-python/active-python-v2.7.14.tar.gz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the installation of (ActivePython)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: Unpacking package: active-python-v2.7.14.tar.gz...[0m
+[0;32m    googlecompute: Installing ActivePython to '/opt/python'...[0m
+[0;32m    googlecompute: Relocating dir-dependent files...[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ActivePython has been successfully installed to:[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute:     /opt/python[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: You can add the following to your .bashrc (or equivalent)[0m
+[0;32m    googlecompute: to put ActivePython on your PATH:[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute:     export PATH=/opt/python/bin:$PATH[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: The documentation is available here:[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute:     /opt/python/doc/python2.7/index.html[0m
+[0;32m    googlecompute:     web: http://docs.activestate.com/activepython/2.7[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: Please send us any feedback you might have or log bugs here:[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute:     activepython-feedback@ActiveState.com[0m
+[0;32m    googlecompute:     http://bugs.activestate.com/ActivePython/[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: Thank you for using ActivePython.[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: Python 2.7.14[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-cni-plugin.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:43:47 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of CNI Plugin in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-cni-plugin.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_CNI_PLUGIN_VERSION: 0.7.4[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (CNI Plugin)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:43:47 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/84575398/db955880-e365-11e8-9389-afa6de2fb463?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190325T014347Z&X-Amz-Expires=300&X-Amz-Signature=62c17798cb1c8313b9442fc957e6e9cd543807e901bb10ef748997b99bda53c5&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Dcni-plugins-amd64-v0.7.4.tgz&response-content-type=application%2Foctet-stream [17108774/17108774] -> "/deployment-files/cni-plugins/cni-plugins-v0.7.4.tgz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-peervpn.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:43:51 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of PeerVPN in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-peervpn.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_PEERVPN_VERSION: 0-044[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (PeerVPN)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:43:53 URL:https://peervpn.net/files/peervpn-0-044-linux-x86.tar.gz [701822/701822] -> "/deployment-files/peervpn/peervpn-v0-044.tar.gz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-rkt.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:43:55 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Rkt in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-rkt.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_RKT_VERSION: 1.30.0[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Rkt)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:43:58 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/26509369/281744f4-415c-11e8-92f1-53e7394960b8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190325T014356Z&X-Amz-Expires=300&X-Amz-Signature=e1ee9d5aa90ec9fc312d0a534a152ac39b9772b3f093e2224ba8211d8b9befa4&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Drkt-v1.30.0.tar.gz&response-content-type=application%2Foctet-stream [106761266/106761266] -> "/deployment-files/rkt/rkt-v1.30.0.tar.gz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the installation of (Rkt)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: CoreOS already has (Rkt) installed on your system.[0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: --Execution path:[0m
+[0;32m    googlecompute: /bin/rkt[0m
+[0;32m    googlecompute: --Version:[0m
+[0;32m    googlecompute: rkt Version: 1.30.0[0m
+[0;32m    googlecompute: appc Version: 0.8.11[0m
+[0;32m    googlecompute: Go Version: go1.9.7[0m
+[0;32m    googlecompute: Go OS/Arch: linux/amd64[0m
+[0;32m    googlecompute: Features: -TPM +SDJOURNAL[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-docker.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:01 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Docker in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-docker.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_DOCKER_VERSION: 18.06.1[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Docker)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:44:02 URL:https://download.docker.com/linux/static/stable/x86_64/docker-18.06.1-ce.tgz [43831680/43831680] -> "/deployment-files/docker/docker-v18.06.1-ce.tgz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the installation of (Docker)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: CoreOS already has (Docker) installed on your system.[0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: --Execution path:[0m
+[0;32m    googlecompute: /bin/docker[0m
+[0;32m    googlecompute: --Version:[0m
+[0;32m    googlecompute: Client:[0m
+[0;32m    googlecompute:  Version:           18.06.1-ce[0m
+[0;32m    googlecompute:  API version:       1.38[0m
+[0;32m    googlecompute:  Go version:        go1.10.8[0m
+[0;32m    googlecompute:  Git commit:        e68fc7a[0m
+[0;32m    googlecompute:  Built:             Tue Aug 21 17:16:31 2018[0m
+[0;32m    googlecompute:  OS/Arch:           linux/amd64[0m
+[0;32m    googlecompute:  Experimental:      false[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: Server:[0m
+[0;32m    googlecompute:  Engine:[0m
+[0;32m    googlecompute:   Version:          18.06.1-ce[0m
+[0;32m    googlecompute:   API version:      1.38 (minimum version 1.12)[0m
+[0;32m    googlecompute:   Go version:       go1.10.8[0m
+[0;32m    googlecompute:   Git commit:       e68fc7a[0m
+[0;32m    googlecompute:   Built:            Tue Aug 21 17:16:31 2018[0m
+[0;32m    googlecompute:   OS/Arch:          linux/amd64[0m
+[0;32m    googlecompute:   Experimental:     false[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-docker-compose.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:10 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Docker Compose in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-docker-compose.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_DOCKER_COMPOSE_VERSION: 1.23.2[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Docker Compose)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:44:11 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/15045751/67742200-f31f-11e8-947e-bd56efcd8886?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190325T014411Z&X-Amz-Expires=300&X-Amz-Signature=b821aa55e0241143910f4c194018241acdd1fb891eb604f22ba159edd1d62fa7&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Ddocker-compose-Linux-x86_64&response-content-type=application%2Foctet-stream [11748168/11748168] -> "/deployment-files/docker-compose/docker-compose-v1.23.2" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the installation of (Docker Compose)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: --run pip upgrade...[0m
+[0;32m    googlecompute: The directory '/home/core/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    googlecompute: The directory '/home/core/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    googlecompute: Collecting pip[0m
+[0;32m    googlecompute:   Downloading https://files.pythonhosted.org/packages/d8/f3/413bab4ff08e1fc4828dfc59996d721917df8e8583ea85385d51125dceff/pip-19.0.3-py2.py3-none-any.whl (1.4MB)[0m
+[0;32m    googlecompute: Installing collected packages: pip[0m
+[0;32m    googlecompute:   Found existing installation: pip 9.0.1[0m
+[0;32m    googlecompute:     Uninstalling pip-9.0.1:[0m
+[0;32m    googlecompute:       Successfully uninstalled pip-9.0.1[0m
+[0;32m    googlecompute: Successfully installed pip-19.0.3[0m
+[0;32m    googlecompute: --run pip uninstall docker-py...[0m
+[0;32m    googlecompute: DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.[0m
+[0;32m    googlecompute: The directory '/home/core/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    googlecompute: Uninstalling docker-py-1.10.6:[0m
+[0;32m    googlecompute:   Successfully uninstalled docker-py-1.10.6[0m
+[0;32m    googlecompute: --run pip install docker...[0m
+[0;32m    googlecompute: DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.[0m
+[0;32m    googlecompute: The directory '/home/core/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    googlecompute: The directory '/home/core/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[0;32m    googlecompute: Collecting docker[0m
+[0;32m    googlecompute:   Downloading https://files.pythonhosted.org/packages/fb/d8/8242b8fb3bd3000274fbf5ac1a06cdba8a5ccbcf4e2a8c05f0ab37999fd8/docker-3.7.1-py2.py3-none-any.whl (134kB)[0m
+[0;32m    googlecompute: Requirement already satisfied: backports.ssl-match-hostname>=3.5; python_version < "3.5" in /opt/python/lib/python2.7/site-packages (from docker) (3.5.0.1)[0m
+[0;32m    googlecompute: Requirement already satisfied: ipaddress>=1.0.16; python_version < "3.3" in /opt/python/lib/python2.7/site-packages (from docker) (1.0.18)[0m
+[0;32m    googlecompute: Collecting docker-pycreds>=0.4.0 (from docker)[0m
+[0;32m    googlecompute:   Downloading https://files.pythonhosted.org/packages/f5/e8/f6bd1eee09314e7e6dee49cbe2c5e22314ccdb38db16c9fc72d2fa80d054/docker_pycreds-0.4.0-py2.py3-none-any.whl[0m
+[0;32m    googlecompute: Requirement already satisfied: requests!=2.18.0,>=2.14.2 in /opt/python/lib/python2.7/site-packages (from docker) (2.18.4)[0m
+[0;32m    googlecompute: Requirement already satisfied: six>=1.4.0 in /opt/python/lib/python2.7/site-packages (from docker) (1.11.0)[0m
+[0;32m    googlecompute: Requirement already satisfied: websocket-client>=0.32.0 in /opt/python/lib/python2.7/site-packages (from docker) (0.44.0)[0m
+[0;32m    googlecompute: Requirement already satisfied: idna<2.7,>=2.5 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (2.6)[0m
+[0;32m    googlecompute: Requirement already satisfied: urllib3<1.23,>=1.21.1 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (1.22)[0m
+[0;32m    googlecompute: Requirement already satisfied: certifi>=2017.4.17 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (2017.11.5)[0m
+[0;32m    googlecompute: Requirement already satisfied: chardet<3.1.0,>=3.0.2 in /opt/python/lib/python2.7/site-packages (from requests!=2.18.0,>=2.14.2->docker) (3.0.4)[0m
+[0;32m    googlecompute: Installing collected packages: docker-pycreds, docker[0m
+[0;32m    googlecompute:   Found existing installation: docker-pycreds 0.2.1[0m
+[0;32m    googlecompute:     Uninstalling docker-pycreds-0.2.1:[0m
+[0;32m    googlecompute:       Successfully uninstalled docker-pycreds-0.2.1[0m
+[0;32m    googlecompute: Successfully installed docker-3.7.1 docker-pycreds-0.4.0[0m
+[0;32m    googlecompute: --Execution path:[0m
+[0;32m    googlecompute: /opt/bin/docker-compose[0m
+[0;32m    googlecompute: --Version:[0m
+[0;32m    googlecompute: docker-compose version 1.23.2, build 1110ad01[0m
+[0;32m    googlecompute: docker-py version: 3.6.0[0m
+[0;32m    googlecompute: CPython version: 3.6.7[0m
+[0;32m    googlecompute: OpenSSL version: OpenSSL 1.1.0f  25 May 2017[0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-etcd.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:21 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Etcd in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-etcd.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_ETCD_VERSION: 3.3.9[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Etcd)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:44:22 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/11225014/7c787e4c-8f2b-11e8-8a29-4db755239b18?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190325T014421Z&X-Amz-Expires=300&X-Amz-Signature=0c3a59859e660dd2ad05b7d0685c0ed02a622c41fe3b6603980894510208333d&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Detcd-v3.3.9-linux-amd64.tar.gz&response-content-type=application%2Foctet-stream [11254519/11254519] -> "/deployment-files/etcd/etcd-v3.3.9.tar.gz" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-flannel.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:24 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Flannel in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-flannel.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_FLANNEL_VERSION: 0.10.0[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Flannel)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: 2019-03-25 01:44:25 URL:https://github-production-release-asset-2e65be.s3.amazonaws.com/21704134/493a9cd8-002c-11e8-9b1c-2e948a34e5bc?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190325%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190325T014425Z&X-Amz-Expires=300&X-Amz-Signature=8842ee46f01302f9fad55ef8737dcce99c027193acc6549c583c5fbbc67cf86a&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3Dflanneld-amd64&response-content-type=application%2Foctet-stream [36327752/36327752] -> "/deployment-files/flannel/flanneld-v0.10.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-kubernetes.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:28 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting the Configurations of Kubernetes in Operating System...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-kubernetes.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute: ###           +-- VAR_KUBERNETES_VERSION: 1.13.0[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Start download (Kubernetes)![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: kubectl...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:29 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl [39214560/39214560] -> "/deployment-files/kubernetes/kubectl-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: kubelet...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:30 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubelet [112953368/112953368] -> "/deployment-files/kubernetes/kubelet-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: kube-proxy...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:30 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-proxy [34804064/34804064] -> "/deployment-files/kubernetes/kube-proxy-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: kube-scheduler...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:30 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-scheduler [37263616/37263616] -> "/deployment-files/kubernetes/kube-scheduler-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: kube-apiserver...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:33 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-apiserver [138570976/138570976] -> "/deployment-files/kubernetes/kube-apiserver-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[0;32m    googlecompute: kube-controller-manager...[0m
+[0;32m    googlecompute: 2019-03-25 01:44:34 URL:https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-controller-manager [103856032/103856032] -> "/deployment-files/kubernetes/kube-controller-manager-v1.13.0" [1][0m
+[0;32m    googlecompute: Download completed![0m
+[1;32m==> googlecompute: Provisioning with shell script: /mnt/sda2/git-repositories/public/coreos-packer/provision/shell-scripts/config-finalize.sh[0m
+[0;32m    googlecompute: ### PACKER: Run: Mon Mar 25 01:44:36 UTC 2019...[0m
+[0;32m    googlecompute: ### PACKER: Starting configurations and adjustments final of the Image...[0m
+[0;32m    googlecompute: ### PACKER: --SHELl:[0m
+[0;32m    googlecompute: ###           |-- config-finalize.sh[0m
+[0;32m    googlecompute: ### PACKER: --VARS:[0m
+[0;32m    googlecompute: ###           +-- VAR_DEPLOYMENT_DIR: /deployment-files[0m
+[0;32m    googlecompute: ###           +-- VAR_LOG_FILES_DIR: /var/log[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: Starting the Configuration final of the Image![0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --WARNING: Remove the machine id, path: '/etc/machine-id'.[0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: ### PACKER: --INFO: List all the contents of the (deployment files).[0m
+[0;32m    googlecompute: *********************************************************[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files:[0m
+[0;32m    googlecompute: active-python[0m
+[0;32m    googlecompute: cni-plugins[0m
+[0;32m    googlecompute: docker[0m
+[0;32m    googlecompute: docker-compose[0m
+[0;32m    googlecompute: etcd[0m
+[0;32m    googlecompute: flannel[0m
+[0;32m    googlecompute: kubernetes[0m
+[0;32m    googlecompute: peervpn[0m
+[0;32m    googlecompute: rkt[0m
+[0;32m    googlecompute: ssl-certificates[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/active-python:[0m
+[0;32m    googlecompute: active-python-v2.7.14.tar.gz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/cni-plugins:[0m
+[0;32m    googlecompute: cni-plugins-v0.7.4.tgz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/docker:[0m
+[0;32m    googlecompute: docker-v18.06.1-ce.tgz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/docker-compose:[0m
+[0;32m    googlecompute: docker-compose-v1.23.2[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/etcd:[0m
+[0;32m    googlecompute: etcd-v3.3.9.tar.gz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/flannel:[0m
+[0;32m    googlecompute: flanneld-v0.10.0[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/kubernetes:[0m
+[0;32m    googlecompute: kube-apiserver-v1.13.0[0m
+[0;32m    googlecompute: kube-controller-manager-v1.13.0[0m
+[0;32m    googlecompute: kube-proxy-v1.13.0[0m
+[0;32m    googlecompute: kube-scheduler-v1.13.0[0m
+[0;32m    googlecompute: kubectl-v1.13.0[0m
+[0;32m    googlecompute: kubelet-v1.13.0[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/peervpn:[0m
+[0;32m    googlecompute: peervpn-v0-044.tar.gz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/rkt:[0m
+[0;32m    googlecompute: rkt-v1.30.0.tar.gz[0m
+[0;32m    googlecompute:[0m
+[0;32m    googlecompute: /deployment-files/ssl-certificates:[0m
+[0;32m    googlecompute: deploy_public_key.pub[0m
+[1;32m==> googlecompute: Deleting instance...[0m
+[0;32m    googlecompute: Instance has been deleted![0m
+[1;32m==> googlecompute: Creating image...[0m
+[1;32m==> googlecompute: Deleting disk...[0m
+[0;32m    googlecompute: Disk has been deleted![0m
+[1;32mBuild 'googlecompute' finished.[0m
+
+==> Builds finished. The artifacts of successful builds are:
+--> googlecompute: A disk image was created: packer-coreos-stable
+Complete build!
+make: Leaving directory '/mnt/sda2/git-repositories/public/coreos-packer'

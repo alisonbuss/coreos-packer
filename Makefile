@@ -13,6 +13,13 @@
 #         https://www.packer.io/docs/templates/communicator.html
 #         https://www.packer.io/docs/builders/virtualbox-iso.html
 #
+#         https://medium.com/the-andela-way/building-custom-machine-images-with-packer-a21c6d932bf6
+#         https://read.acloud.guru/immutable-ami-with-packer-a71694529d60
+#         https://www.informaticsmatters.com/blog/2018/07/10/building-machine-images-with-packer.html
+#         http://blog.shippable.com/build-a-gcp-vm-image-using-packer
+#         https://blogs.oracle.com/developers/build-oracle-cloud-infrastructure-custom-images-with-packer-on-oracle-developer-cloud
+#         https://devopscube.com/packer-tutorial-for-beginners/
+#
 # @example:
 #
 #       $ make help;
@@ -32,20 +39,20 @@
 ENVIRONMENT                 ?= development
 
 # --Possible values: [aws, google, digitalocean, virtualbox, all].
-PLATFORM                    ?= all
+PLATFORM                    ?= virtualbox
 
 WORKING_DIRECTORY           ?= `pwd`
 BUILD_DIRECTORY             ?= $(WORKING_DIRECTORY)/builds/$(ENVIRONMENT)
+CRED_DIRECTORY              ?= $(WORKING_DIRECTORY)/support-files/credential-platform
 
 # DEFAULT VARIABLES - Packer!!!
-PACKER_TEMPLATE_FILE        ?= $(PLATFORM)-template.json
+PACKER_TEMPLATE_FILE        ?= platform-$(PLATFORM).json
 PACKER_TEMPLATES_PATH       ?= $(WORKING_DIRECTORY)/templates
 PACKER_VARIABLES_PATH       ?= $(WORKING_DIRECTORY)/variables
 
 # DEFAULT VARIABLES - Ignition For CoreOS
-IGNITION_SOURCE_FILE        ?= $(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/container-linux-config/deployment-source.yml
-IGNITION_COMPILATION_PATH   ?= $(BUILD_DIRECTORY)/coreos-ignitions
-IGNITION_PLATFORMS          ?= vagrant-virtualbox digitalocean ec2 gce
+IGNITION_SOURCE_FILE        ?= $(WORKING_DIRECTORY)/provision/container-linux-config/deployment-source-$(PLATFORM).yml
+IGNITION_COMPILATION_PATH   ?= $(BUILD_DIRECTORY)/container-linux-config-compiled
 IGNITION_TRANSPILER_URL     ?= https://github.com/coreos/container-linux-config-transpiler/releases/download
 IGNITION_TRANSPILER_VERSION ?= 0.9.0
 
@@ -71,7 +78,6 @@ plan:
 	@echo "";
 	@echo "    --> IGNITION_SOURCE_FILE: $(IGNITION_SOURCE_FILE)";
 	@echo "    --> IGNITION_COMPILATION_PATH: $(IGNITION_COMPILATION_PATH)";
-	@echo "    --> IGNITION_PLATFORMS: $(IGNITION_PLATFORMS)";
 	@echo "    --> IGNITION_TRANSPILER_URL: $(IGNITION_TRANSPILER_URL)";
 	@echo "    --> IGNITION_TRANSPILER_VERSION: $(IGNITION_TRANSPILER_VERSION)";
 	@echo "";
@@ -99,31 +105,72 @@ install-transpiler:
 
 compile: install-transpiler
 	@echo "Starting the compilation of the 'Container Linux Config' for IGNITION the of CoreOS...";
-	
-	# Creating directory for the creation of ignitions...
-	mkdir -p "$(IGNITION_COMPILATION_PATH)";
 
-	# Converting to (no-platform)
-	$(WORKING_DIRECTORY)/builds/ct \
-	    --in-file "$(IGNITION_SOURCE_FILE)" \
-	    --out-file "$(IGNITION_COMPILATION_PATH)/deployment.json" \
-	    --pretty;
-	
-	# Platform to target. Accepted values: [
-	#    azure digitalocean ec2 gce packet openstack-metadata vagrant-virtualbox cloudstack-configdrive
-	# ]
-	for platform in $(IGNITION_PLATFORMS); do \
-		$(WORKING_DIRECTORY)/builds/ct \
-		    --platform="$${platform}" \
-		    --in-file="$(IGNITION_SOURCE_FILE)" \
-		    --out-file="$(IGNITION_COMPILATION_PATH)/deployment-$${platform}.json" \
-		    --pretty; \
-	done
+	# Creating directory for the creation of ignitions...
+	@mkdir -p "$(IGNITION_COMPILATION_PATH)";
+
+	# --Possible values: [aws, google, digitalocean, virtualbox, all].
+	@case $(PLATFORM) in \
+		aws) { \
+			$(WORKING_DIRECTORY)/builds/ct \
+				--platform="ec2" \
+				--in-file "$(IGNITION_SOURCE_FILE)" \
+	    		--out-file "$(IGNITION_COMPILATION_PATH)/ignition-ec2.json" \
+				--pretty; \
+		};; \
+		google) { \
+			$(WORKING_DIRECTORY)/builds/ct \
+				--platform="gce" \
+				--in-file "$(IGNITION_SOURCE_FILE)" \
+	    		--out-file "$(IGNITION_COMPILATION_PATH)/ignition-gce.json" \
+				--pretty; \
+		};; \
+		digitalocean) { \
+			$(WORKING_DIRECTORY)/builds/ct \
+				--platform="digitalocean" \
+				--in-file "$(IGNITION_SOURCE_FILE)" \
+	    		--out-file "$(IGNITION_COMPILATION_PATH)/ignition-digitalocean.json" \
+				--pretty; \
+		};; \
+		virtualbox) { \
+			$(WORKING_DIRECTORY)/builds/ct \
+				--platform="vagrant-virtualbox" \
+				--in-file "$(IGNITION_SOURCE_FILE)" \
+	    		--out-file "$(IGNITION_COMPILATION_PATH)/ignition-vagrant-virtualbox.json" \
+				--pretty; \
+		};; \
+		all) { \
+			for platform in vagrant-virtualbox digitalocean ec2 gce; do \
+				$(WORKING_DIRECTORY)/builds/ct \
+					--platform="$${platform}" \
+					--in-file="$(IGNITION_SOURCE_FILE)" \
+					--out-file="$(IGNITION_COMPILATION_PATH)/ignition-$${platform}.json" \
+					--pretty; \
+			done \
+		};; \
+	esac
 
 	@echo "Complete compilation!";
 
 
-validate:
+export-credentials:
+	@echo "Starting the creation of environment variables for platform access credentials...";
+	
+	# Amazon
+	@export PACKER_CRED_AWS_ACCESS_KEY=$$(sed -n 's/^ *aws_access_key_id *= *//p' $(CRED_DIRECTORY)/amazon/credential);
+	@export PACKER_CRED_AWS_SECRET_KEY=$$(sed -n 's/^ *aws_secret_access_key *= *//p' $(CRED_DIRECTORY)/amazon/credential);
+	
+	# Google Cloud
+	@export PACKER_CRED_GOOGLE_ACCOUNT_FILE="$(CRED_DIRECTORY)/google/credential.json";
+	
+	# DigitalOcean
+	@export PACKER_CRED_DIGITALOCEAN_TOKEN=$$(cat $(CRED_DIRECTORY)/digitalocean/credential);
+	
+	# VirtualBox
+	@export PACKER_CRED_VBOX_SSH_PRIVATE_KEY_FILE="$(CRED_DIRECTORY)/virtualbox/credential";
+
+
+validate: export-credentials
 	@echo "Starting the validation of the template Packer...";
 	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
@@ -146,7 +193,7 @@ validate:
 	@echo "Complete validate!";
 
 
-build:
+build: export-credentials
 	@echo "Starting the BUILD of the template Packer..."; 
 	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
@@ -179,15 +226,15 @@ clean:
 	@rm -rf $(BUILD_DIRECTORY); sleep 2s;
 
 	# List all box and status
-	vagrant box list;
-	vagrant global-status;
+	@vagrant box list;
+	@vagrant global-status;
 
 	# Starting the uninstallation of the Vagrant Box
 	-vagrant box remove --force "$(VAGRANT_BOX_NAME)";
 
 	# List all box and status
-	vagrant box list;
-	vagrant global-status;
+	@vagrant box list;
+	@vagrant global-status;
 	
 	@echo "cleaning completed!"; 
 
@@ -198,8 +245,8 @@ deploy-vagrant-box:
 	@echo "--box file: $(VAGRANT_BOX_FILE)"; 
 
 	# List all box and status
-	vagrant box list;
-	vagrant global-status;
+	@vagrant box list;
+	@vagrant global-status;
 
 	# Vagrant Box Installation
 	vagrant box add --force \
@@ -207,8 +254,8 @@ deploy-vagrant-box:
 	                --name="$(VAGRANT_BOX_NAME)" "$(VAGRANT_BOX_FILE)";
 
 	# List all box and status
-	vagrant box list;
-	vagrant global-status;
+	@vagrant box list;
+	@vagrant global-status;
 
 	@echo "Complete Vagrant Box installation!";  
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Configuration and installation of an Etcd service.
+# @descr: Configuration and downloading of an Etcd.
 # @param-global:
 #     PACKER_DEPLOYMENT_DIR='...'
 #     PACKER_LOG_FILES_DIR='...'
@@ -50,36 +50,11 @@ function StartScript {
         wget -O "${path}/etcd-v${VAR_ETCD_VERSION}.tar.gz" "${url}" -nv && echo "Download completed!" || echo "Download not completed!";
     }
 
-    # @descr: Etcd installation function.
-    __install_etcd() {
-        printf '%b\n'   "### PACKER: --INFO: Starting the installation of (Etcd)!";
-        printf '%b\n\n' "*********************************************************";
-
-        printf '%b\n'   "### PACKER: --WARNING: Configuration not implemented!";
-        printf '%b\n\n' "*********************************************************";
-
-        printf '%b\n'   "### PACKER: --WARNING: However, it will be installed in the future as a Container(Rkt).";
-        printf '%b\n\n' "*********************************************************";
-
-        # Download and verify an ACI Etcd3
-        # Using the fetch subcommand you can download and verify an ACI without immediately
-        # running a pod. This can be useful to precache ACIs on a large number of hosts:
-        # https://coreos.com/releases/#1632.3.0
-        # https://quay.io/repository/coreos/etcd?tab=tags
-        # https://coreos.com/rkt/docs/latest/signing-and-verification-guide.html#download-and-verify-an-aci
-        printf '%b\n'   "### PACKER: --INFO: Starting downloading of the image(etcd:v${VAR_ETCD_VERSION}) to be used in the (Rkt).";
-        printf '%b\n\n' "*********************************************************";
-        rkt fetch "quay.io/coreos/etcd:v${VAR_ETCD_VERSION}" --insecure-options=image;
-    }
-
     # Starting print of information.
     __print_debug;
 
     # Starting download of Etcd.
     __download_etcd;
-
-    # Starting installation of Etcd.
-    __install_etcd;
 
 }
 

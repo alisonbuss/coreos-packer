@@ -1,0 +1,97 @@
+{
+    "description": "CoreOS image for a Google platform.",
+
+    "builders": [{
+        "type": "googlecompute",
+
+        "project_id": "{{user `google_project_id`}}",
+        "source_image": "{{user `google_source_image`}}",
+        "source_image_family": "{{user `google_source_image_family`}}",
+        "zone": "{{user `google_zone`}}",
+        "region": "{{user `google_region`}}",
+        "machine_type": "{{user `google_machine_type`}}",
+        "instance_name": "packer-instance-{{isotime \"2006-01-02\"}}",
+
+        "communicator": "ssh",
+        "ssh_username": "core",
+        "account_file": "{{user `global_working_directory`}}/{{user `google_cred_account_path`}}/{{user `google_cred_account_file`}}",
+
+        "labels": {
+            "created": "{{isotime \"2006-01-02\"}}",
+            "packer": true,
+            "os": "{{user `google_source_image_family`}}"
+        },
+        "image_name": "{{user `google_image_name`}}",
+        "image_family": "{{user `google_source_image_family`}}",
+        "image_description": "{{user `google_image_description`}}",
+        "image_labels": {
+            "created": "{{isotime \"2006-01-02\"}}",
+            "packer": true,
+            "os": "{{user `google_source_image_family`}}",
+            "release": "latest"
+        },
+        "metadata": { 
+            "enable-oslogin": "false" 
+        }
+    }],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "description": "Create certificate folder in the deployment directory",
+            "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "inline": [
+                "mkdir -p  {{user `global_image_deployment_directory`}}/ssl-certificates",
+                "chmod 777 {{user `global_image_deployment_directory`}}/ssl-certificates"
+            ]
+        },
+        {
+            "type": "file",
+            "description": "Copy local certificates to the image",
+            "source": "{{user `global_working_directory`}}/provision/ssl-certificates/deploy_public_key.pub",
+            "destination": "{{user `global_image_deployment_directory`}}/ssl-certificates/deploy_public_key.pub"
+        },
+        {
+            "type": "shell",
+            "description": "Passing the environment variables and running the scripts in an orderly manner",
+            "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "environment_vars" : [
+                "PACKER_LOG_FILES_DIR={{user `global_image_log_directory`}}",
+                "PACKER_DEPLOYMENT_DIR={{user `global_image_deployment_directory`}}",
+                
+                "PACKER_PYTHON_VERSION={{user `global_python_version`}}",
+                "PACKER_CNI_PLUGIN_VERSION={{user `global_cni_plugin_version`}}",
+                "PACKER_PEERVPN_VERSION={{user `global_peervpn_version`}}",
+                "PACKER_RKT_VERSION={{user `global_rkt_version`}}",
+                "PACKER_DOCKER_VERSION={{user `global_docker_version`}}",
+                "PACKER_DOCKER_COMPOSE_VERSION={{user `global_docker_compose_version`}}",
+                "PACKER_ETCD_VERSION={{user `global_etcd_version`}}",
+                "PACKER_FLANNEL_VERSION={{user `global_flannel_version`}}",
+                "PACKER_KUBERNETES_VERSION={{user `global_kubernetes_version`}}"
+            ],
+            "scripts": [
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-security.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-access-user.sh",
+
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-python.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-cni-plugin.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-peervpn.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-rkt.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-docker.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-docker-compose.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-etcd.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-flannel.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-kubernetes.sh",
+
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-finalize.sh"
+            ]
+        }
+    ],
+
+    "post-processors": [
+
+    ],
+
+    "min_packer_version": "1.1.3"
+}
