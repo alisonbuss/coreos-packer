@@ -39,7 +39,7 @@ passwd:
       shell: "/bin/bash"
 
 # WARNING: When you change the RELEASE of CoreOS, you should also change thes
-# files "./variables/operational-system/coreos.json" for {..."os_release":"stable"...}
+# files "./variables/platform/google.json" for {..."google_source_image_family":"coreos-stable"...}
 update:
   group: "stable"
 

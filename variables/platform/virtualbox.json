@@ -12,7 +12,7 @@
     "virtualbox_disk_size": "20000",
     "virtualbox_ssh_username": "core",
 
-    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
+    "_comment_user_data": "WARNING: When you change the [virtualbox_img_release] of CoreOS, you should also change the file './provision/container-linux-config/deployment-source-...yml' for 'stable' line 44.",
     "virtualbox_user_data_path": "support-files/coreos-ignition-file",
     "virtualbox_user_data_file": "ignition-vagrant-virtualbox.json",
 

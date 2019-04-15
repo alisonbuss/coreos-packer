@@ -3,7 +3,7 @@
 
     "aws_img_id": "ami-44a03c22",
 
-    "_comment_user_data": "WARNING: When you change the [os_release] of CoreOS, you should also change the file './environments/.../container-linux-config/deployment.yml' for 'stable' line 44.",
-    "aws_user_data_path": "/files/coreos-ignitions",
-    "aws_user_data_file": "deployment-ec2.json"
+    "_comment_user_data": "WARNING: When you change the [...release] of CoreOS, you should also change the file './provision/container-linux-config/deployment-source-...yml' for 'stable' line 44.",
+    "aws_user_data_path": "support-files/coreos-ignition-file",
+    "aws_user_data_file": "ignition-ec2.json"
 }
