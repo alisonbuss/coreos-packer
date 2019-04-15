@@ -29,7 +29,7 @@
 #       $ make ENVIRONMENT="development" \ 
 #              PLATFORM="virtualbox" \ 
 #              plan clear compile validate build \ 
-#              deploy-vagrant-box publish-vagrant-box \ 
+#              deploy-vagrant-box \ 
 #              2>&1 | tee "${PWD}/builds/deploy-development.log";
 #
 #-------------------------------------------------------------#
