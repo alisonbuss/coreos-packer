@@ -3,7 +3,7 @@
 
     "variables": {
         "google_cred_account_file": "{{env `PACKER_CRED_GOOGLE_ACCOUNT_FILE`}}",
-        "google_cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}",
+        "google_cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}"
     },
 
     "sensitive-variables": [
