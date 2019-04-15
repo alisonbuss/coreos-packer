@@ -1,9 +1,21 @@
 {
     "description": "CoreOS image for a VirtualBox platform.",
 
+    "variables": {
+        "virtualbox_cred_vagrant_ssh_private_key_file": "{{env `PACKER_CRED_VBOX_SSH_PRIVATE_KEY_FILE`}}",
+        "virtualbox_cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}",
+        "virtualbox_cred_vagrant_cloud_token": "{{env `PACKER_CRED_VAGRANT_CLOUD_TOKEN`}}"
+    },
+
+    "sensitive-variables": [
+        "virtualbox_cred_vagrant_ssh_private_key_file",
+        "virtualbox_cred_deploy_ssh_public_key_file",
+        "virtualbox_cred_vagrant_cloud_token"
+    ],
+
     "builders": [{
         "type": "virtualbox-iso",
-            
+
         "vm_name": "vm-{{timestamp}}-packer",
         "iso_checksum": "{{user `virtualbox_img_iso_checksum`}}",
         "iso_checksum_type": "{{user `virtualbox_img_iso_checksum_type`}}",
@@ -17,11 +29,11 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `virtualbox_cpus`}}"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `virtualbox_memory`}}"]
         ],
-    
+
         "headless": "false",
         "guest_additions_mode": "disable",
         "output_directory": "{{user `global_build_directory`}}/packer-vm-cache",
-        
+
         "http_directory": "{{user `global_working_directory`}}",
         "boot_wait": "33s",
         "boot_command": [
@@ -31,15 +43,15 @@
             "cat {{user `virtualbox_user_data_file`}};<enter>",
             "coreos-install -d /dev/sda -C {{ user `virtualbox_img_release` }} -V {{ user `virtualbox_img_version` }} -i {{user `virtualbox_user_data_file`}};<enter>",
             "echo 'A small custom image, a huge leap for provisioning...';<enter>",
-            "echo '...The system will RESTART in 7 seconds......';<enter>",
+            "echo '--> The system will RESTART in 7 seconds...';<enter>",
             "sleep 7s;<enter>",
             "reboot;<enter>"
         ],
 
         "communicator": "ssh",
         "ssh_port": 22,
-        "ssh_username": "{{user `cred_vagrant_username`}}",
-        "ssh_private_key_file": "{{user `global_working_directory`}}/{{user `cred_vagrant_private_key_path`}}/{{user `cred_vagrant_private_key_file`}}",
+        "ssh_username": "{{user `virtualbox_ssh_username`}}",
+        "ssh_private_key_file": "{{user `virtualbox_cred_vagrant_ssh_private_key_file`}}",
         "ssh_timeout": "33m",
     
         "shutdown_command": "sudo -S shutdown -P now"
@@ -50,31 +62,34 @@
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
             "inline": [
-                "mkdir -p  {{user `global_image_deployment_directory`}}/ssl-certificates",
-                "chmod 777 {{user `global_image_deployment_directory`}}/ssl-certificates"
+                "mkdir -p  {{user `global_deploy_destination_ssh_path`}}",
+                "chmod 777 {{user `global_deploy_destination_ssh_path`}}"
             ]
         },
         {
             "type": "file",
-            "source": "{{user `global_working_directory`}}/provision/ssl-certificates/deploy_public_key.pub",
-            "destination": "{{user `global_image_deployment_directory`}}/ssl-certificates/deploy_public_key.pub"
+            "source": "{{user `virtualbox_cred_deploy_ssh_public_key_file`}}",
+            "destination": "{{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}"
         },
         {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
             "environment_vars" : [
-                "PACKER_LOG_FILES_DIR={{user `global_image_log_directory`}}",
-                "PACKER_DEPLOYMENT_DIR={{user `global_image_deployment_directory`}}",
+                "PACKER_ACCESS_USER={{user `global_deploy_user`}}",
+                "PACKER_ACCESS_USER_SSH={{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}",
                 
-                "PACKER_PYTHON_VERSION={{user `global_python_version`}}",
-                "PACKER_CNI_PLUGIN_VERSION={{user `global_cni_plugin_version`}}",
-                "PACKER_PEERVPN_VERSION={{user `global_peervpn_version`}}",
-                "PACKER_RKT_VERSION={{user `global_rkt_version`}}",
-                "PACKER_DOCKER_VERSION={{user `global_docker_version`}}",
-                "PACKER_DOCKER_COMPOSE_VERSION={{user `global_docker_compose_version`}}",
-                "PACKER_ETCD_VERSION={{user `global_etcd_version`}}",
-                "PACKER_FLANNEL_VERSION={{user `global_flannel_version`}}",
-                "PACKER_KUBERNETES_VERSION={{user `global_kubernetes_version`}}"
+                "PACKER_LOG_FILES_DIR={{user `global_image_log_path`}}",
+                "PACKER_DEPLOYMENT_DIR={{user `global_image_deployment_path`}}",
+
+                "PACKER_PYTHON_VERSION={{user `global_dep_python_version`}}",
+                "PACKER_CNI_PLUGIN_VERSION={{user `global_dep_cni_plugin_version`}}",
+                "PACKER_PEERVPN_VERSION={{user `global_dep_peervpn_version`}}",
+                "PACKER_RKT_VERSION={{user `global_dep_rkt_version`}}",
+                "PACKER_DOCKER_VERSION={{user `global_dep_docker_version`}}",
+                "PACKER_DOCKER_COMPOSE_VERSION={{user `global_dep_docker_compose_version`}}",
+                "PACKER_ETCD_VERSION={{user `global_dep_etcd_version`}}",
+                "PACKER_FLANNEL_VERSION={{user `global_dep_flannel_version`}}",
+                "PACKER_KUBERNETES_VERSION={{user `global_dep_kubernetes_version`}}"
             ],
             "scripts": [
                 "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
@@ -96,11 +111,21 @@
         }
     ],
 
-    "post-processors": [{
-        "type": "vagrant",
-        "compression_level": "6",
-        "output": "{{user `global_build_directory`}}/{{user `virtualbox_vagrant_box_file`}}"
-    }],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "compression_level": "6",
+            "output": "{{user `global_build_directory`}}/{{user `virtualbox_vagrant_box_file`}}"
+        },
+        {
+            "type": "vagrant-cloud",
+            "only": ["virtualbox-iso"],
+            "box_tag": "alisonbuss/coreos",
+            "access_token": "{{user `virtualbox_cred_vagrant_cloud_token`}}",
+            "version": "1.0.0",
+            "version_description": "description..."
+        }
+    ],
 
-    "min_packer_version": "1.1.3"
+    "min_packer_version": "1.3.5"
 }

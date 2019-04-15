@@ -2,16 +2,20 @@
     "global_working_directory": "./",
     "global_build_directory": "./builds",
 
-    "global_image_deployment_directory": "/deployment-files",
-    "global_image_log_directory": "/var/log",
+    "global_image_log_path": "/var/log",
+    "global_image_deployment_path": "/deployment-files",
 
-    "global_python_version": "2.7.14",
-    "global_cni_plugin_version": "0.7.4",
-    "global_peervpn_version": "0-044",
-    "global_rkt_version": "1.30.0",
-    "global_docker_version": "18.06.1",
-    "global_docker_compose_version": "1.23.2",
-    "global_etcd_version": "3.3.9",
-    "global_flannel_version": "0.10.0",
-    "global_kubernetes_version": "1.13.0"
+    "global_deploy_user": "deploy",
+    "global_deploy_ssh_file": "deploy_public_key.pub",
+    "global_deploy_destination_ssh_path": "/deployment-files/credential-ssh",
+
+    "global_dep_python_version": "2.7.14",
+    "global_dep_cni_plugin_version": "0.7.4",
+    "global_dep_peervpn_version": "0-044",
+    "global_dep_rkt_version": "1.30.0",
+    "global_dep_docker_version": "18.06.1",
+    "global_dep_docker_compose_version": "1.23.2",
+    "global_dep_etcd_version": "3.3.9",
+    "global_dep_flannel_version": "0.10.0",
+    "global_dep_kubernetes_version": "1.13.0"
 }

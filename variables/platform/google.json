@@ -6,6 +6,8 @@
     "google_region": "us-central1",
     "google_machine_type": "n1-standard-1",
 
+    "google_ssh_username": "core",
+
     "google_image_name": "packer-coreos-stable",
     "google_image_description": "Custom image of CoreOS for an infrastructure of Kubernetes"
 }

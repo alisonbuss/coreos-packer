@@ -35,15 +35,14 @@
 #-------------------------------------------------------------#
 
 # DEFAULT VARIABLES - Structural
-# --Possible values: [development, staging, production].
-ENVIRONMENT                 ?= development
-
 # --Possible values: [aws, google, digitalocean, virtualbox, all].
 PLATFORM                    ?= virtualbox
 
+# --Possible values: [development, staging, homologation, production].
+ENVIRONMENT                 ?= development
+
 WORKING_DIRECTORY           ?= `pwd`
 BUILD_DIRECTORY             ?= $(WORKING_DIRECTORY)/builds/$(ENVIRONMENT)
-CRED_DIRECTORY              ?= $(WORKING_DIRECTORY)/support-files/credential-platform
 
 # DEFAULT VARIABLES - Packer!!!
 PACKER_TEMPLATE_FILE        ?= platform-$(PLATFORM).json
@@ -57,8 +56,8 @@ IGNITION_TRANSPILER_URL     ?= https://github.com/coreos/container-linux-config-
 IGNITION_TRANSPILER_VERSION ?= 0.9.0
 
 # DEFAULT VARIABLES - Vagrant
-VAGRANT_BOX_NAME            ?= local/image/coreos-vagrant-v1
-VAGRANT_BOX_FILE            ?= $(BUILD_DIRECTORY)/image-coreos-vagrant.box
+VAGRANT_BOX_NAME            ?= vagrant/custom-coreos-v1
+VAGRANT_BOX_FILE            ?= $(BUILD_DIRECTORY)/vagrant-custom-coreos-v1.box
 
 
 plan: 
@@ -153,64 +152,39 @@ compile: install-transpiler
 	@echo "Complete compilation!";
 
 
-export-credentials:
-	@echo "Starting the creation of environment variables for platform access credentials...";
-	
-	# Amazon
-	@export PACKER_CRED_AWS_ACCESS_KEY=$$(sed -n 's/^ *aws_access_key_id *= *//p' $(CRED_DIRECTORY)/amazon/credential);
-	@export PACKER_CRED_AWS_SECRET_KEY=$$(sed -n 's/^ *aws_secret_access_key *= *//p' $(CRED_DIRECTORY)/amazon/credential);
-	
-	# Google Cloud
-	@export PACKER_CRED_GOOGLE_ACCOUNT_FILE="$(CRED_DIRECTORY)/google/credential.json";
-	
-	# DigitalOcean
-	@export PACKER_CRED_DIGITALOCEAN_TOKEN=$$(cat $(CRED_DIRECTORY)/digitalocean/credential);
-	
-	# VirtualBox
-	@export PACKER_CRED_VBOX_SSH_PRIVATE_KEY_FILE="$(CRED_DIRECTORY)/virtualbox/credential";
-
-
-validate: export-credentials
+validate:
 	@echo "Starting the validation of the template Packer...";
 	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	packer inspect "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
+	@packer inspect "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	packer validate -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/credential/aws.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/credential/google.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/credential/vagrant.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/credential/digitalocean.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
-	                -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
-	                -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
-	                -var="global_working_directory=$(WORKING_DIRECTORY)" \
-	                -var="global_build_directory=$(BUILD_DIRECTORY)" \
-	                "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
+	@packer validate -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
+	                 -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
+	                 -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
+	                 -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
+	                 -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
+	                 -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
+	                 -var="global_working_directory=$(WORKING_DIRECTORY)" \
+	                 -var="global_build_directory=$(BUILD_DIRECTORY)" \
+	                 "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
 	@echo "Complete validate!";
 
 
-build: export-credentials
+build:
 	@echo "Starting the BUILD of the template Packer..."; 
 	@echo "--template file: $(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
-	packer build -parallel="true" \
-                 -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/credential/aws.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/credential/google.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/credential/vagrant.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/credential/digitalocean.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
-	             -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
-	             -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
-	             -var="global_working_directory=$(WORKING_DIRECTORY)" \
-	             -var="global_build_directory=$(BUILD_DIRECTORY)" \
-                 "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
+	@packer build -parallel="true" \
+                  -var-file="$(PACKER_VARIABLES_PATH)/global.json" \
+	              -var-file="$(PACKER_VARIABLES_PATH)/platform/aws.json" \
+	              -var-file="$(PACKER_VARIABLES_PATH)/platform/google.json" \
+	              -var-file="$(PACKER_VARIABLES_PATH)/platform/virtualbox.json" \
+	              -var-file="$(PACKER_VARIABLES_PATH)/platform/digitalocean.json" \
+	              -var-file="$(WORKING_DIRECTORY)/environments/$(ENVIRONMENT)/custom-variables/custom.json" \
+	              -var="global_working_directory=$(WORKING_DIRECTORY)" \
+	              -var="global_build_directory=$(BUILD_DIRECTORY)" \
+                  "$(PACKER_TEMPLATES_PATH)/$(PACKER_TEMPLATE_FILE)";
 
 	@echo "Complete build!";
 
@@ -223,14 +197,14 @@ clean:
 	@echo "--affected directory: $(BUILD_DIRECTORY)";
 
 	# Removing generated files for Build
-	@rm -rf $(BUILD_DIRECTORY); sleep 2s;
+	@rm -rf $(BUILD_DIRECTORY)/$(ENVIRONMENT); sleep 2s;
 
 	# List all box and status
 	@vagrant box list;
 	@vagrant global-status;
 
 	# Starting the uninstallation of the Vagrant Box
-	-vagrant box remove --force "$(VAGRANT_BOX_NAME)";
+	@-vagrant box remove --force "$(VAGRANT_BOX_NAME)";
 
 	# List all box and status
 	@vagrant box list;
@@ -249,7 +223,7 @@ deploy-vagrant-box:
 	@vagrant global-status;
 
 	# Vagrant Box Installation
-	vagrant box add --force \
+	@vagrant box add --force \
 	                --provider="virtualbox" \
 	                --name="$(VAGRANT_BOX_NAME)" "$(VAGRANT_BOX_FILE)";
 
@@ -257,17 +231,7 @@ deploy-vagrant-box:
 	@vagrant box list;
 	@vagrant global-status;
 
-	@echo "Complete Vagrant Box installation!";  
-
-
-publish-vagrant-box: 
-	@echo "Starting the publish of the Vagrant Box on Vagrant Cloud generated by Packer..."; 
-	@echo "--box name: $(VAGRANT_BOX_NAME)"; 
-	@echo "--box file: $(VAGRANT_BOX_FILE)"; 
-
-	@echo "--WARNING: Configuration not implemented!!!...";
-
-	@echo "Complete Vagrant Box publish!";  
+	@echo "Complete Vagrant Box installation!"; 
 
 
 help:
@@ -286,7 +250,6 @@ help:
 	@echo '                              --> DEPENDENCY: plan, clean, compile, validate, build.'
 	@echo '     clean                  Starts the deletion of builds files from the Project.'
 	@echo '     deploy-vagrant-box     Starts the installation of the Vagrant Box generated by Packer.'
-	@echo '     publish-vagrant-box    Starts the publish of the Vagrant Box on Vagrant Cloud generated by Packer.'
 	@echo ' '
 	@echo '  View details:'
 	@echo '     plan    The default values to be used by this Makefile.'
@@ -296,9 +259,9 @@ help:
 	@echo ' '
 	@echo 'OPTIONS:'
 	@echo ' '
-	@echo '   ENVIRONMENT          Specifies the type of environment variable for the Packer deployment,'
-	@echo '                        the default is [development], possible values: [development, staging, production].'
 	@echo '   PLATFORM             Specifies the type of platform variable for the Packer deployment,'
 	@echo '                        the default is [virtualbox], possible values: [aws, google, digitalocean, virtualbox, all].'
+	@echo '   ENVIRONMENT          Specifies the type of environment variable for the Packer deployment,'
+	@echo '                        the default is [development], possible values: [development, staging, production].'
 	@echo '   WORKING_DIRECTORY    Specify the current working directory, the default is [`pwd`].'
 	@echo ' '

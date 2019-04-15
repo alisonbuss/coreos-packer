@@ -21,6 +21,12 @@ readonly VAR_DEPLOYMENT_DIR="${PACKER_DEPLOYMENT_DIR:-/deployment-files}";
 # @descr: Variable Local: Directory of log files.
 readonly VAR_LOG_FILES_DIR="${PACKER_LOG_FILES_DIR:-/var/log}";
 
+# @descr: Variable Local: New User System.
+readonly VAR_ACCESS_USER="${PACKER_ACCESS_USER:-deploy}";
+
+# @descr: Variable Local: Directory of SSH files.
+readonly VAR_ACCESS_USER_SSH="${PACKER_ACCESS_USER_SSH:-/deployment-files/credential-ssh/deploy_public_key.pub}";
+
 
 # @descr: Main function of the script, it runs automatically on the script call.
 function StartScript {
@@ -34,6 +40,8 @@ function StartScript {
         printf '%b\n'   "### PACKER: --VARS:";
         printf '%b\n'   "###           +-- VAR_DEPLOYMENT_DIR: ${VAR_DEPLOYMENT_DIR}";
         printf '%b\n\n' "###           +-- VAR_LOG_FILES_DIR: ${VAR_LOG_FILES_DIR}";
+        printf '%b\n'   "###           +-- VAR_ACCESS_USER: ${VAR_ACCESS_USER}";
+        printf '%b\n\n' "###           +-- VAR_ACCESS_USER_SSH: ${VAR_ACCESS_USER_SSH}";
     }
 
     # @descr: Creation of the deployment user.
@@ -41,16 +49,14 @@ function StartScript {
         printf '%b\n' "### PACKER: --INFO: Starting the creation of the deployment user!";
         printf '%b\n' "*********************************************************";
 
-        local username="deploy";
-        local password="lucifer";
+        local username="${VAR_ACCESS_USER}";
         local home_dir="/home/${username}";
-        local ssh_file="${VAR_DEPLOYMENT_DIR}/ssl-certificates/deploy_public_key.pub";
+        local ssh_file="${VAR_ACCESS_USER_SSH}";
 
         # userdel --remove "${username}";
 
         useradd --user-group --create-home "${username}" \
                              --home-dir    "${home_dir}" \
-                             --password    "${password}" \
                              --shell       "/bin/bash" \
                              --groups      "sudo";
 

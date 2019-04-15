@@ -3,49 +3,26 @@
 
     "description": "CoreOS image for a AWS platform.",
 
+    "variables": {
+
+    },
+
+    "sensitive-variables": [
+
+    ],
+
     "builders": [{
         "type": "amazon-ebs"
 
     }],
 
-    "provisioners": [{
-        "type": "shell",
-        "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-        "environment_vars" : [
-            "PACKER_PYTHON_VERSION='{{user `global_python_version`}}'",
-            "PACKER_CNI_PLUGIN_VERSION='{{user `global_cni_plugin_version`}}'",
-            "PACKER_PEERVPN_VERSION='{{user `global_peervpn_version`}}'",
-            "PACKER_RKT_VERSION='{{user `global_rkt_version`}}'",
-            "PACKER_DOCKER_VERSION='{{user `global_docker_version`}}'",
-            "PACKER_DOCKER_COMPOSE_VERSION='{{user `global_docker_compose_version`}}'",
-            "PACKER_ETCD_VERSION='{{user `global_etcd_version`}}'",
-            "PACKER_FLANNEL_VERSION='{{user `global_flannel_version`}}'",
-            "PACKER_KUBERNETES_VERSION='{{user `global_kubernetes_version`}}'",
+    "provisioners": [
 
-            "PACKER_DEPLOYMENT_DIR='{{user `global_image_deployment_directory`}}'",
-            "PACKER_LOG_FILES_DIR='{{user `global_image_log_directory`}}'"
-        ],
-        "scripts": [
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
+    ],
 
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-python.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-cni-plugin.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-peervpn.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-rkt.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-docker.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-docker-compose.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-etcd.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-flannel.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-kubernetes.sh",
+    "post-processors": [
 
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-security.sh",
-            "{{user `global_working_directory`}}/provision/shell-scripts/config-finalize.sh"
-        ]
-    }],
+    ],
 
-    "post-processors": [{
-
-    }],
-
-    "min_packer_version": "1.1.3"
+    "min_packer_version": "1.3.5"
 }
