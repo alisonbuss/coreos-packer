@@ -2,15 +2,15 @@
     "description": "CoreOS image for a VirtualBox platform.",
 
     "variables": {
-        "virtualbox_cred_vagrant_ssh_private_key_file": "{{env `PACKER_CRED_VBOX_SSH_PRIVATE_KEY_FILE`}}",
-        "virtualbox_cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}",
-        "virtualbox_cred_vagrant_cloud_token": "{{env `PACKER_CRED_VAGRANT_CLOUD_TOKEN`}}"
+        "cred_vagrant_ssh_private_key_file": "{{env `PACKER_CRED_VBOX_SSH_PRIVATE_KEY_FILE`}}",
+        "cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}",
+        "cred_vagrant_cloud_token": "{{env `PACKER_CRED_VAGRANT_CLOUD_TOKEN`}}"
     },
 
     "sensitive-variables": [
-        "virtualbox_cred_vagrant_ssh_private_key_file",
-        "virtualbox_cred_deploy_ssh_public_key_file",
-        "virtualbox_cred_vagrant_cloud_token"
+        "cred_vagrant_ssh_private_key_file",
+        "cred_deploy_ssh_public_key_file",
+        "cred_vagrant_cloud_token"
     ],
 
     "builders": [{
@@ -51,7 +51,7 @@
         "communicator": "ssh",
         "ssh_port": 22,
         "ssh_username": "{{user `virtualbox_ssh_username`}}",
-        "ssh_private_key_file": "{{user `virtualbox_cred_vagrant_ssh_private_key_file`}}",
+        "ssh_private_key_file": "{{user `cred_vagrant_ssh_private_key_file`}}",
         "ssh_timeout": "33m",
     
         "shutdown_command": "sudo -S shutdown -P now"
@@ -68,7 +68,7 @@
         },
         {
             "type": "file",
-            "source": "{{user `virtualbox_cred_deploy_ssh_public_key_file`}}",
+            "source": "{{user `cred_deploy_ssh_public_key_file`}}",
             "destination": "{{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}"
         },
         {
@@ -121,7 +121,7 @@
             "type": "vagrant-cloud",
             "only": ["virtualbox-iso"],
             "box_tag": "alisonbuss/coreos",
-            "access_token": "{{user `virtualbox_cred_vagrant_cloud_token`}}",
+            "access_token": "{{user `cred_vagrant_cloud_token`}}",
             "version": "1.0.0",
             "version_description": "description..."
         }

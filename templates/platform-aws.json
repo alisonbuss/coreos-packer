@@ -1,23 +1,111 @@
 {
-    "_comment": "Missing the implementation for this platform!!!",
-
     "description": "CoreOS image for a AWS platform.",
 
     "variables": {
-
+        "cred_aws_access_key": "{{env `PACKER_CRED_AWS_ACCESS_KEY`}}",
+        "cred_aws_secret_key": "{{env `PACKER_CRED_AWS_SECRET_KEY`}}",
+        "cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}"
     },
 
     "sensitive-variables": [
-
+        "cred_aws_access_key",
+        "cred_aws_secret_key",
+        "cred_deploy_ssh_public_key_file"
     ],
 
     "builders": [{
-        "type": "amazon-ebs"
+        "type": "amazon-ebs",
 
+        "ami_name": "{{user `aws_ami_name`}}",
+        "ami_description": "{{user `aws_ami_description`}}",
+        "ami_groups": "{{user `aws_ami_groups`}}",
+        "source_ami": "{{user `aws_ami_name`}}",
+        "instance_type": "{{user `aws_ami_name`}}", 
+        "region": "{{user `aws_ami_name`}}",
+        "run_tags": {
+            "OS_Version": "Ubuntu",
+            "Release": "Latest",
+            "Runner": "Packer",
+            "Timestamp": "{{timestamp}}"
+        },
+        "tags": {
+            "Description": "CentOS 7 image for Cloudurable Cassandra image",
+            "OS_Version": "Ubuntu",
+            "Release": "Latest",
+            "Runner": "EC2",
+            "Timestamp": "{{timestamp}}",
+            "Base_AMI_Name": "{{ .SourceAMIName }}"
+        },
+
+        "access_key": "{{user `cred_aws_access_key`}}",
+        "secret_key": "{{user `cred_aws_secret_key`}}",
+
+        "communicator": "ssh",
+        "ssh_username": "",
+        "ssh_timeout": "10m",
+
+        "launch_block_device_mappings": [{
+            "device_name": "/dev/sda1",
+            "volume_type": "gp2",
+            "volume_size": "10",
+            "delete_on_termination": true
+        }],
+
+        "user_data_file": ""
     }],
 
     "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "inline": [
+                "mkdir -p  {{user `global_deploy_destination_ssh_path`}}",
+                "chmod 777 {{user `global_deploy_destination_ssh_path`}}"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `cred_deploy_ssh_public_key_file`}}",
+            "destination": "{{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "environment_vars" : [
+                "PACKER_ACCESS_USER={{user `global_deploy_user`}}",
+                "PACKER_ACCESS_USER_SSH={{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}",
+                
+                "PACKER_LOG_FILES_DIR={{user `global_image_log_path`}}",
+                "PACKER_DEPLOYMENT_DIR={{user `global_image_deployment_path`}}",
 
+                "PACKER_PYTHON_VERSION={{user `global_dep_python_version`}}",
+                "PACKER_CNI_PLUGIN_VERSION={{user `global_dep_cni_plugin_version`}}",
+                "PACKER_PEERVPN_VERSION={{user `global_dep_peervpn_version`}}",
+                "PACKER_RKT_VERSION={{user `global_dep_rkt_version`}}",
+                "PACKER_DOCKER_VERSION={{user `global_dep_docker_version`}}",
+                "PACKER_DOCKER_COMPOSE_VERSION={{user `global_dep_docker_compose_version`}}",
+                "PACKER_ETCD_VERSION={{user `global_dep_etcd_version`}}",
+                "PACKER_FLANNEL_VERSION={{user `global_dep_flannel_version`}}",
+                "PACKER_KUBERNETES_VERSION={{user `global_dep_kubernetes_version`}}"
+            ],
+            "scripts": [
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-system.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-security.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-access-user.sh",
+
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-python.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-cni-plugin.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-peervpn.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-rkt.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-docker.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-docker-compose.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-etcd.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-flannel.sh",
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-kubernetes.sh",
+
+                "{{user `global_working_directory`}}/provision/shell-scripts/config-finalize.sh"
+            ]
+        }
     ],
 
     "post-processors": [

@@ -2,13 +2,13 @@
     "description": "CoreOS image for a Google platform.",
 
     "variables": {
-        "google_cred_account_file": "{{env `PACKER_CRED_GOOGLE_ACCOUNT_FILE`}}",
-        "google_cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}"
+        "cred_google_account_file": "{{env `PACKER_CRED_GOOGLE_ACCOUNT_FILE`}}",
+        "cred_deploy_ssh_public_key_file": "{{env `PACKER_CRED_DEPLOY_SSH_PUBLIC_KEY_FILE`}}"
     },
 
     "sensitive-variables": [
-        "google_cred_account_file",
-        "google_cred_deploy_ssh_public_key_file"
+        "cred_google_account_file",
+        "cred_deploy_ssh_public_key_file"
     ],
 
     "builders": [{
@@ -24,7 +24,7 @@
 
         "communicator": "ssh",
         "ssh_username": "{{user `google_ssh_username`}}",
-        "account_file": "{{user `google_cred_account_file`}}",
+        "account_file": "{{user `cred_google_account_file`}}",
 
         "labels": {
             "created": "{{isotime \"2006-01-02\"}}",
@@ -56,7 +56,7 @@
         },
         {
             "type": "file",
-            "source": "{{user `google_cred_deploy_ssh_public_key_file`}}",
+            "source": "{{user `cred_deploy_ssh_public_key_file`}}",
             "destination": "{{user `global_deploy_destination_ssh_path`}}/{{user `global_deploy_ssh_file`}}"
         },
         {

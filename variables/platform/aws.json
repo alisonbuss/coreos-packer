@@ -1,7 +1,10 @@
 {
-    "_comment": "Missing the definition of the variables of this platform!!!",
-
-    "aws_img_id": "ami-44a03c22",
+    "aws_ami_name": "ami-44a03c22",
+    "aws_ami_description": "",
+    "aws_source_ami": "",
+    "aws_instance_type": "", 
+    "aws_region": "",
+    "aws_ssh_username": "core",
 
     "_comment_user_data": "WARNING: When you change the [...release] of CoreOS, you should also change the file './provision/container-linux-config/deployment-source-...yml' for 'stable' line 44.",
     "aws_user_data_path": "support-files/coreos-ignition-file",

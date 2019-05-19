@@ -442,6 +442,17 @@ Resultado semelhante abaixo:
     "_font01": "https://medium.com/the-andela-way/building-custom-machine-images-with-packer-a21c6d932bf6",
     "_font02": "https://cloud.google.com/video-intelligence/docs/common/auth",
     "_font02": "https://cloud.google.com/compute/docs/machine-types?hl=pt-br",
+    https://medium.com/@sanudatta11/building-custom-ami-using-packer-io-5df55f32ebbb
+    http://blog.shippable.com/build-a-gcp-vm-image-using-packer
+    https://devopscube.com/packer-tutorial-for-beginners/
+    https://read.acloud.guru/immutable-ami-with-packer-a71694529d60
+    https://medium.com/google-cloud/kubernetes-a-story-about-custom-images-packer-and-sysdig-e18ed8d7f403
+    https://github.com/nitnagpal/packer/blob/master/gcloud-base-image/base-image.json
+
+http://blog.nitinnagpal.me/2017/12/17/ami-automation-using-packer
+
+
+
 
 
 * Packer - Official Site, Packer Documentation. ***Welcome to the Packer documentation!*** <br/>
